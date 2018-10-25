@@ -17,7 +17,7 @@
 #
 LSCRIPT = kernel.lds
 OBJ = start.o
-OBJ += led3.o
+OBJ += uart.o
 
 SUBMISSION_FILES = $(shell find . -name "*")
 TUBIT_NAMES = $(shell awk 'NR > 1  {ORS="+"; print prev} {prev=$$1} END { ORS=""; print $$1 }' namen.txt )

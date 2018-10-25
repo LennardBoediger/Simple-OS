@@ -17,7 +17,7 @@ _start:
 _bsprak:
 	
 	/* Einsprung ins Hauptprogramm */
-	bl      yellow_on
+	bl      echo
 	
 .Lend:  
 	b       .Lend
