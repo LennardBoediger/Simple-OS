@@ -31,6 +31,12 @@ void uart_transmit(char to_send){
     uart_reg->DR = to_send;
 }
 
+void sent_string(char* strg){
+    while (*strg != '\0') {
+        uart_transmit(*strg);
+        strg++;
+}
+
 void kprintf(char* text, ...) {
     va_list args;
     va_start(args, text);
