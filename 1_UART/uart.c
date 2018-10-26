@@ -35,7 +35,54 @@ void sent_string(char* strg){
     while (*strg != '\0') {
         uart_transmit(*strg);
         strg++;
+    }
 }
+
+char conv_to_hex(int to_hex) {
+    switch (to_hex) {
+        case 0:
+            return '0';
+        case 1:
+            return '1';
+        case 2:
+            return '2';
+        case 3:
+            return '3';
+        case 4:
+            return '4';
+        case 5:
+            return '5';
+        case 6:
+            return '6';
+        case 7:
+            return '7';
+        case 8:
+            return '8';
+        case 9:
+            return '9';
+        case 10:
+            return 'A';
+        case 11:
+            return 'B';
+        case 12:
+            return 'C';
+        case 13:
+            return 'D';
+        case 14:
+            return 'E';
+        case 15:
+            return 'F';
+    }
+}
+
+void sent_hex(unsigned int num){
+    int to_hex = num % 16;
+    char hex = conv_to_hex(to_hex);
+
+    uart_transmit()
+}        case 14:
+            return 'E';
+
 
 void kprintf(char* text, ...) {
     va_list args;
@@ -49,15 +96,10 @@ void kprintf(char* text, ...) {
                     uart_transmit((unsigned char) va_arg(args, int));
                     break;
                 case 's':
-                    ;
-                    char* strg = (char*) va_arg(args, int);
-                    while (*strg != '\0') {
-                        uart_transmit(*strg);
-                        strg++;
-                    }
+                    sent_string ((char*) va_arg(args, int));
                     break;
                 case 'x':
-
+                    sent_hex(va_arg(args, unsigned int));
                     break;
                 default:
                     uart_transmit(*tmp);
@@ -76,5 +118,4 @@ void echo(){
 //        char tmp = uart_recive();
 //        uart_transmit(tmp);
 //    }
-
 }
