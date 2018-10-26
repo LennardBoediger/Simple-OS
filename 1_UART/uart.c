@@ -72,6 +72,8 @@ char conv_to_hex(int to_hex) {
             return 'E';
         case 15:
             return 'F';
+        default:
+            return '!';
     }
 }
 
@@ -79,16 +81,22 @@ void sent_hex(unsigned int num) {
     unsigned int temp_num = num;
     char hex[8];
     int i;
-    for (i = 0; temp_num >= 0; i++) {
+    for (i = 0; temp_num != 0; i++) {
         int to_hex = temp_num % 16;
         hex[i] = conv_to_hex(to_hex);
         temp_num = temp_num / 16;
     }
+    i--;
     sent_string((char*) "0x");
     while (i >= 0) {
         uart_transmit(hex[i]);
         i--;
     }
+}
+
+void sent_dez(int num) {
+    int temp_num = num;
+    char int[11];           //11. Zeichen für Minuszeichen
 }
 
 void kprintf(char* text, ...) {
@@ -108,6 +116,9 @@ void kprintf(char* text, ...) {
                 case 'x':
                     sent_hex(va_arg(args, unsigned int));
                     break;
+                case 'i':
+                    sent_dez(va_arg(args, int));
+                    break;
                 default:
                     uart_transmit(*tmp);
             }
@@ -120,8 +131,10 @@ void kprintf(char* text, ...) {
 }
 
 void echo(){
-    kprintf("Testbegin\n");
-    kprintf("%%x: 17 hexadezimal gleich %x", 17);
+    kprintf("Testbegin\n\r");
+    kprintf("%%c: b wird ausgegeben: %c\n\r", 'b');
+    kprintf("%%s: Die Welt %s", "ist schön!\n\r");
+    kprintf("%%x: 47096 hexadezimal gleich %x\n\r", 47096);
 //    while (1){
 //        char tmp = uart_recive();
 //        uart_transmit(tmp);
