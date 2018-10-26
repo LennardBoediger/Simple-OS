@@ -75,14 +75,21 @@ char conv_to_hex(int to_hex) {
     }
 }
 
-void sent_hex(unsigned int num){
-    int to_hex = num % 16;
-    char hex = conv_to_hex(to_hex);
-
-    uart_transmit()
-}        case 14:
-            return 'E';
-
+void sent_hex(unsigned int num) {
+    unsigned int temp_num = num;
+    char hex[8];
+    int i;
+    for (i = 0; temp_num >= 0; i++) {
+        int to_hex = temp_num % 16;
+        hex[i] = conv_to_hex(to_hex);
+        temp_num = temp_num / 16;
+    }
+    sent_string((char*) "0x");
+    while (i >= 0) {
+        uart_transmit(hex[i]);
+        i--;
+    }
+}
 
 void kprintf(char* text, ...) {
     va_list args;
@@ -113,7 +120,8 @@ void kprintf(char* text, ...) {
 }
 
 void echo(){
-    kprintf("Test123 %s %c Test321", "peter%s", 'b');
+    kprintf("Testbegin\n");
+    kprintf("%%x: 17 hexadezimal gleich %x", 17);
 //    while (1){
 //        char tmp = uart_recive();
 //        uart_transmit(tmp);
