@@ -1,3 +1,5 @@
+#include <stdarg.h>
+
 #define UART_BASE (0x7E201000 - 0x3F000000)
 #define TXFF_SHIFT 5
 #define RXFE_SHIFT 4
@@ -15,21 +17,13 @@ static volatile
 struct uart * const uart_reg = (struct uart *)UART_BASE;
 
 
-
-
-/*int init() {
-     Initialisieren  //to do set flags//
-    gpio_port->func[0] = gpio_output << (YELLOW_LED * GPF_BITS);
-}*/
-
-
-char uart_recive(){
-    while (!(uart_reg->FR & RXFE));
-    uart_transmit('r');
+/*char uart_recive(){                 //LÄUFT NOCH NICHT...
+    while (!(uart_reg->FR & RXFE));  //
+//    uart_transmit('r');
     char affe = (char) uart_reg->DR & 0xff;
     uart_transmit(affe);
     return affe;
-}
+}*/
 
 void uart_transmit(char to_send){
     //while ((uart_reg->FR >> TXFF_SHIFT) & 0x01){} //wait for FIFO not full
@@ -37,11 +31,44 @@ void uart_transmit(char to_send){
     uart_reg->DR = to_send;
 }
 
-void echo(){
-    uart_transmit('c');
-    while (1){
-        char tmp = uart_recive();
-        uart_transmit(tmp);
+void kprintf(char* text, ...) {
+    va_list args;
+    va_start(args, text);
+    char* tmp = text;
+    while(*tmp != '\0') {
+        if(*tmp == '%') {
+            tmp++;
+            switch(*tmp) {
+                case 'c':
+                    uart_transmit((unsigned char) va_arg(args, int));
+                    break;
+                case 's':
+                    ;
+                    char* strg = (char*) va_arg(args, int);
+                    while (*strg != '\0') {
+                        uart_transmit(*strg);
+                        strg++;
+                    }
+                    break;
+                case 'x':
+
+                    break;
+                default:
+                    uart_transmit(*tmp);
+            }
+        tmp++;
+        }
+        uart_transmit(*tmp);
+        tmp++;
     }
+    va_end(args);
+}
+
+void echo(){
+    kprintf("Test123 %s %c Test321", "peter%s", 'b');
+//    while (1){
+//        char tmp = uart_recive();
+//        uart_transmit(tmp);
+//    }
 
 }

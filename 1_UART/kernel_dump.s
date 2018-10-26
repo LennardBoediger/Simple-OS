@@ -12,7 +12,7 @@ Disassembly of section .init:
     8010:	0a000001 	beq	801c <_exitHyper>
 
 00008014 <_bsprak>:
-    8014:	eb000008 	bl	803c <yellow_on>
+    8014:	eb000029 	bl	80c0 <echo>
     8018:	eafffffe 	b	8018 <_bsprak+0x4>
 
 0000801c <_exitHyper>:
@@ -27,14 +27,62 @@ Disassembly of section .init:
 
 Disassembly of section .text:
 
-0000803c <yellow_on>:
-    803c:	e3a03000 	mov	r3, #0
-    8040:	e3a01602 	mov	r1, #2097152	; 0x200000
-    8044:	e3433f20 	movt	r3, #16160	; 0x3f20
-    8048:	e3a02080 	mov	r2, #128	; 0x80
-    804c:	e5831000 	str	r1, [r3]
-    8050:	e583201c 	str	r2, [r3, #28]
-    8054:	e12fff1e 	bx	lr
+0000803c <uart_recive>:
+    803c:	e3a02a01 	mov	r2, #4096	; 0x1000
+    8040:	e3432f20 	movt	r2, #16160	; 0x3f20
+    8044:	e5923018 	ldr	r3, [r2, #24]
+    8048:	e3130010 	tst	r3, #16
+    804c:	0afffffc 	beq	8044 <uart_recive+0x8>
+    8050:	e3a01a01 	mov	r1, #4096	; 0x1000
+    8054:	e3431f20 	movt	r1, #16160	; 0x3f20
+    8058:	e5912018 	ldr	r2, [r1, #24]
+    805c:	e3a03a01 	mov	r3, #4096	; 0x1000
+    8060:	e3433f20 	movt	r3, #16160	; 0x3f20
+    8064:	e3120020 	tst	r2, #32
+    8068:	1afffffa 	bne	8058 <uart_recive+0x1c>
+    806c:	e3a02072 	mov	r2, #114	; 0x72
+    8070:	e1a01003 	mov	r1, r3
+    8074:	e5832000 	str	r2, [r3]
+    8078:	e5930000 	ldr	r0, [r3]
+    807c:	e6ef0070 	uxtb	r0, r0
+    8080:	e5912018 	ldr	r2, [r1, #24]
+    8084:	e3a03a01 	mov	r3, #4096	; 0x1000
+    8088:	e3433f20 	movt	r3, #16160	; 0x3f20
+    808c:	e3120020 	tst	r2, #32
+    8090:	1afffffa 	bne	8080 <uart_recive+0x44>
+    8094:	e5830000 	str	r0, [r3]
+    8098:	e12fff1e 	bx	lr
+
+0000809c <uart_transmit>:
+    809c:	e3a01a01 	mov	r1, #4096	; 0x1000
+    80a0:	e3431f20 	movt	r1, #16160	; 0x3f20
+    80a4:	e5912018 	ldr	r2, [r1, #24]
+    80a8:	e3a03a01 	mov	r3, #4096	; 0x1000
+    80ac:	e3433f20 	movt	r3, #16160	; 0x3f20
+    80b0:	e3120020 	tst	r2, #32
+    80b4:	1afffffa 	bne	80a4 <uart_transmit+0x8>
+    80b8:	e5830000 	str	r0, [r3]
+    80bc:	e12fff1e 	bx	lr
+
+000080c0 <echo>:
+    80c0:	e3a02a01 	mov	r2, #4096	; 0x1000
+    80c4:	e3432f20 	movt	r2, #16160	; 0x3f20
+    80c8:	e92d4038 	push	{r3, r4, r5, lr}
+    80cc:	e3a03a01 	mov	r3, #4096	; 0x1000
+    80d0:	e5921018 	ldr	r1, [r2, #24]
+    80d4:	e3433f20 	movt	r3, #16160	; 0x3f20
+    80d8:	e3110020 	tst	r1, #32
+    80dc:	1afffffa 	bne	80cc <echo+0xc>
+    80e0:	e1a04003 	mov	r4, r3
+    80e4:	e1a05003 	mov	r5, r3
+    80e8:	e3a02063 	mov	r2, #99	; 0x63
+    80ec:	e5832000 	str	r2, [r3]
+    80f0:	ebffffd1 	bl	803c <uart_recive>
+    80f4:	e5943018 	ldr	r3, [r4, #24]
+    80f8:	e3130020 	tst	r3, #32
+    80fc:	1afffffc 	bne	80f4 <echo+0x34>
+    8100:	e5850000 	str	r0, [r5]
+    8104:	eafffff9 	b	80f0 <echo+0x30>
 
 Disassembly of section .ARM.attributes:
 
@@ -58,7 +106,7 @@ Disassembly of section .ARM.attributes:
 Disassembly of section .comment:
 
 00000000 <.comment>:
-   0:	3a434347 	bcc	10d0d24 <yellow_on+0x10c8ce8>
+   0:	3a434347 	bcc	10d0d24 <echo+0x10c8c64>
    4:	35312820 	ldrcc	r2, [r1, #-2080]!	; 0xfffff7e0
    8:	392e343a 	stmdbcc	lr!, {r1, r3, r4, r5, sl, ip, sp}
    c:	732b332e 			; <UNDEFINED> instruction: 0x732b332e

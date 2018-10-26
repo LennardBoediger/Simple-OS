@@ -70,8 +70,8 @@ dump:
 
 .PHONY: install
 install: kernel.img
-#	cp -v kernel.img /srv/tftp
-	arm-install-image $<
+	cp -v kernel.img /srv/tftp
+#	arm-install-image $<
 
 .PHONY: clean
 clean:
