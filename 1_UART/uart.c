@@ -3,32 +3,6 @@
 
 
 
-//AUSGELAGERT UART_DRIVER.H
-//struct uart {
-//    unsigned int DR;
-//    unsigned int UNUSED[5]; //lennard hat das nicht verstanden
-//    unsigned int FR;
-//
-//};
-
-//AUSGELAGERT IN UART_DRIVER.C
-//static volatile
-//struct uart * const uart_reg = (struct uart *)UART_BASE;
-
-//AUSGELAGERT UART_DRIVER.C
-//char uart_recive(){                 //LÄUFT NOCH NICHT...
-//    while (!(uart_reg->FR & RXFE));  //
-//    char affe = (char) uart_reg->DR & 0xff;
-//    uart_transmit(affe);
-//    return affe;
-//}
-//
-//void uart_transmit(char to_send){
-//    //while ((uart_reg->FR >> TXFF_SHIFT) & 0x01){} //wait for FIFO not full
-//    while (uart_reg->FR & TXFF); //wait for FIFO not full
-//    uart_reg->DR = to_send;
-//}
-
 void sent_string(char* strg){
     while (*strg != '\0') {
         uart_transmit(*strg);
@@ -94,7 +68,22 @@ void sent_hex(unsigned int num) {
 
 void sent_dez(int num) {
     int temp_num = num;
-    char int[11];           //11. Zeichen für Minuszeichen
+    char dez[11];           //11. Zeichen für Minuszeichen
+    int i;
+    if (temp_num < 0) {
+        dez[0] = '-';
+        temp_num = 0 - temp_num;
+    }
+    for (i = 1; temp_num != 0; i++) {
+        int to_hex = temp_num % 10;     //kann verwendet werden, da Rest nie >9
+        dez[i] = conv_to_hex(to_hex);
+        temp_num = temp_num / 10;
+    }
+    i--;
+    while (i >= 0) {
+        uart_transmit(dez[i]);
+        i--;
+    }
 }
 
 void kprintf(char* text, ...) {
@@ -117,6 +106,8 @@ void kprintf(char* text, ...) {
                 case 'i':
                     sent_dez(va_arg(args, int));
                     break;
+                case 'u':
+                //    sent_
                 default:
                     uart_transmit(*tmp);
             }
@@ -133,6 +124,11 @@ void echo(){
     kprintf("%%c: b wird ausgegeben: %c\n\r", 'b');
     kprintf("%%s: Die Welt %s", "ist schön!\n\r");
     kprintf("%%x: 47096 hexadezimal gleich %x\n\r", 47096);
+    kprintf("%%i: kleinste negative Zahl: %i \n\r", -2147483648);
+    kprintf("%%i: groesste positive Zahl: %i\n\r", 2147483647);
+    kprintf("%%u: groesste unsigned Int: %u\n\r", 4294967295);
+
+
 //    while (1){
 //        char tmp = uart_recive();
 //        uart_transmit(tmp);
