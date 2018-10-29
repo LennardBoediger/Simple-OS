@@ -1,6 +1,5 @@
 #include <stdarg.h>
 #include "uart_driver.h"
-#include <stdint.h>
 
 
 
@@ -95,7 +94,7 @@ void sent_udez(uint32_t num) {
     int8_t i;
     uint32_t temp_num = num;
     for (i = 0; temp_num != 0; i++) {
-        uint8_t to_ASCII = temp_num % 10;
+        uint8_t to_ASCII =  temp_num % 10;
         udez[i] = conv_to_ASCII(to_ASCII);
         temp_num = temp_num / 10;
     }
