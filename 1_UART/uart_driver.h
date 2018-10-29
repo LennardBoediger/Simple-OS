@@ -1,10 +1,11 @@
 #ifndef BS_PRAK_UART_DRIVER_H
 #define BS_PRAK_UART_DRIVER_H
+#include <stdint.h>
 
 struct uart {
-    unsigned int DR;
-    unsigned int UNUSED[5]; //lennard hat das nicht verstanden
-    unsigned int FR;
+    uint32_t DR;
+    uint32_t UNUSED[5]; //lennard hat das nicht verstanden
+    uint32_t FR;
 
 };
 

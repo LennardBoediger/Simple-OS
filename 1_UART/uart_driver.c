@@ -1,4 +1,5 @@
 #include "uart_driver.h"
+#include <stdint.h>
 #define UART_BASE (0x7E201000 - 0x3F000000)
 #define TXFF_SHIFT 5
 #define RXFE_SHIFT 4
