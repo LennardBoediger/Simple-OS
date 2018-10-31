@@ -18,8 +18,9 @@
 LSCRIPT = kernel.lds
 OBJ = start.o
 OBJ += uart.o
+OBJ += uart_driver.o
 
-SUBMISSION_FILES = $(shell find . -name "*")
+SUBMISSION_FILES = $(shell find . -name '*' -not -name '*.tar.gz' -not -name '.*' -not -type d )
 TUBIT_NAMES = $(shell awk 'NR > 1  {ORS="+"; print prev} {prev=$$1} END { ORS=""; print $$1 }' namen.txt )
 #TUBIT_NAMES = $(shell cut -d' ' -f1  namen.txt | tr '\n' '+')
 

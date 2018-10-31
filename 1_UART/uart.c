@@ -2,7 +2,6 @@
 #include "uart_driver.h"
 
 
-
 void sent_string(char* strg){
     while (*strg != '\0') {
         uart_transmit(*strg);
@@ -68,13 +67,13 @@ void sent_hex(uint32_t num) {
 
 void sent_dez(int32_t num) {
     uint32_t temp_num;
-    char dez[10] = {0};           //11. Zeichen für Minuszeichen
+    char dez[10] = {0};
     int8_t i;
     if (num < 0) {
         temp_num = (uint32_t) (0 - num);
     } else temp_num = (uint32_t) num;
     for (i = 0; temp_num != 0; i++) {
-        uint8_t to_ASCII = temp_num % 10;     //kann verwendet werden, da Rest nie >9
+        uint8_t to_ASCII = temp_num % 10;
         dez[i] = conv_to_ASCII(to_ASCII);
         temp_num = temp_num / 10;
     }
@@ -128,6 +127,8 @@ void kprintf(char* text, ...) {
                 case 'u':
                     sent_udez(va_arg(args, uint32_t));
                     break;
+                case 'p':
+                    sent_hex(va_arg(args, uint32_t));
                 default:
                     uart_transmit(*tmp);
             }
@@ -139,7 +140,7 @@ void kprintf(char* text, ...) {
     va_end(args);
 }
 
-void echo(){
+void main(){
     kprintf("Testbegin\n\r");
     kprintf("%%c: b wird ausgegeben: %c\n\r", 'b');
     kprintf("%%s: Die Welt %s", "ist schön!\n\r");
@@ -147,10 +148,14 @@ void echo(){
     kprintf("%%i: kleinste negative Zahl: %i \n\r", -2147483648);
     kprintf("%%i: groesste positive Zahl: %i\n\r", 2147483647);
     kprintf("%%u: groesste unsigned Int: %u\n\r", 4294967295);
+    char a = '4';
+    kprintf("%%p: char a befindet sich hier: %p\n\r", &a);
+    kprintf("Jetzt freie Eingabe möglich:\n\r");
 
-
-//    while (1){
-//        char tmp = uart_recive();
-//        uart_transmit(tmp);
-//    }
+    while (1){
+        char c = uart_receive();
+        if (c) {
+            kprintf("you pressed: %c\n\r", c);
+        }
+    }
 }
