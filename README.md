@@ -1,2 +1,0 @@
-# BS-Prak
-Affe lebt!

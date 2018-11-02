@@ -1,7 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.o"
-  "CMakeFiles/Bs_Prak.dir/src/lib/uart.c.o"
+  "CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.o"
   "CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o"
+  "CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.o"
   "Bs_Prak.pdb"
   "Bs_Prak"
 )
