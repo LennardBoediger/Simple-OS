@@ -4,7 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/Users/Lennard/Github/Bs-Prak/1_UART/uart.c" "/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/1_UART/uart.c.o"
+  "/Users/Lennard/Github/Bs-Prak/src/bs-logic/Interrupt_Handler.c" "/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o"
+  "/Users/Lennard/Github/Bs-Prak/src/driver/uart_driver.c" "/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.o"
+  "/Users/Lennard/Github/Bs-Prak/src/lib/uart.c" "/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/src/lib/uart.c.o"
   )
 set(CMAKE_C_COMPILER_ID "AppleClang")
 

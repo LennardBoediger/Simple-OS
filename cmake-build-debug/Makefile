@@ -123,32 +123,86 @@ Bs_Prak/fast:
 	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/build
 .PHONY : Bs_Prak/fast
 
-1_UART/uart.o: 1_UART/uart.c.o
+src/bs-logic/Interrupt_Handler.o: src/bs-logic/Interrupt_Handler.c.o
 
-.PHONY : 1_UART/uart.o
+.PHONY : src/bs-logic/Interrupt_Handler.o
 
 # target to build an object file
-1_UART/uart.c.o:
-	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/1_UART/uart.c.o
-.PHONY : 1_UART/uart.c.o
+src/bs-logic/Interrupt_Handler.c.o:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o
+.PHONY : src/bs-logic/Interrupt_Handler.c.o
 
-1_UART/uart.i: 1_UART/uart.c.i
+src/bs-logic/Interrupt_Handler.i: src/bs-logic/Interrupt_Handler.c.i
 
-.PHONY : 1_UART/uart.i
+.PHONY : src/bs-logic/Interrupt_Handler.i
 
 # target to preprocess a source file
-1_UART/uart.c.i:
-	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/1_UART/uart.c.i
-.PHONY : 1_UART/uart.c.i
+src/bs-logic/Interrupt_Handler.c.i:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.i
+.PHONY : src/bs-logic/Interrupt_Handler.c.i
 
-1_UART/uart.s: 1_UART/uart.c.s
+src/bs-logic/Interrupt_Handler.s: src/bs-logic/Interrupt_Handler.c.s
 
-.PHONY : 1_UART/uart.s
+.PHONY : src/bs-logic/Interrupt_Handler.s
 
 # target to generate assembly for a file
-1_UART/uart.c.s:
-	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/1_UART/uart.c.s
-.PHONY : 1_UART/uart.c.s
+src/bs-logic/Interrupt_Handler.c.s:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.s
+.PHONY : src/bs-logic/Interrupt_Handler.c.s
+
+src/driver/uart_driver.o: src/driver/uart_driver.c.o
+
+.PHONY : src/driver/uart_driver.o
+
+# target to build an object file
+src/driver/uart_driver.c.o:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.o
+.PHONY : src/driver/uart_driver.c.o
+
+src/driver/uart_driver.i: src/driver/uart_driver.c.i
+
+.PHONY : src/driver/uart_driver.i
+
+# target to preprocess a source file
+src/driver/uart_driver.c.i:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.i
+.PHONY : src/driver/uart_driver.c.i
+
+src/driver/uart_driver.s: src/driver/uart_driver.c.s
+
+.PHONY : src/driver/uart_driver.s
+
+# target to generate assembly for a file
+src/driver/uart_driver.c.s:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.s
+.PHONY : src/driver/uart_driver.c.s
+
+src/lib/uart.o: src/lib/uart.c.o
+
+.PHONY : src/lib/uart.o
+
+# target to build an object file
+src/lib/uart.c.o:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/lib/uart.c.o
+.PHONY : src/lib/uart.c.o
+
+src/lib/uart.i: src/lib/uart.c.i
+
+.PHONY : src/lib/uart.i
+
+# target to preprocess a source file
+src/lib/uart.c.i:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/lib/uart.c.i
+.PHONY : src/lib/uart.c.i
+
+src/lib/uart.s: src/lib/uart.c.s
+
+.PHONY : src/lib/uart.s
+
+# target to generate assembly for a file
+src/lib/uart.c.s:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/lib/uart.c.s
+.PHONY : src/lib/uart.c.s
 
 # Help Target
 help:
@@ -159,9 +213,15 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... Bs_Prak"
-	@echo "... 1_UART/uart.o"
-	@echo "... 1_UART/uart.i"
-	@echo "... 1_UART/uart.s"
+	@echo "... src/bs-logic/Interrupt_Handler.o"
+	@echo "... src/bs-logic/Interrupt_Handler.i"
+	@echo "... src/bs-logic/Interrupt_Handler.s"
+	@echo "... src/driver/uart_driver.o"
+	@echo "... src/driver/uart_driver.i"
+	@echo "... src/driver/uart_driver.s"
+	@echo "... src/lib/uart.o"
+	@echo "... src/lib/uart.i"
+	@echo "... src/lib/uart.s"
 .PHONY : help
 
 

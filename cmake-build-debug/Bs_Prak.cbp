@@ -80,34 +80,19 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/Lennard/Github/Bs-Prak/1_UART/Makefile">
+		<Unit filename="/Users/Lennard/Github/Bs-Prak/src/bs-logic/Interrupt_Handler.c">
 			<Option target="Bs_Prak"/>
 		</Unit>
-		<Unit filename="/Users/Lennard/Github/Bs-Prak/1_UART/kernel">
+		<Unit filename="/Users/Lennard/Github/Bs-Prak/src/driver/uart_driver.c">
 			<Option target="Bs_Prak"/>
 		</Unit>
-		<Unit filename="/Users/Lennard/Github/Bs-Prak/1_UART/kernel.bin">
+		<Unit filename="/Users/Lennard/Github/Bs-Prak/src/include/Interrupt_Handler.h">
 			<Option target="Bs_Prak"/>
 		</Unit>
-		<Unit filename="/Users/Lennard/Github/Bs-Prak/1_UART/kernel.lds">
+		<Unit filename="/Users/Lennard/Github/Bs-Prak/src/include/uart_driver.h">
 			<Option target="Bs_Prak"/>
 		</Unit>
-		<Unit filename="/Users/Lennard/Github/Bs-Prak/1_UART/kernel_dump.s">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/Users/Lennard/Github/Bs-Prak/1_UART/namen.txt">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/Users/Lennard/Github/Bs-Prak/1_UART/start.S">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/Users/Lennard/Github/Bs-Prak/1_UART/start.d">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/Users/Lennard/Github/Bs-Prak/1_UART/uart.c">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/Users/Lennard/Github/Bs-Prak/README.md">
+		<Unit filename="/Users/Lennard/Github/Bs-Prak/src/lib/uart.c">
 			<Option target="Bs_Prak"/>
 		</Unit>
 		<Unit filename="/Users/Lennard/Github/Bs-Prak/CMakeLists.txt">

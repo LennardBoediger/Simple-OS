@@ -1,1 +1,1 @@
-/Library/Developer/CommandLineTools/usr/bin/cc -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/Bs_Prak.dir/1_UART/uart.c.o  -o Bs_Prak 
+/Library/Developer/CommandLineTools/usr/bin/cc -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.o CMakeFiles/Bs_Prak.dir/src/lib/uart.c.o CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o  -o Bs_Prak 

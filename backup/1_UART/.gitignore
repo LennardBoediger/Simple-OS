@@ -9,7 +9,8 @@
 *.d
 kernel
 *.bin
-
+start.S
+CMakeList.txt
 
 # OS generated files #
 ######################
