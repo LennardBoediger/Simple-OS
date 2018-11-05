@@ -1,5 +1,7 @@
 #ifndef BS_PRAK_KPRINTF_H
 #define BS_PRAK_KPRINTF_H
+#include <stdint.h>
+
 
 void sent_string(char* strg);
 char conv_to_ASCII(uint8_t to_hex);

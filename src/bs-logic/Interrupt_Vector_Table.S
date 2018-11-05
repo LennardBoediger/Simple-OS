@@ -1,8 +1,49 @@
+.global _IVT
+.global _INIT_IVT
+.global reset_tr
+
+_INIT_IVT:
+    ldr r0, _IVT
+    mcr p15, 0, r0, c12, c0, 0
+    bx lr
+
 .balign 32
-.global IVT
--IVT:
+_IVT:
     b reset_tr
     b undef_tr
-    #...
+    b swi_tr
+    b prefab_tr
+    b dataab_tr
+    nop
+    b irq_tr
+    b fiq_tr
 
-.global reset_tr
+
+reset_tr:
+    stmib r13, {r0-r12}     //oder doch increasing?
+    bl reset
+    //    mov r13, #(1024*1024*128)
+
+undef_tr:
+    stmib r13, {r0-r12}     //oder doch increasing?
+    bl undef
+
+swi_tr:
+    stmib r13, {r0-r12}     //oder doch increasing?
+    bl reset
+
+prefab_tr:
+    stmib r13, {r0-r12}     //oder doch increasing?
+    bl reset
+
+dataab_tr:
+    stmib r13, {r0-r12}     //oder doch increasing?
+    bl reset
+
+irq_tr:
+    stmib r13, {r0-r12}     //oder doch increasing?
+    bl reset
+
+fiq_tr:
+    stmib r13, {r0-r12}
+    bl reset

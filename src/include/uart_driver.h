@@ -12,4 +12,4 @@ struct uart {
 void uart_transmit(char);
 char uart_receive();
 
-#endif BS_PRAK_UART_DRIVER_H
+#endif /*BS_PRAK_UART_DRIVER_H*/

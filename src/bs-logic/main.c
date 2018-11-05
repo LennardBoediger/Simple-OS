@@ -14,6 +14,7 @@ void main(){
     kprintf("%%p: char a befindet sich hier: %p\n\r", &a);
     kprintf("Jetzt freie Eingabe möglich:\n\r");
 
+
     while (1){
         char c = uart_receive();
         if (c) {

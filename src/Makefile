@@ -21,6 +21,9 @@ OBJ += ./bs-logic/start.o
 OBJ += ./lib/kprintf.o
 OBJ += ./driver/uart_driver.o
 OBJ += ./bs-logic/Interrupt_Handler.o
+OBJ += ./bs-logic/Interrupt_Vector_Table.o
+OBJ += ./bs-logic/Stack.o
+
 
 SUBMISSION_FILES = $(shell find . -name '*' -not -name '*.tar.gz' -not -name '.*' -not -type d )
 TUBIT_NAMES = $(shell awk 'NR > 1  {ORS="+"; print prev} {prev=$$1} END { ORS=""; print $$1 }' ../Abgabe/namen.txt )
