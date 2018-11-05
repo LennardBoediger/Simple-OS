@@ -9,7 +9,7 @@
 *.d
 kernel
 *.bin
-start.S
+
 
 
 # OS generated files #

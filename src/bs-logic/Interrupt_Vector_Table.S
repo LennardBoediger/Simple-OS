@@ -20,30 +20,33 @@ _IVT:
 
 
 reset_tr:
-    stmib r13, {r0-r12}     //oder doch increasing?
-    bl reset
+    bl reset            //testweise
+//    push {r0-r12}
+//    bl reset
     //    mov r13, #(1024*1024*128)
 
 undef_tr:
-    stmib r13, {r0-r12}     //oder doch increasing?
+    bl undef            //testweise
+/*    push {r0-r12}
     bl undef
+*/
 
 swi_tr:
-    stmib r13, {r0-r12}     //oder doch increasing?
+//    stmib r13, {r0-r12}
     bl reset
 
 prefab_tr:
-    stmib r13, {r0-r12}     //oder doch increasing?
+//    stmib r13, {r0-r12}
     bl reset
 
 dataab_tr:
-    stmib r13, {r0-r12}     //oder doch increasing?
+//    stmib r13, {r0-r12}
     bl reset
 
 irq_tr:
-    stmib r13, {r0-r12}     //oder doch increasing?
+//    stmib r13, {r0-r12}
     bl reset
 
 fiq_tr:
-    stmib r13, {r0-r12}
+//    stmib r13, {r0-r12}
     bl reset
