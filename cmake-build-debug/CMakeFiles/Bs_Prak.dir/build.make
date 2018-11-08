@@ -34,19 +34,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/pablo/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/173.4301.33/bin/cmake/bin/cmake
+CMAKE_COMMAND = /Applications/CLion.app/Contents/bin/cmake/bin/cmake
 
 # The command to remove a file.
-RM = /home/pablo/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/173.4301.33/bin/cmake/bin/cmake -E remove -f
+RM = /Applications/CLion.app/Contents/bin/cmake/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/pablo/Dokumente/Uni/BSPrak/BS-Prak
+CMAKE_SOURCE_DIR = /Users/Lennard/Github/Bs-Prak
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug
+CMAKE_BINARY_DIR = /Users/Lennard/Github/Bs-Prak/cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/Bs_Prak.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/Bs_Prak.dir/flags.make
 
 CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.o: CMakeFiles/Bs_Prak.dir/flags.make
 CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.o: ../src/driver/uart_driver.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.o   -c /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/driver/uart_driver.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.o"
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.o   -c /Users/Lennard/Github/Bs-Prak/src/driver/uart_driver.c
 
 CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/driver/uart_driver.c > CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.i
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/Lennard/Github/Bs-Prak/src/driver/uart_driver.c > CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.i
 
 CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/driver/uart_driver.c -o CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.s
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/Lennard/Github/Bs-Prak/src/driver/uart_driver.c -o CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.s
 
 CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.o.requires:
 
@@ -83,16 +83,16 @@ CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.o.provides.build: CMakeFiles/Bs_
 
 CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.o: CMakeFiles/Bs_Prak.dir/flags.make
 CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.o: ../src/lib/kprintf.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.o   -c /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/lib/kprintf.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.o"
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.o   -c /Users/Lennard/Github/Bs-Prak/src/lib/kprintf.c
 
 CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/lib/kprintf.c > CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.i
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/Lennard/Github/Bs-Prak/src/lib/kprintf.c > CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.i
 
 CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/lib/kprintf.c -o CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.s
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/Lennard/Github/Bs-Prak/src/lib/kprintf.c -o CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.s
 
 CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.o.requires:
 
@@ -107,16 +107,16 @@ CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.o.provides.build: CMakeFiles/Bs_Prak.di
 
 CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o: CMakeFiles/Bs_Prak.dir/flags.make
 CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o: ../src/bs-logic/Interrupt_Handler.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o   -c /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/bs-logic/Interrupt_Handler.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o"
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o   -c /Users/Lennard/Github/Bs-Prak/src/bs-logic/Interrupt_Handler.c
 
 CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/bs-logic/Interrupt_Handler.c > CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.i
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/Lennard/Github/Bs-Prak/src/bs-logic/Interrupt_Handler.c > CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.i
 
 CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/bs-logic/Interrupt_Handler.c -o CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.s
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/Lennard/Github/Bs-Prak/src/bs-logic/Interrupt_Handler.c -o CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.s
 
 CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o.requires:
 
@@ -131,16 +131,16 @@ CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o.provides.build: CMakeF
 
 CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.o: CMakeFiles/Bs_Prak.dir/flags.make
 CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.o: ../src/bs-logic/main.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.o   -c /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/bs-logic/main.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.o"
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.o   -c /Users/Lennard/Github/Bs-Prak/src/bs-logic/main.c
 
 CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/bs-logic/main.c > CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.i
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/Lennard/Github/Bs-Prak/src/bs-logic/main.c > CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.i
 
 CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/bs-logic/main.c -o CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.s
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/Lennard/Github/Bs-Prak/src/bs-logic/main.c -o CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.s
 
 CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.o.requires:
 
@@ -169,7 +169,7 @@ Bs_Prak: CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o
 Bs_Prak: CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.o
 Bs_Prak: CMakeFiles/Bs_Prak.dir/build.make
 Bs_Prak: CMakeFiles/Bs_Prak.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable Bs_Prak"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable Bs_Prak"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Bs_Prak.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -189,6 +189,6 @@ CMakeFiles/Bs_Prak.dir/clean:
 .PHONY : CMakeFiles/Bs_Prak.dir/clean
 
 CMakeFiles/Bs_Prak.dir/depend:
-	cd /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/pablo/Dokumente/Uni/BSPrak/BS-Prak /home/pablo/Dokumente/Uni/BSPrak/BS-Prak /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/DependInfo.cmake --color=$(COLOR)
+	cd /Users/Lennard/Github/Bs-Prak/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/Lennard/Github/Bs-Prak /Users/Lennard/Github/Bs-Prak /Users/Lennard/Github/Bs-Prak/cmake-build-debug /Users/Lennard/Github/Bs-Prak/cmake-build-debug /Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/Bs_Prak.dir/depend
 
