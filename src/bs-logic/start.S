@@ -7,7 +7,7 @@ _start:
 	mrs r0, cpsr
 	and r0, r0, #0x1F
 	mov r1, #0x1A	//Modebits = 0x1A = Hypervisor Mode
-	cmp r0, r1		//Vergleichen und Statusbits setzen f�r bedingte Spr�nge
+	cmp r0, r1		//Vergleichen und Statusbits setzen für bedingte Sprünge
 	
 	/* Wenn Hypemode erkannt: abschalten (sprung nach _exitHyper)
 	 * wenn nicht erkannt: dann weitermachen (weiterlaufen nach _bsprak)

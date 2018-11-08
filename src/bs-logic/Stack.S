@@ -1,5 +1,6 @@
 .global INIT_STACK
 
+//wechselt durch die Modi und schreibt deren Stackpointer
 INIT_STACK:
     msr cpsr_c, #0xDF           //sys 11011111
     mov sp, #(123*1024*1024)
@@ -13,5 +14,5 @@ INIT_STACK:
     mov sp, #(127*1024*1024)
     msr cpsr_c, #0xD1           //FIQ 11010001
     mov sp, #(128*1024*1024)
-    msr cpsr_c, #0xD3           //wieder in supervisor, wie beim Eintritt
+    msr cpsr_c, #0x13           //wieder in supervisor + IRQ & FIQ mode 0
     bx lr
