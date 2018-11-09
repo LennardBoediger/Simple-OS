@@ -22,7 +22,9 @@ _IVT:
 
 
 reset_tr:
-//    b reset
+//    push {r0-r15}        //Alles pushen für Registerschnappschuss
+//    mov r0, sp
+//    bl reset             //oder doch b reset
 
 undef_tr:
     mov r0, #20
@@ -39,19 +41,27 @@ undef_tr:
     mov r11, #31
     mov r12, #32
     push {r0-r15}        //Alles pushen für Registerschnappschuss
+/* Printfunktion-Aufruf */
     mov r0, sp
+    mrs r1, cpsr
+    mrs r2, spsr
     bl undef
-    add sp, sp, #4       //r15 überspringen
-    pop {lr}             //r14 stimmt so, da bei undef Folgebefehl ausgeführt wird
-    add sp, sp, #4       //r13 überspringen
-    pop {r0-r12}
-    msr cpsr_c, #0x13           //wieder in supervisor + IRQ & FIQ mode 0
-
+/* Wechsel in zuvorigen Modus */
+    pop {r0-r12}        //register zurück schreiben 0-14
+    add sp, #4          //sp überspringen
+    pop {lr}
+//    add lr, lr, #0      //undef befehl überspringen
+    add sp, #4          //PC im stack überspringen
+    movs pc, lr
 
 
 swi_tr:
     stmib r13, {r0-r12}
     bl reset
+/* User/Kernel-Schnittstelle
+*  keinerlei Vorgaben für Registerinhalte, der Prozess wollte die Unterbrechung
+*  keine Fortsetzung bei z. B. exit() */
+
 
 prefab_tr:
 //    stmib r13, {r0-r12}
