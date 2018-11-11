@@ -9,11 +9,15 @@ void reset(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
 
 void undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
 
+void prefab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
+
+void dataab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
+
 struct timer {
     uint32_t LOAD;
     uint32_t VALUE;
     uint32_t CONTROL;
-    uint32_t IRQ_CLEAR/ACK;
+    uint32_t IRQ_CLEAR_ACK;
     uint32_t unused[3];
     uint32_t PREDIVIDER;
 

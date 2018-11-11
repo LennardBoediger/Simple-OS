@@ -1,7 +1,7 @@
 * Register sichern
 * Grund für Ausnahme
 * Grund behandeln
-* Rücksprungadresse modifizieren (IRQ/FIQ -4 (nahtlos? letzte abgeschlossene?;
+* Rücksprungadresse modifizieren (IRQ/FIQ -4 (nahtlos? letzte abgeschlossene?, laut Jannes doch -8!?!);
                                   Data_Abort -8; Undef -0; Pref_Abort -4)
                                   # ACHTUNG: Rechnung wahrscheinlich falsch. Alle +4 #
                                   ## ACHTUNGACHTUNG: wahrscheinlich doch richtig ##

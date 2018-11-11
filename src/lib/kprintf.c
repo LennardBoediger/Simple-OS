@@ -60,6 +60,10 @@ void sent_hex(uint32_t num) {
     }
     i--;
     sent_string((char*) "0x");
+    /* (TODO nochmal drüberschauen) wenn num = 0 */
+    if (i == (-1)) {
+        uart_transmit('0');
+    }
     while (i >= 0) {
         uart_transmit(hex[i]);
         i--;
@@ -82,6 +86,10 @@ void sent_dez(int32_t num) {
         uart_transmit('-');
     }
     i--;
+    /* (TODO nochmal drüberschauen) wenn num = 0 */
+    if (i == (-1)) {
+        uart_transmit('0');
+    }
     while (i >= 0) {
         uart_transmit(dez[i]);
         i--;
@@ -99,6 +107,10 @@ void sent_udez(uint32_t num) {
         temp_num = temp_num / 10;
     }
     i--;
+    /* (TODO nochmal drüberschauen) wenn num = 0 */
+    if (i == (-1)) {
+        uart_transmit('0');
+    }
     while (i >= 0) {
         uart_transmit(udez[i]);
         i--;

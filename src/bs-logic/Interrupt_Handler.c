@@ -40,3 +40,12 @@ void reset(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
 void undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     print_interrupt(stackadress, cpsr, spsr, "UNDEFINED");
 }
+
+
+void prefab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
+
+}
+
+void dataab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
+
+}
