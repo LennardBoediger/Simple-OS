@@ -137,9 +137,35 @@ dataab_tr:
     add sp, #4          //PC im stack überspringen
     movs pc, lr
 
+/* timer und uart */
 irq_tr:
-//    stmib r13, {r0-r12}
-    bl reset
+    mov r0, #1
+    mov r1, #0
+    mov r2, #1
+    mov r3, #0
+    mov r4, #1
+    mov r5, #0
+    mov r6, #1
+    mov r7, #0
+    mov r8, #1
+    mov r9, #0
+    mov r10, #1
+    mov r11, #0
+    mov r12, #1
+    push {r0-r15}        //Alles pushen für Registerschnappschuss
+/* Printfunktion-Aufruf */
+    mov r0, sp
+    mrs r1, cpsr
+    mrs r2, spsr
+    bl irq
+/* Wechsel in zuvorigen Modus */
+    pop {r0-r12}        //register zurück schreiben 0-14
+    add sp, #4          //sp überspringen
+    pop {lr}
+    sub lr, lr, #8      //zu letzten unausgeführten Befehl
+    add sp, #4          //PC im stack überspringen
+    movs pc, lr
+
 
 fiq_tr:
 //    stmib r13, {r0-r12}

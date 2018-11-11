@@ -19,7 +19,8 @@ _bsprak:
 	/* Einsprung ins Hauptprogramm */
     bl      _INIT_IVT
     bl      INIT_STACK
-    udf
+    bl      enable_ext_interrupts
+    bl      watchdog
 
 	bl      main
 
