@@ -41,8 +41,8 @@ reset_tr:
     mrs r1, cpsr
     mrs r2, spsr
     bl reset
-/* TODO (nochmal drüberschauen) Programmneustart */
-    b 0x00008000
+/* neustart des Programms*/
+    b _start
 
 undef_tr:
     mov r0, #20
@@ -105,7 +105,7 @@ prefab_tr:
     pop {r0-r12}        //register zurück schreiben 0-14
     add sp, #4          //sp überspringen
     pop {lr}
-    sub lr, lr, #4      //prefab-befehl wiederholen
+    sub lr, lr, #0      //TODO: wäre #4 um prefab-befehl zu wiederholen
     add sp, #4          //PC im stack überspringen
     movs pc, lr
 
@@ -133,7 +133,7 @@ dataab_tr:
     pop {r0-r12}        //register zurück schreiben 0-14
     add sp, #4          //sp überspringen
     pop {lr}
-    sub lr, lr, #8      //nach dataab-befehl einsetzen
+    sub lr, lr, #4      //TODO: wäre #8 um dataab-befehl zu wiederholen
     add sp, #4          //PC im stack überspringen
     movs pc, lr
 

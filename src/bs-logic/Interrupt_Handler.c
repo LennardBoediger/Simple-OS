@@ -1,3 +1,4 @@
+#include <math.h>
 #include "../include/Interrupt_Handler.h"
 #include "../include/kprintf.h"
 
@@ -59,11 +60,6 @@ void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* i
     kprintf("\n\r");
 }
 
-void watchdog_init() {
-    //set timer
-    //
-}
-
 
 void reset(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     print_interrupt(stackadress, cpsr, spsr, "RESET");
@@ -73,16 +69,24 @@ void undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     print_interrupt(stackadress, cpsr, spsr, "UNDEFINED");
 }
 
+void swi(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
+    print_interrupt(stackadress, cpsr, spsr, "SOFTWARE INTERRUPT");
+}
+
 
 void prefab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-
+    print_interrupt(stackadress, cpsr, spsr, "PREFETCH ABORT");
 }
 
 void dataab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-
+    print_interrupt(stackadress, cpsr, spsr, "DATA ABORT");
 }
 
 void irq(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     print_interrupt(stackadress, cpsr, spsr, "TIMER INTERRUPT");
     watchdog();
+}
+
+void fiq(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
+    print_interrupt(stackadress, cpsr, spsr, "DATA ABORT");
 }
