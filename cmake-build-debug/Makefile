@@ -39,19 +39,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /Applications/CLion.app/Contents/bin/cmake/bin/cmake
+CMAKE_COMMAND = /home/pablo/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/173.4301.33/bin/cmake/bin/cmake
 
 # The command to remove a file.
-RM = /Applications/CLion.app/Contents/bin/cmake/bin/cmake -E remove -f
+RM = /home/pablo/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/173.4301.33/bin/cmake/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/Lennard/Github/Bs-Prak
+CMAKE_SOURCE_DIR = /home/pablo/Dokumente/Uni/BSPrak/BS-Prak
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/Lennard/Github/Bs-Prak/cmake-build-debug
+CMAKE_BINARY_DIR = /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = /Users/Lennard/Github/Bs-Prak/cmake-build-debug
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/Applications/CLion.app/Contents/bin/cmake/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/home/pablo/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/173.4301.33/bin/cmake/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -70,7 +70,7 @@ rebuild_cache/fast: rebuild_cache
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/Applications/CLion.app/Contents/bin/cmake/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/home/pablo/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/173.4301.33/bin/cmake/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles /Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -150,32 +150,32 @@ src/bs-logic/Interrupt_Handler.c.s:
 	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.s
 .PHONY : src/bs-logic/Interrupt_Handler.c.s
 
-src/bs-logic/main.o: src/bs-logic/main.c.o
+src/bs-logic/inputtest.o: src/bs-logic/inputtest.c.o
 
-.PHONY : src/bs-logic/main.o
+.PHONY : src/bs-logic/inputtest.o
 
 # target to build an object file
-src/bs-logic/main.c.o:
-	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.o
-.PHONY : src/bs-logic/main.c.o
+src/bs-logic/inputtest.c.o:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/inputtest.c.o
+.PHONY : src/bs-logic/inputtest.c.o
 
-src/bs-logic/main.i: src/bs-logic/main.c.i
+src/bs-logic/inputtest.i: src/bs-logic/inputtest.c.i
 
-.PHONY : src/bs-logic/main.i
+.PHONY : src/bs-logic/inputtest.i
 
 # target to preprocess a source file
-src/bs-logic/main.c.i:
-	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.i
-.PHONY : src/bs-logic/main.c.i
+src/bs-logic/inputtest.c.i:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/inputtest.c.i
+.PHONY : src/bs-logic/inputtest.c.i
 
-src/bs-logic/main.s: src/bs-logic/main.c.s
+src/bs-logic/inputtest.s: src/bs-logic/inputtest.c.s
 
-.PHONY : src/bs-logic/main.s
+.PHONY : src/bs-logic/inputtest.s
 
 # target to generate assembly for a file
-src/bs-logic/main.c.s:
-	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/main.c.s
-.PHONY : src/bs-logic/main.c.s
+src/bs-logic/inputtest.c.s:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/inputtest.c.s
+.PHONY : src/bs-logic/inputtest.c.s
 
 src/driver/uart_driver.o: src/driver/uart_driver.c.o
 
@@ -243,9 +243,9 @@ help:
 	@echo "... src/bs-logic/Interrupt_Handler.o"
 	@echo "... src/bs-logic/Interrupt_Handler.i"
 	@echo "... src/bs-logic/Interrupt_Handler.s"
-	@echo "... src/bs-logic/main.o"
-	@echo "... src/bs-logic/main.i"
-	@echo "... src/bs-logic/main.s"
+	@echo "... src/bs-logic/inputtest.o"
+	@echo "... src/bs-logic/inputtest.i"
+	@echo "... src/bs-logic/inputtest.s"
 	@echo "... src/driver/uart_driver.o"
 	@echo "... src/driver/uart_driver.i"
 	@echo "... src/driver/uart_driver.s"

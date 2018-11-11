@@ -8,4 +8,4 @@ add_executable(Bs_Prak
         src/include/uart_driver.h
         src/lib/kprintf.c
         src/bs-logic/Interrupt_Handler.c
-        src/include/Interrupt_Handler.h src/bs-logic/main.c src/include/kprintf.h)
+        src/include/Interrupt_Handler.h src/bs-logic/inputtest.c src/include/kprintf.h src/include/inputtest.h)

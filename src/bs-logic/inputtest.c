@@ -2,7 +2,23 @@
 #include "../include/kprintf.h"
 #include "../include/Interrupt_Handler.h"
 
-void main(){
+
+
+void force_interrupts (char c) {
+    switch (c) {
+        case 's':
+            asm("swi 99");
+            break;
+        case 'a':
+            force_dataab();
+            break;
+        case 'u':
+            asm("udf");
+            break;
+    }
+}
+
+void inputtest(){
     kprintf("Testbegin\n\r");
     kprintf("%%c: b wird ausgegeben: %c\n\r", 'b');
     kprintf("%%s: Die Welt %s", "ist schön!\n\r");
@@ -19,6 +35,7 @@ void main(){
         char c = uart_receive();
         if (c) {
             kprintf("you pressed: %c\n\r", c);
+            force_interrupts(c);
         }
     }
 }
