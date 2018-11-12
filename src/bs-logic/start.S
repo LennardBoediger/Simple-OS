@@ -21,10 +21,10 @@ _bsprak:
     bl      INIT_STACK
     bl      enable_ext_interrupts
     bl      initialize_timer
-
 /* lößt prefetch abort aus */
 //    bkpt
-
+    loop:
+    b loop
 	bl      inputtest
 
 .Lend:

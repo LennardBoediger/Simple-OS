@@ -4,12 +4,12 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/bs-logic/Interrupt_Handler.c" "/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o"
-  "/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/bs-logic/inputtest.c" "/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/src/bs-logic/inputtest.c.o"
-  "/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/driver/uart_driver.c" "/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.o"
-  "/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/lib/kprintf.c" "/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.o"
+  "/Users/Lennard/Github/Bs-Prak/src/bs-logic/Interrupt_Handler.c" "/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o"
+  "/Users/Lennard/Github/Bs-Prak/src/bs-logic/inputtest.c" "/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/src/bs-logic/inputtest.c.o"
+  "/Users/Lennard/Github/Bs-Prak/src/driver/uart_driver.c" "/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.o"
+  "/Users/Lennard/Github/Bs-Prak/src/lib/kprintf.c" "/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.o"
   )
-set(CMAKE_C_COMPILER_ID "GNU")
+set(CMAKE_C_COMPILER_ID "AppleClang")
 
 # The include file search paths:
 set(CMAKE_C_TARGET_INCLUDE_PATH
