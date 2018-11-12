@@ -15,3 +15,12 @@ Bei RESET: Nur an Anfang des Programms springen
 PRIORITÄT: Reset, Data_abort, FIQ, IRQ, Pref_abort, undef/SWI
 ?? Wie stellt man Prioritätskategorie fest?
 Bei undef hatten wir 10011011, sollte es nicht 0 am Anfang sein?
+
+
+Ausgabe der sp
+sp_und
+sp_usr
+nicht extra in den Modus springen
+
+timer_irq
+trampolin

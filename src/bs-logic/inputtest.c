@@ -35,6 +35,7 @@ void inputtest(){
         char c = uart_receive();
         if (c) {
             kprintf("you pressed: %c\n\r", c);
+            kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
             force_interrupts(c);
         }
     }

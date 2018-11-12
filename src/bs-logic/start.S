@@ -20,7 +20,7 @@ _bsprak:
     bl      _INIT_IVT
     bl      INIT_STACK
     bl      enable_ext_interrupts
-    bl      watchdog
+    bl      initialize_timer
 
 /* lößt prefetch abort aus */
 //    bkpt

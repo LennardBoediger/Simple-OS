@@ -57,6 +57,7 @@ undef_tr:
     mov r10, #30
     mov r11, #31
     mov r12, #32
+    //    add lr, lr, #0      //undef befehl überspringen
     push {r0-r15}        //Alles pushen für Registerschnappschuss
 /* Printfunktion-Aufruf */
     mov r0, sp
@@ -65,9 +66,8 @@ undef_tr:
     bl undef
 /* Wechsel in zuvorigen Modus */
     pop {r0-r12}        //register zurück schreiben 0-14
-    add sp, #4          //sp überspringen
+    add sp, #4          //sp im Stack überspringen
     pop {lr}
-//    add lr, lr, #0      //undef befehl überspringen
     add sp, #4          //PC im stack überspringen
     movs pc, lr
 
@@ -86,6 +86,7 @@ swi_tr:
     mov r10, #30
     mov r11, #31
     mov r12, #32
+    add lr, lr, #0      //bei #0 hängts sich auf, bei #4 springt es zu "Testbegin (...)", #8 "%b: b wird ausgegeben (...)"
     push {r0-r15}        //Alles pushen für Registerschnappschuss
 /* Printfunktion-Aufruf */
     mov r0, sp
@@ -96,7 +97,6 @@ swi_tr:
     pop {r0-r12}        //register zurück schreiben 0-14
     add sp, #4          //sp überspringen
     pop {lr}
-    add lr, lr, #0      //bei #0 hängts sich auf, bei #4 springt es zu "Testbegin (...)", #8 "%b: b wird ausgegeben (...)"
     add sp, #4          //PC im stack überspringen
     movs pc, lr
 
@@ -115,6 +115,7 @@ prefab_tr:
     mov r10, #4
     mov r11, #4
     mov r12, #4
+    sub lr, lr, #0      //TODO: wäre #4 um prefab-befehl zu wiederholen
     push {r0-r15}        //Alles pushen für Registerschnappschuss
 /* Printfunktion-Aufruf */
     mov r0, sp
@@ -125,7 +126,6 @@ prefab_tr:
     pop {r0-r12}        //register zurück schreiben 0-14
     add sp, #4          //sp überspringen
     pop {lr}
-    sub lr, lr, #0      //TODO: wäre #4 um prefab-befehl zu wiederholen
     add sp, #4          //PC im stack überspringen
     movs pc, lr
 
@@ -143,6 +143,7 @@ dataab_tr:
     mov r10, #5
     mov r11, #5
     mov r12, #5
+    sub lr, lr, #4      //TODO: wäre #8 um dataab-befehl zu wiederholen
     push {r0-r15}        //Alles pushen für Registerschnappschuss
 /* Printfunktion-Aufruf */
     mov r0, sp
@@ -153,7 +154,6 @@ dataab_tr:
     pop {r0-r12}        //register zurück schreiben 0-14
     add sp, #4          //sp überspringen
     pop {lr}
-    sub lr, lr, #4      //TODO: wäre #8 um dataab-befehl zu wiederholen
     add sp, #4          //PC im stack überspringen
     movs pc, lr
 
@@ -172,6 +172,7 @@ irq_tr:
     mov r10, #1
     mov r11, #0
     mov r12, #1
+    sub lr, lr, #4      //zu letzten unausgeführten Befehl
     push {r0-r15}        //Alles pushen für Registerschnappschuss
 /* Printfunktion-Aufruf */
     mov r0, sp
@@ -182,8 +183,8 @@ irq_tr:
     pop {r0-r12}        //register zurück schreiben 0-14
     add sp, #4          //sp überspringen
     pop {lr}
-    sub lr, lr, #8      //zu letzten unausgeführten Befehl
     add sp, #4          //PC im stack überspringen
+    msr cpsr_c, #0x13           //wieder in supervisor + IRQ & FIQ mode 0
     movs pc, lr
 
 

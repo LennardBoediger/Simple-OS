@@ -7,7 +7,10 @@
 
 void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* interrupt_name);
 
-void watchdog();
+static volatile
+struct timer* const timer_reg;
+
+void initialize_timer();
 
 void reset(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
 
@@ -32,10 +35,17 @@ struct timer {
     uint32_t PREDIVIDER;
 };
 
-struct en_basic_irq {
+struct arm_interrupt {
     uint32_t IRQ_BASIC_PENDING;
-    uint32_t unused[5];
+    uint32_t IRQ_PENDING_1;
+    uint32_t IRQ_PENDING_2;
+    uint32_t FIQ_CONTROL;
+    uint32_t EN_IRQ_1;
+    uint32_t EN_IRQ_2;
     uint32_t EN_BASIC_IRQS;
+    uint32_t DIS_IRQ_1;
+    uint32_t DIS_IRQ_2;
+    uint32_t DIS_BASIC_IRQS;
 };
 
 #endif //BS_PRAK_INTERRUPT_HANDLER_H
