@@ -184,7 +184,7 @@ irq_tr:
     add sp, #4          //sp überspringen
     pop {lr}
     add sp, #4          //PC im stack überspringen
-    msr cpsr_c, #0x13           //wieder in supervisor + IRQ & FIQ mode 0
+//    msr cpsr_c, #0x13           //wieder in supervisor + IRQ & FIQ mode 0
     movs pc, lr
 
 

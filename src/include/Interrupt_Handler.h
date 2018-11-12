@@ -12,6 +12,8 @@ struct timer* const timer_reg;
 
 void initialize_timer();
 
+void print_timerval(uint32_t cpsr);
+
 void reset(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
 
 void undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);

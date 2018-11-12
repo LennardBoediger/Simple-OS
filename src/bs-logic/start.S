@@ -19,14 +19,16 @@ _bsprak:
 	/* Einsprung ins Hauptprogramm */
     bl      _INIT_IVT
     bl      INIT_STACK
+    msr     cpsr_c, #0x1F           //sys 00011111 TODO: WIESO???
     bl      enable_ext_interrupts
     bl      initialize_timer
 /* lößt prefetch abort aus */
 //    bkpt
     //loop:
     //b loop
-
-	bl      inputtest
+    mrs     r0, cpsr
+    bl      print_timerval
+//	bl      inputtest
 
 .Lend:
 	b       .Lend

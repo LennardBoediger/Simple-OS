@@ -1,6 +1,7 @@
 #include <math.h>
 #include "../include/Interrupt_Handler.h"
 #include "../include/kprintf.h"
+#include "../include/uart_driver.h"
 
 /** ab hier defines für timer*/
 #define TIMER_BASE (0x7E00B000 - 0x3F000000 + 0x400) //timerbaseadress minus MMU-offset
@@ -11,7 +12,7 @@
 #define TIMER_PRESCALE_LSB_SHIFT 2
 #define TIMER_32BIT_COUNTER 1
 #define IRQ_TIMER_SHIFT 0
-#define IRQ_UART_SHIFT 52
+#define IRQ_UART_SHIFT 57
 #define PREDIVIDER_VALUE 249 /* +1 = 250*/
 #define TIMER_VALUE 5000000
 
@@ -25,27 +26,9 @@ void initialize_timer() {
     timer_reg->CONTROL |= ((1 << TIMER_INTERRUPT_EN_SHIFT) | (1 << TIMER_32BIT_COUNTER));
     timer_reg->CONTROL |= (1 << TIMER_EN_SHIFT); /* Timer starten */
     timer_reg->LOAD = TIMER_VALUE;
-    kprintf("Controlreg: %x \n\r", timer_reg->CONTROL);
+    kprintf("INITIALIZE TIMER\n\r Controlreg: %x \n\r", timer_reg->CONTROL);
     kprintf("Predivider: %x \n\r", timer_reg->PREDIVIDER);
     kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-
 };
 
 void clear_timer() {
@@ -53,9 +36,6 @@ void clear_timer() {
     kprintf("\n\r-----------clear_timer-------------\n\r");
     kprintf("Controlreg: %x \n\r", timer_reg->CONTROL);
     kprintf("Predivider: %x \n\r", timer_reg->PREDIVIDER);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
     kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
     kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
     kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
@@ -74,7 +54,8 @@ struct arm_interrupt* const arm_interrupt_reg = (struct arm_interrupt*) (IRQ_FIQ
 void enable_ext_interrupts () {
     arm_interrupt_reg->EN_BASIC_IRQS = (1 << IRQ_TIMER_SHIFT);
     arm_interrupt_reg->EN_IRQ_2 = (1 << IRQ_UART_SHIFT);
-    kprintf("Enable_ext_Interrupts");
+    en_uart_interrupt();
+    kprintf("\n\rEnable_ext_Interrupts\n\r");
 }
 
 void recognize_irq_interrupt() {
@@ -85,6 +66,11 @@ void recognize_irq_interrupt() {
     if ((arm_interrupt_reg->IRQ_PENDING_2 & (1 << IRQ_UART_SHIFT)) == 1) {
         kprintf("UART TASTENDRUCK!!!");
     }
+}
+
+void print_timerval(uint32_t cpsr) {
+    kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
+    kprintf("CPSR: %x", cpsr);
 }
 
 void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* interrupt_name){
@@ -104,8 +90,8 @@ void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* i
     }
 
     kprintf(">>> Aktuelle Statusregister (SPSR im aktuellen Modus) <<<\n\r");
-    kprintf("CPSR: %u\n\r", cpsr);
-    kprintf("SPSR: %u\n\r", spsr);
+    kprintf("CPSR: %x\n\r", cpsr);
+    kprintf("SPSR: %x\n\r", spsr);
     for (i = 0; i < 47; ++i) {
         kprintf("#");
     }
@@ -137,7 +123,6 @@ void dataab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
 void irq(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     print_interrupt(stackadress, cpsr, spsr, "TIMER INTERRUPT");
     recognize_irq_interrupt();
-//    initialize_timer();
 }
 
 void fiq(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
