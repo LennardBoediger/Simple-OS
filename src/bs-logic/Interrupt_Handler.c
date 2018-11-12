@@ -16,8 +16,7 @@
 #define TIMER_VALUE 5000000
 
 
-static volatile
-struct timer* const timer_reg = (struct timer*) TIMER_BASE;
+static volatile struct timer* const timer_reg = (struct timer*) TIMER_BASE;
 
 /* Setzt/-erneut initialize_timer-timer auf 1 sec mit Interrupt */
 void initialize_timer() {
@@ -51,7 +50,7 @@ void initialize_timer() {
 
 void clear_timer() {
     timer_reg->IRQ_CLEAR_ACK = 0x1; // TODO:has to happen
-    kprintf("\n\r-----------NOT clear_timer-------------\n\r");
+    kprintf("\n\r-----------clear_timer-------------\n\r");
     kprintf("Controlreg: %x \n\r", timer_reg->CONTROL);
     kprintf("Predivider: %x \n\r", timer_reg->PREDIVIDER);
     kprintf("Timervalue: %i\n\r",timer_reg->VALUE);

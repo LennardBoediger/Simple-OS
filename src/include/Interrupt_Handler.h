@@ -26,7 +26,7 @@ void irq(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
 
 void fiq(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
 
-struct timer {
+static volatile struct timer {
     uint32_t LOAD;
     uint32_t VALUE;
     uint32_t CONTROL;

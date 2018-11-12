@@ -23,8 +23,9 @@ _bsprak:
     bl      initialize_timer
 /* lößt prefetch abort aus */
 //    bkpt
-    loop:
-    b loop
+    //loop:
+    //b loop
+
 	bl      inputtest
 
 .Lend:
