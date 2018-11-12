@@ -13,7 +13,7 @@
 #define IRQ_TIMER_SHIFT 0
 #define IRQ_UART_SHIFT 52
 #define PREDIVIDER_VALUE 249 /* +1 = 250*/
-#define TIMER_VALUE 5000//000
+#define TIMER_VALUE 5000000
 
 
 static volatile
@@ -50,8 +50,8 @@ void initialize_timer() {
 };
 
 void clear_timer() {
-    timer_reg->IRQ_CLEAR_ACK = 0x1;
-    kprintf("\n\rclear_timer\n\r");
+    timer_reg->IRQ_CLEAR_ACK = 0x1; // TODO:has to happen
+    kprintf("\n\r-----------NOT clear_timer-------------\n\r");
     kprintf("Controlreg: %x \n\r", timer_reg->CONTROL);
     kprintf("Predivider: %x \n\r", timer_reg->PREDIVIDER);
     kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
