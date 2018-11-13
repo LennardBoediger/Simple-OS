@@ -28,6 +28,7 @@ OBJ += ./driver/uart_driver.o
 OBJ += ./lib/kprintf.o
 OBJ += ./lib/regcheck.o
 OBJ += ./lib/regcheck_asm.o
+OBJ += ./lib/Interrupt_printer.o
 
 
 

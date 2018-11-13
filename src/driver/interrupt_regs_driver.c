@@ -51,9 +51,9 @@ void clear_timer() {
 }
 
 /* aktiviert Timer- und UART-Interrupts*/
-void enable_ext_interrupts () {
-    arm_interrupt_reg->EN_BASIC_IRQS = (1 << IRQ_TIMER_SHIFT);
-    arm_interrupt_reg->EN_IRQ_2 = (1 << IRQ_UART_SHIFT);
+void enable_IRQ_interrupts() {
+    arm_interrupt_reg->EN_BASIC_IRQS = (1 << IRQ_TIMER_SHIFT);  // 0
+    arm_interrupt_reg->EN_IRQ_2 = (1 << IRQ_UART_SHIFT);        // 25
     en_uart_interrupt();
     kprintf("\n\rEnable_ext_Interrupts\n\r");
 }

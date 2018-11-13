@@ -38,7 +38,7 @@ struct arm_interrupt {
 
 void initialize_timer();
 void clear_timer();
-void enable_ext_interrupts ();
+void enable_IRQ_interrupts();
 void recognize_irq_interrupt();
 
 #endif //BS_PRAK_INTERRUPT_REGS_DRIVER_H
