@@ -3,6 +3,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.o"
   "CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o"
   "CMakeFiles/Bs_Prak.dir/src/bs-logic/inputtest.c.o"
+  "CMakeFiles/Bs_Prak.dir/src/driver/interrupt_regs_driver.c.o"
   "Bs_Prak.pdb"
   "Bs_Prak"
 )

@@ -6,6 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_C
   "/Users/Lennard/Github/Bs-Prak/src/bs-logic/Interrupt_Handler.c" "/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/src/bs-logic/Interrupt_Handler.c.o"
   "/Users/Lennard/Github/Bs-Prak/src/bs-logic/inputtest.c" "/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/src/bs-logic/inputtest.c.o"
+  "/Users/Lennard/Github/Bs-Prak/src/driver/interrupt_regs_driver.c" "/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/src/driver/interrupt_regs_driver.c.o"
   "/Users/Lennard/Github/Bs-Prak/src/driver/uart_driver.c" "/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.o"
   "/Users/Lennard/Github/Bs-Prak/src/lib/kprintf.c" "/Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.o"
   )

@@ -24,11 +24,9 @@ _bsprak:
     bl      initialize_timer
 /* lößt prefetch abort aus */
 //    bkpt
-    //loop:
-    //b loop
     mrs     r0, cpsr
     bl      print_timerval
-//	bl      inputtest
+	bl      inputtest
 
 .Lend:
 	b       .Lend

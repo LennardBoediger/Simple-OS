@@ -30,11 +30,11 @@ void uart_transmit(char to_send){
 }
 
 void en_uart_interrupt() {
-    uart_reg->CONTROL_REG |= (1 << TXE);
-    uart_reg->CONTROL_REG |= (1 << RXE);
-    uart_reg->CONTROL_REG |= (1 << 0);
+      uart_reg->CONTROL_REG |= (1 << TXE);
+      uart_reg->CONTROL_REG |= (1 << RXE);
+ //   uart_reg->CONTROL_REG |= (1 << 0);
     uart_reg->IMSC |= (1 << RTIM_SHIFT);
-    check_en_uart_interrupt();
+ //   check_en_uart_interrupt();
 }
 
 void check_en_uart_interrupt() {

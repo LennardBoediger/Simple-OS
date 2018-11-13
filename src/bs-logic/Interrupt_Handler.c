@@ -1,4 +1,3 @@
-#include <math.h>
 #include "../include/kprintf.h"
 #include "../include/interrupt_regs_driver.h"
 
@@ -14,13 +13,14 @@ void print_timerval(uint32_t cpsr) {
     kprintf("CPSR: %x", cpsr);
 }
 
-void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* interrupt_name){
+void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* interrupt_name, int32_t pc_offset){
     kprintf("\n\r");
     int i;
     for (i = 0; i < 47; ++i) {
         kprintf("#");
     }
-    kprintf("\n\r%s\n\r",interrupt_name);
+    //PC wird bei Ausnahme nach LR geschrieben + wegen pipline muss offset bechatet werden
+    kprintf("\n\r%s an der Adresse %x\n\r",interrupt_name, *(int*) (stackadress+14*4) + pc_offset);
 
     //DFSR auslesen und Ausgabe mit switch-case verschönern
 
@@ -41,31 +41,31 @@ void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* i
 
 
 void reset(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-    print_interrupt(stackadress, cpsr, spsr, "RESET");
+    print_interrupt(stackadress, cpsr, spsr, "RESET", 0);
 }
 
 void undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-    print_interrupt(stackadress, cpsr, spsr, "UNDEFINED");
+    print_interrupt(stackadress, cpsr, spsr, "UNDEFINED", -4);
 }
 
 void swi(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-    print_interrupt(stackadress, cpsr, spsr, "SOFTWARE INTERRUPT");
+    print_interrupt(stackadress, cpsr, spsr, "SOFTWARE INTERRUPT", -4);
 }
 
 
 void prefab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-    print_interrupt(stackadress, cpsr, spsr, "PREFETCH ABORT");
+    print_interrupt(stackadress, cpsr, spsr, "PREFETCH ABORT", -4);
 }
 
 void dataab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-    print_interrupt(stackadress, cpsr, spsr, "DATA ABORT");
+    print_interrupt(stackadress, cpsr, spsr, "DATA ABORT", -8);
 }
 
 void irq(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-    print_interrupt(stackadress, cpsr, spsr, "TIMER INTERRUPT");
+    print_interrupt(stackadress, cpsr, spsr, "TIMER INTERRUPT", -8);
     recognize_irq_interrupt();
 }
 
 void fiq(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-    print_interrupt(stackadress, cpsr, spsr, "DATA ABORT");
+    print_interrupt(stackadress, cpsr, spsr, "DATA ABORT", -8);
 }

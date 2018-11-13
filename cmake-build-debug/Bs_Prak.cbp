@@ -88,13 +88,19 @@
 		<Unit filename="/Users/Lennard/Github/Bs-Prak/src/bs-logic/inputtest.c">
 			<Option target="Bs_Prak"/>
 		</Unit>
+		<Unit filename="/Users/Lennard/Github/Bs-Prak/src/driver/interrupt_regs_driver.c">
+			<Option target="Bs_Prak"/>
+		</Unit>
 		<Unit filename="/Users/Lennard/Github/Bs-Prak/src/driver/uart_driver.c">
 			<Option target="Bs_Prak"/>
 		</Unit>
 		<Unit filename="/Users/Lennard/Github/Bs-Prak/src/include/Interrupt_Handler.h">
 			<Option target="Bs_Prak"/>
 		</Unit>
-		<Unit filename="/Users/Lennard/Github/Bs-Prak/src/include/inputtest.h">
+		<Unit filename="/Users/Lennard/Github/Bs-Prak/src/include/f_dataab.h">
+			<Option target="Bs_Prak"/>
+		</Unit>
+		<Unit filename="/Users/Lennard/Github/Bs-Prak/src/include/interrupt_regs_driver.h">
 			<Option target="Bs_Prak"/>
 		</Unit>
 		<Unit filename="/Users/Lennard/Github/Bs-Prak/src/include/kprintf.h">

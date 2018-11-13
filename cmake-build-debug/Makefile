@@ -177,6 +177,33 @@ src/bs-logic/inputtest.c.s:
 	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/inputtest.c.s
 .PHONY : src/bs-logic/inputtest.c.s
 
+src/driver/interrupt_regs_driver.o: src/driver/interrupt_regs_driver.c.o
+
+.PHONY : src/driver/interrupt_regs_driver.o
+
+# target to build an object file
+src/driver/interrupt_regs_driver.c.o:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/driver/interrupt_regs_driver.c.o
+.PHONY : src/driver/interrupt_regs_driver.c.o
+
+src/driver/interrupt_regs_driver.i: src/driver/interrupt_regs_driver.c.i
+
+.PHONY : src/driver/interrupt_regs_driver.i
+
+# target to preprocess a source file
+src/driver/interrupt_regs_driver.c.i:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/driver/interrupt_regs_driver.c.i
+.PHONY : src/driver/interrupt_regs_driver.c.i
+
+src/driver/interrupt_regs_driver.s: src/driver/interrupt_regs_driver.c.s
+
+.PHONY : src/driver/interrupt_regs_driver.s
+
+# target to generate assembly for a file
+src/driver/interrupt_regs_driver.c.s:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/driver/interrupt_regs_driver.c.s
+.PHONY : src/driver/interrupt_regs_driver.c.s
+
 src/driver/uart_driver.o: src/driver/uart_driver.c.o
 
 .PHONY : src/driver/uart_driver.o
@@ -246,6 +273,9 @@ help:
 	@echo "... src/bs-logic/inputtest.o"
 	@echo "... src/bs-logic/inputtest.i"
 	@echo "... src/bs-logic/inputtest.s"
+	@echo "... src/driver/interrupt_regs_driver.o"
+	@echo "... src/driver/interrupt_regs_driver.i"
+	@echo "... src/driver/interrupt_regs_driver.s"
 	@echo "... src/driver/uart_driver.o"
 	@echo "... src/driver/uart_driver.i"
 	@echo "... src/driver/uart_driver.s"
