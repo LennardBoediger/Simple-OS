@@ -10,7 +10,7 @@ INIT_STACK:
     ldr sp, =#(128*1024*1021)
     msr cpsr_c, #0xD3           //supervisor 11010011
     ldr sp, =#(128*1024*1022)
-    msr cpsr_c, #0xD2           //IRQ 11010010b
+    msr cpsr_c, #0xD2           //IRQ 11010010
     ldr sp, =#(128*1024*1023)
     msr cpsr_c, #0xD1           //FIQ 11010001
     ldr sp, =#(128*1024*1024)

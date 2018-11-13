@@ -11,42 +11,11 @@ void sent_string(char* strg){
 }
 
 char conv_to_ASCII(uint8_t to_hex) {
-    switch (to_hex) {
-        case 0:
-            return '0';
-        case 1:
-            return '1';
-        case 2:
-            return '2';
-        case 3:
-            return '3';
-        case 4:
-            return '4';
-        case 5:
-            return '5';
-        case 6:
-            return '6';
-        case 7:
-            return '7';
-        case 8:
-            return '8';
-        case 9:
-            return '9';
-        case 10:
-            return 'A';
-        case 11:
-            return 'B';
-        case 12:
-            return 'C';
-        case 13:
-            return 'D';
-        case 14:
-            return 'E';
-        case 15:
-            return 'F';
-        default:
-            return '!';
+    char conv[] = "0123456789ABCDEF";
+    if (to_hex > 15) {
+        return '?';
     }
+    return conv[to_hex];
 }
 
 void sent_hex(uint32_t num) {
@@ -60,7 +29,6 @@ void sent_hex(uint32_t num) {
     }
     i--;
     sent_string((char*) "0x");
-    /* (TODO nochmal drüberschauen) wenn num = 0 */
     if (i == (-1)) {
         uart_transmit('0');
     }
@@ -86,7 +54,6 @@ void sent_dez(int32_t num) {
         uart_transmit('-');
     }
     i--;
-    /* (TODO nochmal drüberschauen) wenn num = 0 */
     if (i == (-1)) {
         uart_transmit('0');
     }
@@ -107,7 +74,6 @@ void sent_udez(uint32_t num) {
         temp_num = temp_num / 10;
     }
     i--;
-    /* (TODO nochmal drüberschauen) wenn num = 0 */
     if (i == (-1)) {
         uart_transmit('0');
     }

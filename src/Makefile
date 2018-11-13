@@ -18,12 +18,13 @@
 LSCRIPT = ./bs-logic/kernel.lds
 OBJ = ./bs-logic/inputtest.o
 OBJ += ./bs-logic/start.o
-OBJ += ./lib/kprintf.o
-OBJ += ./driver/uart_driver.o
 OBJ += ./bs-logic/Interrupt_Handler.o
 OBJ += ./bs-logic/Interrupt_Vector_Table.o
 OBJ += ./bs-logic/Stack.o
 OBJ += ./bs-logic/f_dataab.o
+OBJ += ./driver/interrupt_regs_driver.o
+OBJ += ./driver/uart_driver.o
+OBJ += ./lib/kprintf.o
 
 
 
