@@ -2,6 +2,7 @@
 #include "../include/kprintf.h"
 #include "../include/Interrupt_Handler.h"
 #include "../include/dataab_helper.h"
+#include "../include/regcheck.h"
 
 
 
@@ -10,17 +11,18 @@ void force_interrupts (char c) {
         case 's':
             asm("swi 99");
             break;
-/*        case 'a':
+        case 'a':
             force_dataab();
             break;
-*/        case 'u':
+        case 'u':
             asm("udf");
             break;
+        case 'r':
+            register_checker();
     }
 }
-
-void inputtest(){
-   kprintf("Testbegin\n\r");
+void test_kprintf(){
+    kprintf("Testbegin\n\r");
     kprintf("%%c: b wird ausgegeben: %c\n\r", 'b');
     kprintf("%%s: Die Welt %s", "ist schön!\n\r");
     kprintf("%%x: 47096 hexadezimal gleich %x\n\r", 47096);
@@ -30,8 +32,15 @@ void inputtest(){
     char a = '4';
     kprintf("%%p: char a befindet sich hier: %p\n\r", &a);
     kprintf("Jetzt freie Eingabe möglich:\n\r");
+}
 
-
+void inputtest(){
+   kprintf("Press S for Software Interrupt \n\r");
+   kprintf("Press D for Data Abort \n\r");
+   kprintf("Press U for Undefined Instruction \n\r");
+   kprintf("Press C for Register Checker  \n\r");
+   kprintf("Press E for interaktive Unterprogramm \n\r");
+   //kprintf("Press D to toggle IRQ-Debug Mode \n\r");
 
     while (1){
         char c = uart_receive();

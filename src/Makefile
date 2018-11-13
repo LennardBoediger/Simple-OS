@@ -26,6 +26,8 @@ OBJ += ./bs-logic/mode_reg_helper.o
 OBJ += ./driver/interrupt_regs_driver.o
 OBJ += ./driver/uart_driver.o
 OBJ += ./lib/kprintf.o
+OBJ += ./lib/regcheck.o
+OBJ += ./lib/regcheck_asm.o
 
 
 

@@ -8,7 +8,35 @@
 #define TIMER_PRESCALE_MSB_SHIFT 3
 #define TIMER_PRESCALE_LSB_SHIFT 2
 #define WNR_BIT_SHIFT 11
+void print_psr_mode(uint32_t _psr){
+    switch (_psr % 32){
+        case 16:
+            kprintf(" User");
+            break;
+        case 17:
+            kprintf(" FIQ");
+            break;
+        case 18:
+            kprintf(" IRQ");
+            break;
+        case 19:
+            kprintf(" Supervisor");
+            break;
+        case 23:
+            kprintf(" Abort");
+            break;
+        case 27:
+            kprintf(" Undefined");
+            break;
+        case 31:
+            kprintf(" System");
+            break;
+        default:
+            kprintf(" INVALID MODE!!!!!");
+            break;
 
+    }
+}
 void print_psr_bits(uint32_t _psr) {
 
     char bits[] = {'N','Z','C','V','_','I','F','T','\0'}; //0
@@ -37,26 +65,31 @@ void print_mode_reg(){
     tmp_sp = get_sp_supervisor();
     kprintf("Supervisor:  %x %x ", tmp_lr, tmp_sp);
     print_psr_bits(get_spsr_supervisor());
+    print_psr_mode(get_spsr_supervisor());
     kprintf("\n\r");
     tmp_lr = get_lr_abort();
     tmp_sp = get_sp_abort();
     kprintf("Abort:       %x %x ", tmp_lr, tmp_sp);
     print_psr_bits(get_spsr_abort());
+    print_psr_mode(get_spsr_abort());
     kprintf("\n\r");
     tmp_lr = get_lr_FIQ();
     tmp_sp = get_sp_FIQ();
     kprintf("FIQ:         %x %x ", tmp_lr, tmp_sp);
     print_psr_bits(get_spsr_FIQ());
+    print_psr_mode(get_spsr_FIQ());
     kprintf("\n\r");
     tmp_lr = get_lr_IRQ();
     tmp_sp = get_sp_IRQ();
     kprintf("IRQ:         %x %x ", tmp_lr, tmp_sp);
     print_psr_bits(get_spsr_IRQ());
+    print_psr_mode(get_spsr_IRQ());
     kprintf("\n\r");
     tmp_lr = get_lr_undefined();
     tmp_sp = get_sp_undefined();
     kprintf("Undefined:   %x %x ", tmp_lr, tmp_sp);
     print_psr_bits(get_spsr_undefined());
+    print_psr_mode(get_spsr_undefined());
     kprintf("\n\r");
 }
 
@@ -93,11 +126,11 @@ void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* i
     kprintf("\n\r>>> Aktuelle Statusregister (SPSR im aktuellen Modus) <<<\n\r");
     kprintf("CPSR: ");
     print_psr_bits(cpsr);
-//    print_psr_mode(cpsr);
+    print_psr_mode(cpsr);
     kprintf(" %x\n\r", cpsr);
     kprintf("SPSR: ");
     print_psr_bits(spsr);
-//    print_psr_mode(spsr);
+    print_psr_mode(spsr);
     kprintf(" %x\n\r", spsr);
     for (i = 0; i < 47; ++i) {
         kprintf("#");
