@@ -10,10 +10,10 @@ void force_interrupts (char c) {
         case 's':
             asm("swi 99");
             break;
-        case 'a':
+/*        case 'a':
             force_dataab();
             break;
-        case 'u':
+*/        case 'u':
             asm("udf");
             break;
     }

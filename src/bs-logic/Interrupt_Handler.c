@@ -1,5 +1,7 @@
 #include "../include/kprintf.h"
 #include "../include/interrupt_regs_driver.h"
+#include "../include/mode_reg_helper.h"
+#include "../include/dataab_helper.h"
 
 /** ab hier defines für timer*/
 
@@ -12,42 +14,50 @@ void print_psr_bits(uint32_t _psr) {
     char bits[] = {'N','Z','C','V','_','I','F','T','\0'}; //0
     int i;
     for (i = 0; i <=3; ++i) {
-        if (((_psr & (1 << 31-i)) >> (31-i)) == 0){
+        if (((_psr & (1 << (31-i))) >> (31-i)) == 0){
             bits[i]='_';
         }
     }
     for (i = 5; i <=7; ++i) {
-        if (((_psr & (1 << 12-i)) >> (12-i)) == 0){
+        if (((_psr & (1 << (12-i))) >> (12-i)) == 0){
             bits[i]='_';
         }
     }
-/*    int i;
-    //NZCV-Bits
-    for (i = 31; i >= 28; i--) {
-        //if (((_psr & (1 << i)) >> i) == 0) {
-            bits[i - 24] = '_';
-        //}
-    }
-    //IFT-Bits
-    for (i = 7; i >= 5; i--) {
-       // if (((_psr & (1 << i)) >> i) == 0) {
-            bits[i-5] = '_';
-       // }
-    }
-*/    kprintf("%s", bits);
+    kprintf("%s", bits);
 }
 
 void print_mode_reg(){
-    kprintf(">>> Aktuelle modusspezifische Register <<<\n\r");
-    kprintf("             LR         SP          SPSR\n\r");
-    uint32_t tmp_lr,tmp_sp, tmp_spsr;
-    tmp_lr = get_lr_sys();
-    tmp_sp = get_sp_sys();
+    kprintf("\n\r>>> Aktuelle modusspezifische Register <<<\n\r");
+    kprintf("             LR         SP         SPSR\n\r");
+    uint32_t tmp_lr,tmp_sp;
+    tmp_lr = get_lr_system();
+    tmp_sp = get_sp_system();
     kprintf("User/System: %x %x\n\r", tmp_lr, tmp_sp);
-    tmp_lr = get_lr_svc();
-    tmp_sp = get_sp_svc();
-    tmp_spsr = get_spsr_svc();
-    kprintf("Supervisor:  %x %x %x\n\r", tmp_lr, tmp_sp, tmp_spsr);
+    tmp_lr = get_lr_supervisor();
+    tmp_sp = get_sp_supervisor();
+    kprintf("Supervisor:  %x %x ", tmp_lr, tmp_sp);
+    print_psr_bits(get_spsr_supervisor());
+    kprintf("\n\r");
+    tmp_lr = get_lr_abort();
+    tmp_sp = get_sp_abort();
+    kprintf("Abort:       %x %x ", tmp_lr, tmp_sp);
+    print_psr_bits(get_spsr_abort());
+    kprintf("\n\r");
+    tmp_lr = get_lr_FIQ();
+    tmp_sp = get_sp_FIQ();
+    kprintf("FIQ:         %x %x ", tmp_lr, tmp_sp);
+    print_psr_bits(get_spsr_FIQ());
+    kprintf("\n\r");
+    tmp_lr = get_lr_IRQ();
+    tmp_sp = get_sp_IRQ();
+    kprintf("IRQ:         %x %x ", tmp_lr, tmp_sp);
+    print_psr_bits(get_spsr_IRQ());
+    kprintf("\n\r");
+    tmp_lr = get_lr_undefined();
+    tmp_sp = get_sp_undefined();
+    kprintf("Undefined:   %x %x ", tmp_lr, tmp_sp);
+    print_psr_bits(get_spsr_undefined());
+    kprintf("\n\r");
 }
 
 void print_timerval(uint32_t cpsr) {
@@ -76,11 +86,11 @@ void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* i
 
     kprintf(">>> Registerschnappschuss (aktueller Modus) <<<\n\r");
     for (i = 0; i <= 7; i++) {
-        kprintf("R%u: %x\t", i, *(int*) (stackadress+i*4));
+        kprintf("R%u: %x\t    ", i, *(int*) (stackadress+i*4));
         kprintf("R%u: %x\n\r", i+8, *(int*) (stackadress+(i+8)*4));
     }
 
-    kprintf(">>> Aktuelle Statusregister (SPSR im aktuellen Modus) <<<\n\r");
+    kprintf("\n\r>>> Aktuelle Statusregister (SPSR im aktuellen Modus) <<<\n\r");
     kprintf("CPSR: ");
     print_psr_bits(cpsr);
 //    print_psr_mode(cpsr);

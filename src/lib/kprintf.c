@@ -28,8 +28,10 @@ void sent_hex(uint32_t num) {
         temp_num = temp_num / 16;
     }
     i--;
+
     sent_string((char*) "0x");
-    if (i == (-1)) {
+    int8_t nullen;
+    for (nullen = 7; nullen > i; nullen--) {
         uart_transmit('0');
     }
     while (i >= 0) {
