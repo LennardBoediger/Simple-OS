@@ -9,6 +9,7 @@ void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* i
 
 
 void print_timerval(uint32_t cpsr);
+void print_data_abort_reason();
 
 void reset(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
 void undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
