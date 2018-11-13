@@ -7,6 +7,48 @@
 #define TIMER_PRESCALE_LSB_SHIFT 2
 #define WNR_BIT_SHIFT 11
 
+void print_psr_bits(uint32_t _psr) {
+
+    char bits[] = {'N','Z','C','V','_','I','F','T','\0'}; //0
+    int i;
+    for (i = 0; i <=3; ++i) {
+        if (((_psr & (1 << 31-i)) >> (31-i)) == 0){
+            bits[i]='_';
+        }
+    }
+    for (i = 5; i <=7; ++i) {
+        if (((_psr & (1 << 12-i)) >> (12-i)) == 0){
+            bits[i]='_';
+        }
+    }
+/*    int i;
+    //NZCV-Bits
+    for (i = 31; i >= 28; i--) {
+        //if (((_psr & (1 << i)) >> i) == 0) {
+            bits[i - 24] = '_';
+        //}
+    }
+    //IFT-Bits
+    for (i = 7; i >= 5; i--) {
+       // if (((_psr & (1 << i)) >> i) == 0) {
+            bits[i-5] = '_';
+       // }
+    }
+*/    kprintf("%s", bits);
+}
+
+void print_mode_reg(){
+    kprintf(">>> Aktuelle modusspezifische Register <<<\n\r");
+    kprintf("             LR         SP          SPSR\n\r");
+    uint32_t tmp_lr,tmp_sp, tmp_spsr;
+    tmp_lr = get_lr_sys();
+    tmp_sp = get_sp_sys();
+    kprintf("User/System: %x %x\n\r", tmp_lr, tmp_sp);
+    tmp_lr = get_lr_svc();
+    tmp_sp = get_sp_svc();
+    tmp_spsr = get_spsr_svc();
+    kprintf("Supervisor:  %x %x %x\n\r", tmp_lr, tmp_sp, tmp_spsr);
+}
 
 void print_timerval(uint32_t cpsr) {
     kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
@@ -39,11 +81,18 @@ void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* i
     }
 
     kprintf(">>> Aktuelle Statusregister (SPSR im aktuellen Modus) <<<\n\r");
-    kprintf("CPSR: %x\n\r", cpsr);
-    kprintf("SPSR: %x\n\r", spsr);
+    kprintf("CPSR: ");
+    print_psr_bits(cpsr);
+//    print_psr_mode(cpsr);
+    kprintf(" %x\n\r", cpsr);
+    kprintf("SPSR: ");
+    print_psr_bits(spsr);
+//    print_psr_mode(spsr);
+    kprintf(" %x\n\r", spsr);
     for (i = 0; i < 47; ++i) {
         kprintf("#");
     }
+    print_mode_reg();
     kprintf("\n\r");
 }
 

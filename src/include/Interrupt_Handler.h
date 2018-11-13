@@ -5,8 +5,9 @@
 #define BS_PRAK_INTERRUPT_HANDLER_H
 #include <stdint.h>
 
-void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* interrupt_name, int32_t pc_offset);
 
+
+void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* interrupt_name, int32_t pc_offset);
 
 void print_timerval(uint32_t cpsr);
 void print_data_abort_reason();
