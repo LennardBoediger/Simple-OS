@@ -8,7 +8,7 @@
 #define IRQ_FIQ_REG_OFFSET (0x7E00B000 - 0x3F000000 + 0x200) //TODO: change name 0x200
 #define TIMER_BASE (0x7E00B000 - 0x3F000000 + 0x400) //timerbaseadress minus MMU-offset
 #define PREDIVIDER_VALUE 249 /* +1 = 250*/
-#define TIMER_VALUE 50000000000//5000000 //5 sek
+#define TIMER_VALUE 5000000//5000000 //5 sek
 #define TIMER_EN_SHIFT 7
 #define TIMER_INTERRUPT_EN_SHIFT 5
 #define TIMER_32BIT_COUNTER 1
@@ -36,7 +36,7 @@ void initialize_timer() {
 
 void clear_timer() {
     timer_reg->IRQ_CLEAR_ACK = 0x1; // TODO:has to happen
-    kprintf("\n\r-----------clear_timer-------------\n\r");
+  /*  kprintf("\n\r-----------clear_timer-------------\n\r");
     kprintf("Controlreg: %x \n\r", timer_reg->CONTROL);
     kprintf("Predivider: %x \n\r", timer_reg->PREDIVIDER);
     kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
@@ -47,7 +47,7 @@ void clear_timer() {
     kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
     kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
     kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
-    kprintf("\n\r%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\r");
+    kprintf("\n\r%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\r");*/
 }
 
 /* aktiviert Timer- und UART-Interrupts*/

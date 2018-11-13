@@ -8,6 +8,7 @@
 #define TIMER_PRESCALE_MSB_SHIFT 3
 #define TIMER_PRESCALE_LSB_SHIFT 2
 #define WNR_BIT_SHIFT 11
+
 void print_psr_mode(uint32_t _psr){
     switch (_psr % 32){
         case 16:
@@ -97,16 +98,78 @@ void print_timerval(uint32_t cpsr) {
     kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
     kprintf("CPSR: %x", cpsr);
 }
+
+
+
 void print_data_abort_reason(){
     uint32_t dfar = read_dfar();
     uint32_t dfsr = read_dfsr();
     if((dfsr & (1 << WNR_BIT_SHIFT)) >> WNR_BIT_SHIFT){
-        kprintf("Zugriff: schreibend auf Adresse %x\n", dfar);
+        kprintf("Zugriff: schreibend auf Adresse %x\n\r", dfar);
     } else{
-        kprintf("Zugriff: lesend auf Adresse %x\n", dfar);
+        kprintf("Zugriff: lesend auf Adresse %x\n\r", dfar);
     }
+    kprintf("Fehler: ");
+    switch (dfar % 32) {
+        case 0:
+            kprintf("No function, reset value\n\r");
+            break;
+        case 1:
+            kprintf("Alignment fault\n\r");
+            break;
+        case 2:
+            kprintf("Debug event fault\n\r");
+            break;
+        case 3:
+            kprintf("Access Flag fault on Section\n\r");
+            break;
+        case 4:
+            kprintf("Cache maintenance operation fault[b]\n\r");
+            break;
+        case 5:
+            kprintf("Translation fault on Section\n\r");
+            break;
+        case 6:
+            kprintf("Access Flag fault on Page\n\r");
+            break;
+        case 7:
+            kprintf("Translation fault on Page\n\r");
+            break;
+        case 8:
+            kprintf("Precise External Abort\n\r");
+            break;
+        case 9:
+            kprintf("Domain fault on Section\n\r");
+            break;
+        case 10:
+            kprintf("No function\n\r");
+            break;
+        case 11:
+            kprintf("Domain fault on Page\n\r");
+            break;
+        case 12:
+            kprintf("External abort on translation, first level\n\r");
+            break;
+        case 13:
+            kprintf("Permission fault on Section\n\r");
+            break;
+        case 14:
+            kprintf("External abort on translation, second level\n\r");
+            break;
+        case 15:
+            kprintf("Permission fault on Page\n\r");
+            break;
+        case 22:
+            kprintf("Imprecise External Abort\n\r");
+            break;
+        default:
+            kprintf("No function\n\r");
+    }
+    kprintf("\n\r");
+
 }
-void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* interrupt_name, int32_t pc_offset){
+
+void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* interrupt_name, int32_t pc_offset, int8_t is_data_ab){
     kprintf("\n\r");
     int i;
     for (i = 0; i < 47; ++i) {
@@ -115,7 +178,11 @@ void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* i
     //PC wird bei Ausnahme nach LR geschrieben + wegen pipline muss offset bechatet werden
     kprintf("\n\r%s an der Adresse %x\n\r",interrupt_name, *(int*) (stackadress+14*4) + pc_offset);
 
-    //DFSR auslesen und Ausgabe mit switch-case verschönern
+
+    //Wenn DATA_abort print DESR stuff
+    if (is_data_ab == 1) {
+        print_data_abort_reason();
+    }
 
     kprintf(">>> Registerschnappschuss (aktueller Modus) <<<\n\r");
     for (i = 0; i <= 7; i++) {
@@ -132,41 +199,44 @@ void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* i
     print_psr_bits(spsr);
     print_psr_mode(spsr);
     kprintf(" %x\n\r", spsr);
+    kprintf("\n\r");
+    print_mode_reg();
+    kprintf("\n\r");
     for (i = 0; i < 47; ++i) {
         kprintf("#");
     }
-    print_mode_reg();
+
+    kprintf("\n\r-----Test betrieb: Programm läuft weiter als wäre alles ok -------\n\r");
     kprintf("\n\r");
 }
 
 
 void reset(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-    print_interrupt(stackadress, cpsr, spsr, "RESET", 0);
+    print_interrupt(stackadress, cpsr, spsr, "RESET", 0, 0);
 }
 
 void undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-    print_interrupt(stackadress, cpsr, spsr, "UNDEFINED", -4);
+    print_interrupt(stackadress, cpsr, spsr, "UNDEFINED", -4, 0);
 }
 
 void swi(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-    print_interrupt(stackadress, cpsr, spsr, "SOFTWARE INTERRUPT", -4);
+    print_interrupt(stackadress, cpsr, spsr, "SOFTWARE INTERRUPT", -4, 0);
 }
 
 
 void prefab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-    print_interrupt(stackadress, cpsr, spsr, "PREFETCH ABORT", -4);
+    print_interrupt(stackadress, cpsr, spsr, "PREFETCH ABORT", -4, 0);
 }
 
 void dataab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-    print_interrupt(stackadress, cpsr, spsr, "DATA ABORT", -8);
-    print_data_abort_reason();
+    print_interrupt(stackadress, cpsr, spsr, "DATA ABORT", -8, 1);
 }
 
 void irq(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-    print_interrupt(stackadress, cpsr, spsr, "TIMER INTERRUPT", -8);
+    print_interrupt(stackadress, cpsr, spsr, "TIMER INTERRUPT", -8, 0);
     recognize_irq_interrupt();
 }
 
 void fiq(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-    print_interrupt(stackadress, cpsr, spsr, "DATA ABORT", -8);
+    print_interrupt(stackadress, cpsr, spsr, "DATA ABORT", -8, 0);
 }
