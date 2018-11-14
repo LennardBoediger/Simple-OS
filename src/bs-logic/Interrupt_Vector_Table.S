@@ -34,7 +34,8 @@ reset_tr:
     mov r10, #42
     mov r11, #42
     mov r12, #42
-    push {r0-r15}        //Alles pushen für Registerschnappschuss
+   push {r13-r15}        //Alles pushen für Registerschnappschuss
+   push {r0-r12}        //wegen warning jetzt in 2 zeilen
 /* Printfunktion-Aufruf */
     mov r0, sp
     mrs r1, cpsr
@@ -58,7 +59,8 @@ undef_tr:
     mov r11, #31
     mov r12, #32
     //    add lr, lr, #0      //undef befehl überspringen
-    push {r0-r15}        //Alles pushen für Registerschnappschuss
+    push {r13-r15}        //Alles pushen für Registerschnappschuss
+    push {r0-r12}        //wegen warning jetzt in 2 zeilen
 /* Printfunktion-Aufruf */
     mov r0, sp
     mrs r1, cpsr
@@ -73,21 +75,22 @@ undef_tr:
 
 
 swi_tr:
-    mov r0, #20
-    mov r1, #21
-    mov r2, #22
-    mov r3, #23
-    mov r4, #24
-    mov r5, #25
-    mov r6, #26
-    mov r7, #27
-    mov r8, #28
-    mov r9, #29
-    mov r10, #30
-    mov r11, #31
-    mov r12, #32
+    mov r0, #0
+    mov r1, #1
+    mov r2, #2
+    mov r3, #3
+    mov r4, #4
+    mov r5, #5
+    mov r6, #6
+    mov r7, #7
+    mov r8, #8
+    mov r9, #9
+    mov r10, #10
+    mov r11, #11
+    mov r12, #12
     add lr, lr, #0      //bei #0 hängts sich auf, bei #4 springt es zu "Testbegin (...)", #8 "%b: b wird ausgegeben (...)"
-    push {r0-r15}        //Alles pushen für Registerschnappschuss
+    push {r13-r15}        //Alles pushen für Registerschnappschuss
+    push {r0-r12}        //wegen warning jetzt in 2 zeilen
 /* Printfunktion-Aufruf */
     mov r0, sp
     mrs r1, cpsr
@@ -116,7 +119,8 @@ prefab_tr:
     mov r11, #4
     mov r12, #4
     sub lr, lr, #0      //TODO: wäre #4 um prefab-befehl zu wiederholen
-    push {r0-r15}        //Alles pushen für Registerschnappschuss
+    push {r13-r15}        //Alles pushen für Registerschnappschuss
+    push {r0-r12}        //wegen warning jetzt in 2 zeilen
 /* Printfunktion-Aufruf */
     mov r0, sp
     mrs r1, cpsr
@@ -144,7 +148,8 @@ dataab_tr:
     mov r11, #5
     mov r12, #5
     sub lr, lr, #4      //TODO: wäre #8 um dataab-befehl zu wiederholen
-    push {r0-r15}        //Alles pushen für Registerschnappschuss
+    push {r13-r15}        //Alles pushen für Registerschnappschuss
+    push {r0-r12}        //wegen warning jetzt in 2 zeilen
 /* Printfunktion-Aufruf */
     mov r0, sp
     mrs r1, cpsr
@@ -174,7 +179,8 @@ irq_tr:
     mov r12, #1
   //  sub lr, lr, #4      // TODO: mabe just use this
     sub lr, lr, #8      //zu letzten unausgeführten Befehl
-    push {r0-r15}        //Alles pushen für Registerschnappschuss
+    push {r13-r15}        //Alles pushen für Registerschnappschuss
+    push {r0-r12}        //wegen warning jetzt in 2 zeilen
 /* Printfunktion-Aufruf */
     mov r0, sp
     mrs r1, cpsr

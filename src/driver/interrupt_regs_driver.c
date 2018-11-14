@@ -50,6 +50,11 @@ void clear_timer() {
     kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
     kprintf("\n\r%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\r");*/
 }
+void interactive_test(){
+   while(1){
+       //uart_receive(); //TODO:machen
+   }
+}
 void force_interrupts (char c) {
     switch (c) {
         case 's':
@@ -70,6 +75,8 @@ void force_interrupts (char c) {
             }else{
                 debug_irq = 0;
             }
+        case 'e':
+            interactive_test(); //TODO: fertig machen
         default:
             break;
     }
