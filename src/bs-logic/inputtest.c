@@ -5,22 +5,6 @@
 #include "../include/regcheck.h"
 
 
-
-void force_interrupts (char c) {
-    switch (c) {
-        case 's':
-            asm("swi 99");
-            break;
-        case 'a':
-            force_dataab();
-            break;
-        case 'u':
-            asm("udf");
-            break;
-        case 'r':
-            register_checker();
-    }
-}
 void test_kprintf(){
     kprintf("Testbegin\n\r");
     kprintf("%%c: b wird ausgegeben: %c\n\r", 'b');
@@ -43,10 +27,7 @@ void inputtest(){
    //kprintf("Press D to toggle IRQ-Debug Mode \n\r");
 
     while (1){
-        char c = uart_receive();
-        if (c) {
-            kprintf("you pressed: %c\n\r", c);
-            force_interrupts(c);
-        }
+
+
     }
 }

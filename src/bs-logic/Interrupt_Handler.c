@@ -9,6 +9,7 @@
 #define TIMER_PRESCALE_MSB_SHIFT 3
 #define TIMER_PRESCALE_LSB_SHIFT 2
 
+uint8_t debug_irq = 0;  //Global RINT IRQ
 
 
 void reset(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
@@ -33,7 +34,9 @@ void dataab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
 }
 
 void irq(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
-    print_interrupt(stackadress, cpsr, spsr, "IRQ INTERRUPT", -8, 0);
+    if (debug_irq == 1){
+        print_interrupt(stackadress, cpsr, spsr, "IRQ INTERRUPT", -8, 0);
+    }
     recognize_irq_interrupt();
 }
 

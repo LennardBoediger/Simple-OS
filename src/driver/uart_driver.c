@@ -46,18 +46,20 @@ void enable_uart(){
 //TODO: zeile 52 bring nix weil wir uartt nicht disabeln!?!?!
 void en_uart_interrupt() {
     kprintf("TODO: Initializing UART:\r\n");
-  /*  // disable_uart();
-    uart_reg->CONTROL_REG |= (1 << TXE);
-    uart_reg->CONTROL_REG |= (1 << RXE);
+    // disable_uart();
+  //  uart_reg->CONTROL_REG |= (1 << TXE);
+ //   uart_reg->CONTROL_REG |= (1 << RXE);
     //disable_fifo(); wenn wir ein rinbuffer machen
     uart_reg->IMSC |= (1 << RTIM_SHIFT); // enable interrupt an bit 6
-    uart_reg->CONTROL_REG |= (1 << 0); // enable uart
+ //   uart_reg->CONTROL_REG |= (1 << 0); // enable uart
     //   check_en_uart_interrupt();
-*/
+
 }
 
 void check_en_uart_interrupt() {
-    if (uart_reg->CONTROL_REG & (1 << RXE) >> RXE) {
+    kprintf("dont print");
+
+  /*  if (uart_reg->CONTROL_REG & (1 << RXE) >> RXE) {
         kprintf("receive ist enabled\n\r");
         if (uart_reg->CONTROL_REG & (1 << TXE) >> TXE) {
             kprintf("send ist enabled\n\r");
@@ -65,5 +67,5 @@ void check_en_uart_interrupt() {
     } else {
         kprintf("###### ERROR UART NICHT ENABLED #######\n\r");
         en_uart_interrupt();
-    }
+    }*/
 }

@@ -19,7 +19,7 @@ _bsprak:
 	/* Einsprung ins Hauptprogramm */
     bl      _INIT_IVT
     bl      INIT_STACK
-    msr     cpsr_c, #0x1F           //sys 00011111 TODO: WIESO???
+   // msr     cpsr_c, #0x1F           //sys 00011111 TODO: WIESO???
     bl      enable_IRQ_interrupts
     bl      initialize_timer
 /* lößt prefetch abort aus */

@@ -173,7 +173,7 @@ irq_tr:
     mov r11, #0
     mov r12, #1
   //  sub lr, lr, #4      // TODO: mabe just use this
-    add lr, lr, #8      //zu letzten unausgeführten Befehl
+    sub lr, lr, #8      //zu letzten unausgeführten Befehl
     push {r0-r15}        //Alles pushen für Registerschnappschuss
 /* Printfunktion-Aufruf */
     mov r0, sp

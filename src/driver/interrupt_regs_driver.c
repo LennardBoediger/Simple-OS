@@ -1,9 +1,10 @@
-//
-// Created by pablo on 12.11.18.
-//
-#include "../include/interrupt_regs_driver.h"
-#include "../include/kprintf.h"
 #include "../include/uart_driver.h"
+#include "../include/kprintf.h"
+#include "../include/Interrupt_Handler.h"
+#include "../include/dataab_helper.h"
+#include "../include/regcheck.h"
+#include "../include/interrupt_regs_driver.h"
+
 
 #define IRQ_FIQ_REG_OFFSET (0x7E00B000 - 0x3F000000 + 0x200) //TODO: change name 0x200
 #define TIMER_BASE (0x7E00B000 - 0x3F000000 + 0x400) //timerbaseadress minus MMU-offset
@@ -49,6 +50,30 @@ void clear_timer() {
     kprintf("Timervalue: %i\n\r",timer_reg->VALUE);
     kprintf("\n\r%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\r");*/
 }
+void force_interrupts (char c) {
+    switch (c) {
+        case 's':
+            asm("swi 99");
+            break;
+        case 'a':
+            force_dataab();
+            break;
+        case 'u':
+            asm("udf");
+            break;
+        case 'c':
+            register_checker();
+            break;
+        case 'd':
+            if (debug_irq == 0){
+                debug_irq = 1;
+            }else{
+                debug_irq = 0;
+            }
+        default:
+            break;
+    }
+}
 
 /* aktiviert Timer- und UART-Interrupts*/
 void enable_IRQ_interrupts() {
@@ -60,10 +85,16 @@ void enable_IRQ_interrupts() {
 
 void recognize_irq_interrupt() {
     if (((arm_interrupt_reg->IRQ_BASIC_PENDING & (1 << IRQ_TIMER_SHIFT))>>IRQ_TIMER_SHIFT) == 1) {
-        kprintf("\n\r!\n\r");
+        kprintf("\n\r!\n\r"); // print ! on timer interrupt
         clear_timer();
     }
     if (((arm_interrupt_reg->IRQ_PENDING_2 & (1 << IRQ_UART_SHIFT))>>IRQ_UART_SHIFT) == 1) {
-        kprintf("UART TASTENDRUCK!!!");
+        kprintf("UART INTERRUPT\n\r");
+
+        char c = uart_receive();
+        if (c) {
+            kprintf("you pressed: %c\n\r", c);
+            force_interrupts(c);
+        }
     }
 }

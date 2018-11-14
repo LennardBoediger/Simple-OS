@@ -6,7 +6,7 @@
 #include <stdint.h>
 
 
-
+extern uint8_t debug_irq; //Global RINT IRQ
 
 void reset(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
 void undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
