@@ -4,11 +4,6 @@
 #include "../include/mode_reg_helper.h"
 #include "../include/dataab_helper.h"
 
-/** ab hier defines für timer*/
-
-#define TIMER_PRESCALE_MSB_SHIFT 3
-#define TIMER_PRESCALE_LSB_SHIFT 2
-
 uint8_t debug_irq = 0;  //Global RINT IRQ
 
 

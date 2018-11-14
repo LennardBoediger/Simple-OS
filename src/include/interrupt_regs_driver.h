@@ -1,6 +1,3 @@
-//
-// Created by pablo on 12.11.18.
-//
 
 #ifndef BS_PRAK_INTERRUPT_REGS_DRIVER_H
 #define BS_PRAK_INTERRUPT_REGS_DRIVER_H
@@ -40,5 +37,6 @@ void initialize_timer();
 void clear_timer();
 void enable_IRQ_interrupts();
 void recognize_irq_interrupt();
+void force_interrupts(char c);
 
 #endif //BS_PRAK_INTERRUPT_REGS_DRIVER_H
