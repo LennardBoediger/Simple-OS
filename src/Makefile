@@ -10,6 +10,11 @@
 #
 # make clean	-- Löscht alle erzeugten Dateien.
 #
+# make submission
+#		-- packt alles im Verzeichnis für die Abgabe zusammen
+# make home
+#		-- kopiert das fertige image nach $TFTP_PATH, für die
+#		   Arbeit zuhause einfach den Pfad eintragen
 
 
 #
@@ -32,7 +37,7 @@ OBJ += ./lib/regcheck_asm.o
 
 
 
-SUBMISSION_FILES = $(shell find . -name '*' -not -name '*.tar.gz' -not -name '.*' -not -type d )
+SUBMISSION_FILES = $(shell find . -name '*' -not -name '*.tar.gz' -not -name '.*' -not -type d -not -name '*.pdf' -not -path './.*')
 TUBIT_NAMES = $(shell awk 'NR > 1  {ORS="+"; print prev} {prev=$$1} END { ORS=""; print $$1 }' ../Abgabe/namen.txt )
 #TUBIT_NAMES = $(shell cut -d' ' -f1  ../Abgabe/namen.txt | tr '\n' '+')
 
@@ -58,7 +63,7 @@ DEP = $(OBJ:.o=.d)
 #
 # Regeln
 #
-.PHONY: all
+.PHONY: all install clean
 all: ./bs-logic/kernel ./bs-logic/kernel.bin dump
 
 -include $(DEP)
@@ -81,12 +86,9 @@ all: ./bs-logic/kernel ./bs-logic/kernel.bin dump
 dump:
 	$(OBJDUMP) -D ./bs-logic/kernel > ./bs-logic/kernel_dump.s
 
-.PHONY: install
 install: ./bs-logic/kernel.img
-	cp -v ./bs-logic/kernel.img /srv/tftp
-#	arm-install-image $<
+	arm-install-image $<
 
-.PHONY: clean
 clean:
 	rm -f ./bs-logic/kernel ./bs-logic/kernel.bin ./bs-logic/kernel.img ./bs-logic/kernel_dump.s
 	rm -f $(OBJ)
@@ -94,4 +96,7 @@ clean:
 
 submission:	clean 
 	tar -czf "$(TUBIT_NAMES).tar.gz" $(SUBMISSION_FILES)
+
+home: ./bs-logic/kernel.img
+	cp -v ./bs-logic/kernel.img /srv/tftp
 

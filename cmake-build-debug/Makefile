@@ -39,19 +39,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /Applications/CLion.app/Contents/bin/cmake/bin/cmake
+CMAKE_COMMAND = /home/pablo/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/173.4301.33/bin/cmake/bin/cmake
 
 # The command to remove a file.
-RM = /Applications/CLion.app/Contents/bin/cmake/bin/cmake -E remove -f
+RM = /home/pablo/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/173.4301.33/bin/cmake/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/Lennard/Github/Bs-Prak
+CMAKE_SOURCE_DIR = /home/pablo/Dokumente/Uni/BSPrak/BS-Prak
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/Lennard/Github/Bs-Prak/cmake-build-debug
+CMAKE_BINARY_DIR = /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = /Users/Lennard/Github/Bs-Prak/cmake-build-debug
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/Applications/CLion.app/Contents/bin/cmake/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/home/pablo/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/173.4301.33/bin/cmake/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -70,7 +70,7 @@ rebuild_cache/fast: rebuild_cache
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/Applications/CLion.app/Contents/bin/cmake/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/home/pablo/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/173.4301.33/bin/cmake/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles /Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -177,6 +177,60 @@ src/bs-logic/inputtest.c.s:
 	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/inputtest.c.s
 .PHONY : src/bs-logic/inputtest.c.s
 
+src/bs-logic/threads/init_thread.o: src/bs-logic/threads/init_thread.c.o
+
+.PHONY : src/bs-logic/threads/init_thread.o
+
+# target to build an object file
+src/bs-logic/threads/init_thread.c.o:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/threads/init_thread.c.o
+.PHONY : src/bs-logic/threads/init_thread.c.o
+
+src/bs-logic/threads/init_thread.i: src/bs-logic/threads/init_thread.c.i
+
+.PHONY : src/bs-logic/threads/init_thread.i
+
+# target to preprocess a source file
+src/bs-logic/threads/init_thread.c.i:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/threads/init_thread.c.i
+.PHONY : src/bs-logic/threads/init_thread.c.i
+
+src/bs-logic/threads/init_thread.s: src/bs-logic/threads/init_thread.c.s
+
+.PHONY : src/bs-logic/threads/init_thread.s
+
+# target to generate assembly for a file
+src/bs-logic/threads/init_thread.c.s:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/threads/init_thread.c.s
+.PHONY : src/bs-logic/threads/init_thread.c.s
+
+src/bs-logic/threads/threads_handler.o: src/bs-logic/threads/threads_handler.c.o
+
+.PHONY : src/bs-logic/threads/threads_handler.o
+
+# target to build an object file
+src/bs-logic/threads/threads_handler.c.o:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/threads/threads_handler.c.o
+.PHONY : src/bs-logic/threads/threads_handler.c.o
+
+src/bs-logic/threads/threads_handler.i: src/bs-logic/threads/threads_handler.c.i
+
+.PHONY : src/bs-logic/threads/threads_handler.i
+
+# target to preprocess a source file
+src/bs-logic/threads/threads_handler.c.i:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/threads/threads_handler.c.i
+.PHONY : src/bs-logic/threads/threads_handler.c.i
+
+src/bs-logic/threads/threads_handler.s: src/bs-logic/threads/threads_handler.c.s
+
+.PHONY : src/bs-logic/threads/threads_handler.s
+
+# target to generate assembly for a file
+src/bs-logic/threads/threads_handler.c.s:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/bs-logic/threads/threads_handler.c.s
+.PHONY : src/bs-logic/threads/threads_handler.c.s
+
 src/driver/interrupt_regs_driver.o: src/driver/interrupt_regs_driver.c.o
 
 .PHONY : src/driver/interrupt_regs_driver.o
@@ -231,32 +285,32 @@ src/driver/uart_driver.c.s:
 	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/driver/uart_driver.c.s
 .PHONY : src/driver/uart_driver.c.s
 
-src/lib/Interrupt_Printer.o: src/lib/Interrupt_Printer.c.o
+src/lib/Interrupt_printer.o: src/lib/Interrupt_printer.c.o
 
-.PHONY : src/lib/Interrupt_Printer.o
+.PHONY : src/lib/Interrupt_printer.o
 
 # target to build an object file
-src/lib/Interrupt_Printer.c.o:
-	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/lib/Interrupt_Printer.c.o
-.PHONY : src/lib/Interrupt_Printer.c.o
+src/lib/Interrupt_printer.c.o:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/lib/Interrupt_printer.c.o
+.PHONY : src/lib/Interrupt_printer.c.o
 
-src/lib/Interrupt_Printer.i: src/lib/Interrupt_Printer.c.i
+src/lib/Interrupt_printer.i: src/lib/Interrupt_printer.c.i
 
-.PHONY : src/lib/Interrupt_Printer.i
+.PHONY : src/lib/Interrupt_printer.i
 
 # target to preprocess a source file
-src/lib/Interrupt_Printer.c.i:
-	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/lib/Interrupt_Printer.c.i
-.PHONY : src/lib/Interrupt_Printer.c.i
+src/lib/Interrupt_printer.c.i:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/lib/Interrupt_printer.c.i
+.PHONY : src/lib/Interrupt_printer.c.i
 
-src/lib/Interrupt_Printer.s: src/lib/Interrupt_Printer.c.s
+src/lib/Interrupt_printer.s: src/lib/Interrupt_printer.c.s
 
-.PHONY : src/lib/Interrupt_Printer.s
+.PHONY : src/lib/Interrupt_printer.s
 
 # target to generate assembly for a file
-src/lib/Interrupt_Printer.c.s:
-	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/lib/Interrupt_Printer.c.s
-.PHONY : src/lib/Interrupt_Printer.c.s
+src/lib/Interrupt_printer.c.s:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/lib/Interrupt_printer.c.s
+.PHONY : src/lib/Interrupt_printer.c.s
 
 src/lib/kprintf.o: src/lib/kprintf.c.o
 
@@ -300,15 +354,21 @@ help:
 	@echo "... src/bs-logic/inputtest.o"
 	@echo "... src/bs-logic/inputtest.i"
 	@echo "... src/bs-logic/inputtest.s"
+	@echo "... src/bs-logic/threads/init_thread.o"
+	@echo "... src/bs-logic/threads/init_thread.i"
+	@echo "... src/bs-logic/threads/init_thread.s"
+	@echo "... src/bs-logic/threads/threads_handler.o"
+	@echo "... src/bs-logic/threads/threads_handler.i"
+	@echo "... src/bs-logic/threads/threads_handler.s"
 	@echo "... src/driver/interrupt_regs_driver.o"
 	@echo "... src/driver/interrupt_regs_driver.i"
 	@echo "... src/driver/interrupt_regs_driver.s"
 	@echo "... src/driver/uart_driver.o"
 	@echo "... src/driver/uart_driver.i"
 	@echo "... src/driver/uart_driver.s"
-	@echo "... src/lib/Interrupt_Printer.o"
-	@echo "... src/lib/Interrupt_Printer.i"
-	@echo "... src/lib/Interrupt_Printer.s"
+	@echo "... src/lib/Interrupt_printer.o"
+	@echo "... src/lib/Interrupt_printer.i"
+	@echo "... src/lib/Interrupt_printer.s"
 	@echo "... src/lib/kprintf.o"
 	@echo "... src/lib/kprintf.i"
 	@echo "... src/lib/kprintf.s"
