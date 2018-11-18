@@ -28,11 +28,11 @@ void dataab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     print_interrupt(stackadress, cpsr, spsr, "DATA ABORT", -8, 1);
 }
 
-void irq(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
+uint32_t irq(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     if (debug_irq == 1){
         print_interrupt(stackadress, cpsr, spsr, "IRQ INTERRUPT", -8, 0);
     }
-    recognize_irq_interrupt();
+    return recognize_irq_interrupt(stackadress, spsr);
 }
 
 void fiq(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {

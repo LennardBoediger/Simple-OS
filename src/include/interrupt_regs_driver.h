@@ -36,7 +36,7 @@ struct arm_interrupt {
 void initialize_timer();
 void clear_timer();
 void enable_IRQ_interrupts();
-void recognize_irq_interrupt();
+uint32_t recognize_irq_interrupt(uint32_t stackadress, uint32_t spsr);
 void force_interrupts(char c);
 
 #endif //BS_PRAK_INTERRUPT_REGS_DRIVER_H

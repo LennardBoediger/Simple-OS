@@ -20,10 +20,10 @@ _bsprak:
     bl      _INIT_IVT
     bl      INIT_STACK
     bl      enable_IRQ_interrupts   /* in interrupt_regs_driver.c */
-    bl      init_threads             //erstellt 32 TCBs
+    bl      init_tcbs                //erstellt 32 TCBs
+    bl      start_idle_thread
     bl      initialize_timer        /* in interrupt_regs_driver.c */
     mrs     r0, cpsr
-    bl      start_idle_thread
 
 .Lend:
 	b       .Lend

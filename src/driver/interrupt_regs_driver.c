@@ -4,6 +4,8 @@
 #include "../include/dataab_helper.h"
 #include "../include/regcheck.h"
 #include "../include/interrupt_regs_driver.h"
+#include "../include/threads_handler.h"
+#include "../include/init_thread.h"
 
 #define IRQ_FIQ_REG_OFFSET (0x7E00B000 - 0x3F000000 + 0x200)
 #define TIMER_BASE (0x7E00B000 - 0x3F000000 + 0x400) //timerbaseadress minus MMU-offset
@@ -95,13 +97,16 @@ void enable_IRQ_interrupts() {
 }
 
 /* print ! bei Timer-Interrupt */
-void recognize_irq_interrupt() {
+uint32_t recognize_irq_interrupt(uint32_t stackadress, uint32_t spsr) {
     if (((arm_interrupt_reg->IRQ_BASIC_PENDING & (1 << IRQ_TIMER_SHIFT))>>IRQ_TIMER_SHIFT) == 1) {
         kprintf("!\n\r"); // print ! on timer interrupt
+        uint32_t cpsr = swap_thread(stackadress, spsr);
         clear_timer();
+        return cpsr;
     }
     if (((arm_interrupt_reg->IRQ_PENDING_2 & (1 << IRQ_UART_SHIFT))>>IRQ_UART_SHIFT) == 1) {
         kprintf("UART INTERRUPT\n\r");
-
+        prepare_thread(); //TODO
+        return 0x0;
     }
 }
