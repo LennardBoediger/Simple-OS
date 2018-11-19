@@ -108,7 +108,7 @@ uint32_t recognize_irq_interrupt(uint32_t stackadress, uint32_t spsr) {
         kprintf("UART INTERRUPT\n\r");
         void(* interactive_testPtr)();
         interactive_testPtr = &interactive_test;
-        prepare_thread(interactive_testPtr, (void*)8000, 0, 0); //TODO speicher
+        prepare_thread(interactive_testPtr, (void*)NO_STACK_ADRESS, 0, 0);
         return 0x0;
     }
     else{

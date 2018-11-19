@@ -4,7 +4,7 @@
 #include "../include/mode_reg_helper.h"
 #include "../include/dataab_helper.h"
 
-uint8_t debug_irq = 0;  //Global RINT IRQ
+uint8_t debug_irq = 1;  //Global RINT IRQ
 
 
 void reset(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {

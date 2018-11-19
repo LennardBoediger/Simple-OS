@@ -7,6 +7,7 @@
 #define WARTEND 1
 #define BEREIT 2
 #define LAUFEND 3
+#define NO_STACK_ADRESS 0x7b40000 //Stack des nie aktiv genutzten Idle-threads
 #include <stdint.h>
 
 
@@ -36,5 +37,9 @@ static volatile
 struct tcb threads[MAX_THREADS];
 
 int16_t prepare_thread(void (*pc)(), uint32_t* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle);
+
+void init_tcbs();
+void prepare_idle_thread();
+
 
 #endif //BS_PRAK_INIT_THREAD_H

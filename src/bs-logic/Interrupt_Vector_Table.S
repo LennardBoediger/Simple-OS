@@ -42,9 +42,9 @@ undef_tr:
     bl undef
 /* Wechsel in zuvorigen Modus */
     pop {r0-r12}        //register zurück schreiben 0-14
-    add sp, #4          //sp im Stack überspringen
+    add sp, sp, #4          //sp im Stack überspringen
     pop {lr}
-    add sp, #4          //PC im stack überspringen
+    add sp, sp, #4          //PC im stack überspringen
     movs pc, lr
 
 
@@ -59,9 +59,9 @@ swi_tr:
     bl swi
 /* Wechsel in zuvorigen Modus */
     pop {r0-r12}        //register zurück schreiben 0-14
-    add sp, #4          //sp überspringen
+    add sp, sp, #4          //sp überspringen
     pop {lr}
-    add sp, #4          //PC im stack überspringen
+    add sp, sp, #4          //PC im stack überspringen
     movs pc, lr
 
 
@@ -76,9 +76,9 @@ prefab_tr:
     bl prefab
 /* Wechsel in zuvorigen Modus */
     pop {r0-r12}        //register zurück schreiben 0-14
-    add sp, #4          //sp überspringen
+    add sp, sp, #4          //sp überspringen
     pop {lr}
-    add sp, #4          //PC im stack überspringen
+    add sp, sp, #4          //PC im stack überspringen
     movs pc, lr
 
 dataab_tr:
@@ -92,25 +92,25 @@ dataab_tr:
     bl dataab
 /* Wechsel in zuvorigen Modus */
     pop {r0-r12}        //register zurück schreiben 0-14
-    add sp, #4          //sp überspringen
+    add sp, sp, #4          //sp überspringen
     pop {lr}
-    add sp, #4          //PC im stack überspringen
+    add sp, sp, #4          //PC im stack überspringen
     movs pc, lr
 
 /* timer und uart */
 irq_tr:
     sub lr, lr, #4      // zu letzten unausgeführten Befehl
-    sub sp, #8          // 2 Felder für sp_usr und lr_usr freihalten
+    sub sp, sp, #8          // 2 Felder für sp_usr und lr_usr freihalten
     //    push {sp_usr}       //NEU AUFGABE 3 FÜR THREAD-WECHSEL
     //    push {lr_usr}       //NEU AUFGABE 3 FÜR THREAD-WECHSEL
     push {r13-r15}      //Alles pushen für Registerschnappschuss
     push {r0-r12}       //wegen warning jetzt in 2 zeilen
-    add sp, #72         // zurück zu den 2 freien Feldern springen
+    add sp, sp, #72         // zurück zu den 2 freien Feldern springen
     mrs r0, sp_usr
     mrs r1, lr_usr
     push {r0}           // sp_usr an unterste Stelle des IRQ_Stacks
     push {r1}           // lr_usr an Stelle direkt darüber
-    sub sp, #64         // zurück zum eigentlichen Stackende
+    sub sp, sp, #64         // zurück zum eigentlichen Stackende
     /* Printfunktion-Aufruf */
     mov r0, sp
     mrs r1, cpsr
@@ -125,17 +125,21 @@ irq_tr:
     msr spsr, r0
     /* Wechsel in zuvorigen Modus */
 j_if_uart:
-    add sp, #64
+    add sp, sp, #64
     pop {r1}
     pop {r0}
     msr sp_usr, r0
     msr lr_usr, r1
-    sub sp, #72
+    sub sp, sp, #72
     pop {r0-r12}        //register zurück schreiben 0-14
-    add sp, #4          //sp überspringen
+    add sp, sp, #4          //sp überspringen
+    add r0, lr, #0
+    bl print_lr
     pop {lr}
-    add sp, #4          //PC im stack überspringen
-    add sp, #8          // sp wieder auf Anfang
+    add r0, lr, #0
+    bl print_lr
+    add sp, sp, #4          //PC im stack überspringen
+    add sp, sp, #8          // sp wieder auf Anfang
 //    pop {lr_usr}        //NEU AUFGABE 3 FÜR THREAD-WECHSEL
 //    pop {sp_usr}        //NEU ...
     movs pc, lr

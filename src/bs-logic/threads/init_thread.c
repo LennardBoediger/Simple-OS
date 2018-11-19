@@ -11,9 +11,16 @@
 //              - Zusatzdaten Stack_max-size (gibt an, wie groß der Zusatzstack eines Threads sein darf
 //enum threadzustand {beendet = 0, wartend = 1, bereit = 2, laufend = 3};
 
+void wait_for_first_irq(){
+    kprintf("WAITING FOR FIRST IRQ");
+    while(1){
+    }
+}
+
 void init_tcbs(){
     uint8_t i;
     for (i = 0; i < MAX_THREADS; i++) {
+        kprintf("TCBs werden vorbereitet\n\r");
         threads[i].r0 = 0x0;
         threads[i].r1 = 0x1;
         threads[i].r2 = 0x2;
@@ -27,34 +34,36 @@ void init_tcbs(){
         threads[i].r10 = 0x10;
         threads[i].r11 = 0x11;
         threads[i].r12 = 0x12;
-        threads[i].sp = 0x13; //sollte nie...
-        threads[i].lr_usr = 0x14; //sollte nie...
-        threads[i].lr_irq = 0x15; //sollte nie zu sehen sein
+        threads[i].sp = 0x666; //sollte nie...
+        threads[i].lr_usr = 0x666; //sollte nie...
+        threads[i].lr_irq = 0x666; //sollte nie zu sehen sein
         threads[i].cpsr = DEF_USERMODE_CPSR;
-        threads[i].data_stack_pointer = 128*1024*(1018-i);
+        threads[i].data_stack_pointer = (uint32_t) 128*1024*(1018-i);
         threads[i].zustand = BEENDET;
     }
+    kprintf("finito\n\r");
 }
 
 
 
-void idel_thread(){
+void idle_thread(){
     kprintf("start idle thread 32");
-    while (1){
-
+    while (1) {
+        kprintf("xyz");
+    /* so lange, bis interrupt */
     }
 }
 
-//auch wenn idele keine daten braucht braucvt er einen (stack pointer?) und zustand
-//-> er liegt bei i= 32 und wir behandelt wie ein normaler threadbdafür ruft die funktion
-// init_idel prepare auf idel auf start_idle_thread
+//auch wenn idle keine daten braucht, braucht er einen (stack pointer?) und zustand
+//-> er liegt bei i= 32 und wird wie ein normaler thread behandelt. Dafür ruft die funktion
+// init_idle prepare auf idle auf start_idle_thread
 void prepare_idle_thread(){
-    void(* idel_thread_Ptr)();
-    idel_thread_Ptr = &idel_thread;
-    prepare_thread(idel_thread_Ptr, (void*)8000, 0, 1); //TODO: chose a better pointer?
+    void(* idle_thread_Ptr)();
+    idle_thread_Ptr = &idle_thread;
+    prepare_thread(idle_thread_Ptr, (void*)NO_STACK_ADRESS, 0, 1); //TODO: DONE?! chose a better pointer?
 }
 
-//TODO Datenübergeben?? - wenn wir es so machen, Datenalign?  threads[i].tcb_sp += data_size
+
 int16_t prepare_thread(void (*pc)(), uint32_t* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle) {
     int16_t i = 0;
     if (force_idle == 0) {
@@ -73,10 +82,12 @@ int16_t prepare_thread(void (*pc)(), uint32_t* irq_stack_data, uint32_t irq_stac
     //TODO DATEN IN STACK KOPIEREN
     threads[i].lr_usr = (uint32_t) pc;
     uint16_t j;
-    for (j = 0; j < irq_stack_data_size; j++) {                 // copy data tu thread stack
-        *(uint32_t*)(128*1024*(1018 - i)) =*(irq_stack_data - i);   //TODO testen
+    for (j = 0; j < irq_stack_data_size; j++) {                 // copy data to thread stack
+        *(uint32_t*)(128*1024*(1018 - j)) = *(irq_stack_data - j);   //TODO testen
     }
-    threads[i].data_stack_pointer = 128*1024*(1018-i);  //TODO idel donts need stack
+    if (i == IDLE_THREAD) {
+        threads[i].data_stack_pointer = NO_STACK_ADRESS;
+    } else threads[i].data_stack_pointer = (uint32_t) 128*1024*(1018-i);
     threads[i].sp = threads[i].data_stack_pointer - irq_stack_data_size;
     return i;
 }
