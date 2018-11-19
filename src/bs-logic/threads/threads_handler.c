@@ -40,33 +40,36 @@ uint8_t find_next_thread() {
     return i;
 }
 
-uint32_t load_thread(uint8_t next_thread, uint32_t stackadress) {
-    *(uint32_t*) stackadress = threads[running_thread].r0;
-    *(uint32_t*) (stackadress+4) = threads[running_thread].r1;
-    *(uint32_t*) (stackadress+4*2) = threads[running_thread].r2;
-    *(uint32_t*) (stackadress+4*3) = threads[running_thread].r3;
-    *(uint32_t*) (stackadress+4*4) = threads[running_thread].r4;
-    *(uint32_t*) (stackadress+4*5) = threads[running_thread].r5;
-    *(uint32_t*) (stackadress+4*6) = threads[running_thread].r6;
-    *(uint32_t*) (stackadress+4*7) = threads[running_thread].r7;
-    *(uint32_t*) (stackadress+4*8) = threads[running_thread].r8;
-    *(uint32_t*) (stackadress+4*9) = threads[running_thread].r9;
-    *(uint32_t*) (stackadress+4*10) = threads[running_thread].r10;
-    *(uint32_t*) (stackadress+4*11) = threads[running_thread].r11;
-    *(uint32_t*) (stackadress+4*12) = threads[running_thread].r12;
-    *(uint32_t*) (stackadress+4*17) = threads[running_thread].sp;
-    *(uint32_t*) (stackadress+4*16) = threads[running_thread].lr_usr;
-    *(uint32_t*) (stackadress+4*14) = threads[running_thread].lr_irq;
-    return threads[running_thread].cpsr;
+uint32_t load_thread(uint8_t next_thread, uint32_t irq_stackadress) {
+
+    *(uint32_t*) irq_stackadress = threads[next_thread].r0;
+    *(uint32_t*) (irq_stackadress+4) = threads[next_thread].r1;
+    *(uint32_t*) (irq_stackadress+4*2) = threads[next_thread].r2;
+    *(uint32_t*) (irq_stackadress+4*3) = threads[next_thread].r3;
+    *(uint32_t*) (irq_stackadress+4*4) = threads[next_thread].r4;
+    *(uint32_t*) (irq_stackadress+4*5) = threads[next_thread].r5;
+    *(uint32_t*) (irq_stackadress+4*6) = threads[next_thread].r6;
+    *(uint32_t*) (irq_stackadress+4*7) = threads[next_thread].r7;
+    *(uint32_t*) (irq_stackadress+4*8) = threads[next_thread].r8;
+    *(uint32_t*) (irq_stackadress+4*9) = threads[next_thread].r9;
+    *(uint32_t*) (irq_stackadress+4*10) = threads[next_thread].r10;
+    *(uint32_t*) (irq_stackadress+4*11) = threads[next_thread].r11;
+    *(uint32_t*) (irq_stackadress+4*12) = threads[next_thread].r12;
+    *(uint32_t*) (irq_stackadress+4*17) = threads[next_thread].sp;
+    *(uint32_t*) (irq_stackadress+4*16) = threads[next_thread].lr_usr;
+    *(uint32_t*) (irq_stackadress+4*14) = threads[next_thread].lr_irq;
+    return threads[next_thread].cpsr;
 
 }
 
-uint32_t swap_thread(uint32_t stackadress, uint32_t spsr) {
-    if (running_thread != IDLE_THREAD) {
-        save_thread(stackadress, spsr);
-        threads[running_thread].zustand = WARTEND;
+uint32_t swap_thread(uint32_t irq_stackadress, uint32_t spsr) {
+    if(running_thread[IDLE_THREAD]==BEENDET) { //wird beim initialen durchlauf aufgereufen
+        running_thread = IDLE_THREAD;           // IDEL_thread ist erster thread der läuft
+    }else{
+        save_thread(irq_stackadress, spsr);
+        threads[running_thread].zustand = BEREIT;
+        running_thread = find_next_thread(); //TODO round robin
     }
-    running_thread = find_next_thread(); //TODO round robin
     threads[running_thread].zustand = LAUFEND;
-    return load_thread(running_thread, stackadress);
+    return load_thread(running_thread, irq_stackadress);
 }

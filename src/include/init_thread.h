@@ -1,7 +1,7 @@
 
 #ifndef BS_PRAK_INIT_THREAD_H
 #define BS_PRAK_INIT_THREAD_H
-#define MAX_THREADS 32
+#define MAX_THREADS 33
 #define IDLE_THREAD 32 // IDLE_THREAD has to be MAX_THREAD
 #define BEENDET 0
 #define WARTEND 1
@@ -35,6 +35,6 @@ struct tcb {
 static volatile
 struct tcb threads[MAX_THREADS];
 
-int16_t prepare_thread(uint32_t pc, uint32_t* irq_stack_data, uint32_t irq_stack_data_size);
+int16_t prepare_thread(void (*pc)(), uint32_t* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle);
 
 #endif //BS_PRAK_INIT_THREAD_H

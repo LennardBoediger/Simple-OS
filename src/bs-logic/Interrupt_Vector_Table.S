@@ -99,27 +99,45 @@ dataab_tr:
 
 /* timer und uart */
 irq_tr:
-    sub lr, lr, #4      //zu letzten unausgeführten Befehl
-    push {sp_usr}       //NEU AUFGABE 3 FÜR THREAD-WECHSEL
-    push {lr_usr}       //NEU AUFGABE 3 FÜR THREAD-WECHSEL
+    sub lr, lr, #4      // zu letzten unausgeführten Befehl
+    sub sp, #8          // 2 Felder für sp_usr und lr_usr freihalten
+    //    push {sp_usr}       //NEU AUFGABE 3 FÜR THREAD-WECHSEL
+    //    push {lr_usr}       //NEU AUFGABE 3 FÜR THREAD-WECHSEL
     push {r13-r15}      //Alles pushen für Registerschnappschuss
     push {r0-r12}       //wegen warning jetzt in 2 zeilen
-/* Printfunktion-Aufruf */
+    add sp, #72         // zurück zu den 2 freien Feldern springen
+    mrs r0, sp_usr
+    mrs r1, lr_usr
+    push {r0}           // sp_usr an unterste Stelle des IRQ_Stacks
+    push {r1}           // lr_usr an Stelle direkt darüber
+    sub sp, #64         // zurück zum eigentlichen Stackende
+    /* Printfunktion-Aufruf */
     mov r0, sp
     mrs r1, cpsr
     mrs r2, spsr
-//    mov r3, pc+8
+    //    mov r3, pc+8
     bl irq
-    cbz r0, j_if_uart
+    cmp r0, #0          //TODO: testen
+    beq j_if_uart       //TODO: testen
+    //    IT EQ r0, #0
+    //    T j_if_uart E
+    //    cbz r0, j_if_uart
     msr spsr, r0
-/* Wechsel in zuvorigen Modus */
+    /* Wechsel in zuvorigen Modus */
 j_if_uart:
+    add sp, #64
+    pop {r1}
+    pop {r0}
+    msr sp_usr, r0
+    msr lr_usr, r1
+    sub sp, #72
     pop {r0-r12}        //register zurück schreiben 0-14
     add sp, #4          //sp überspringen
     pop {lr}
     add sp, #4          //PC im stack überspringen
-    pop {lr_usr}        //NEU AUFGABE 3 FÜR THREAD-WECHSEL
-    pop {sp_usr}        //NEU ...
+    add sp, #8          // sp wieder auf Anfang
+//    pop {lr_usr}        //NEU AUFGABE 3 FÜR THREAD-WECHSEL
+//    pop {sp_usr}        //NEU ...
     movs pc, lr
 
 

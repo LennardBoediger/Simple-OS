@@ -106,7 +106,14 @@ uint32_t recognize_irq_interrupt(uint32_t stackadress, uint32_t spsr) {
     }
     if (((arm_interrupt_reg->IRQ_PENDING_2 & (1 << IRQ_UART_SHIFT))>>IRQ_UART_SHIFT) == 1) {
         kprintf("UART INTERRUPT\n\r");
-        prepare_thread(); //TODO
+        void(* interactive_testPtr)();
+        interactive_testPtr = &interactive_test;
+        prepare_thread(interactive_testPtr, (void*)8000, 0, 0); //TODO speicher
+        return 0x0;
+    }
+    else{
+        kprintf("Intterrupt is broken, not timer not UART->return 0");
         return 0x0;
     }
 }
+

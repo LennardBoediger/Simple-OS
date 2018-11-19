@@ -21,19 +21,22 @@
 # Quellen
 #
 LSCRIPT = ./bs-logic/kernel.lds
+OBJ += ./bs-logic/start.o
 OBJ += ./bs-logic/dataab_helper.o
 OBJ += ./bs-logic/inputtest.o
 OBJ += ./bs-logic/Interrupt_Handler.o
 OBJ += ./bs-logic/Interrupt_Vector_Table.o
 OBJ += ./bs-logic/mode_reg_helper.o
 OBJ += ./bs-logic/Stack.o
-OBJ += ./bs-logic/start.o
+OBJ += ./bs-logic/threads/init_thread.o
+OBJ += ./bs-logic/threads/threads_handler.o
 OBJ += ./driver/interrupt_regs_driver.o
 OBJ += ./driver/uart_driver.o
 OBJ += ./lib/Interrupt_printer.o
 OBJ += ./lib/kprintf.o
 OBJ += ./lib/regcheck.o
 OBJ += ./lib/regcheck_asm.o
+
 
 
 
