@@ -9,37 +9,51 @@
 
 //TODO NUR ZU DEBUG ZWECKEN:
 void print_lr (int32_t lr) {
+    struct tcb* thread = get_tcb(IDLE_THREAD);
+    kprintf("AUS START.S -> PRINT_LR() -> threads[IDLE_THREAD].r5 = %x\n\r", (*thread).r5);
+    kprintf("AUS START.S -> PRINT_LR() -> threads[IDLE_THREAD].r6 = %x\n\r", (*thread).r6);
+
     kprintf("\n\r############");
     kprintf("\n\rlink register: %i\n\r", lr);
     kprintf("\n\r############");
+    kprintf(">>> STACK_CHECK <<<\n\r");
+    int i;
+    kprintf("sp_usr: %x\n\r", *(int*) ((128*1024*1023)-4));
+    kprintf("lr_usr: %x\n\r", *(int*) ((128*1024*1023)-8));
+    for (i = 3; i <= 10; i++) {
+        kprintf("R%u: %x\t    ", (15-(i-3)), *(int*) ((128*1024*1023)-i*4));
+        kprintf("R%u: %x\n\r", (15-(i+5)), *(int*) ((128*1024*1023)-(i+8)*4));
+    }
     return;
 }
 
 
 void save_thread(uint32_t stackadress, uint32_t spsr) {
-    threads[running_thread].r0 = *(uint32_t*) stackadress;
-    threads[running_thread].r1 = *(uint32_t*) stackadress+4;
-    threads[running_thread].r2 = *(uint32_t*) stackadress+4*2;
-    threads[running_thread].r3 = *(uint32_t*) stackadress+4*3;
-    threads[running_thread].r4 = *(uint32_t*) stackadress+4*4;
-    threads[running_thread].r5 = *(uint32_t*) stackadress+4*5;
-    threads[running_thread].r6 = *(uint32_t*) stackadress+4*6;
-    threads[running_thread].r7 = *(uint32_t*) stackadress+4*7;
-    threads[running_thread].r8 = *(uint32_t*) stackadress+4*8;
-    threads[running_thread].r9 = *(uint32_t*) stackadress+4*9;
-    threads[running_thread].r10 = *(uint32_t*) stackadress+4*10;
-    threads[running_thread].r11 = *(uint32_t*) stackadress+4*11;
-    threads[running_thread].r12 = *(uint32_t*) stackadress+4*12;
-    threads[running_thread].sp = *(uint32_t*) stackadress+4*17;     //sp_usr
-    threads[running_thread].lr_usr = *(uint32_t*) stackadress+4*16;     //lr_usr
-    threads[running_thread].lr_irq = *(uint32_t*) stackadress+4*14;     //lr_IRQ
-    threads[running_thread].cpsr = spsr;
+    struct tcb* thread = get_tcb(running_thread);
+    (*thread).r0 = *(uint32_t*) stackadress;
+    (*thread).r1 = *(uint32_t*) stackadress+4;
+    (*thread).r2 = *(uint32_t*) stackadress+4*2;
+    (*thread).r3 = *(uint32_t*) stackadress+4*3;
+    (*thread).r4 = *(uint32_t*) stackadress+4*4;
+    (*thread).r5 = *(uint32_t*) stackadress+4*5;
+    (*thread).r6 = *(uint32_t*) stackadress+4*6;
+    (*thread).r7 = *(uint32_t*) stackadress+4*7;
+    (*thread).r8 = *(uint32_t*) stackadress+4*8;
+    (*thread).r9 = *(uint32_t*) stackadress+4*9;
+    (*thread).r10 = *(uint32_t*) stackadress+4*10;
+    (*thread).r11 = *(uint32_t*) stackadress+4*11;
+    (*thread).r12 = *(uint32_t*) stackadress+4*12;
+    (*thread).sp = *(uint32_t*) stackadress+4*17;     //sp_usr
+    (*thread).lr_usr = *(uint32_t*) stackadress+4*16;     //lr_usr
+    (*thread).lr_irq = *(uint32_t*) stackadress+4*14;     //lr_IRQ
+    (*thread).cpsr = spsr;
 }
 
 uint8_t find_next_thread() {
     //TODO round robin
     uint8_t i = 1;
-    while (threads[i].zustand != BEREIT) {
+    struct tcb* thread = get_tcb(i);
+    while ((*thread).zustand != BEREIT) {
         if (i == MAX_THREADS-1) {
             kprintf("cant find Thread to execute -> loading idle");
             return IDLE_THREAD;
@@ -50,42 +64,47 @@ uint8_t find_next_thread() {
 }
 
 uint32_t load_thread(uint8_t next_thread, uint32_t irq_stackadress) {
-
-    *(uint32_t*) irq_stackadress = threads[next_thread].r0;
-    *(uint32_t*) (irq_stackadress+4) = threads[next_thread].r1;
-    *(uint32_t*) (irq_stackadress+4*2) = threads[next_thread].r2;
-    *(uint32_t*) (irq_stackadress+4*3) = threads[next_thread].r3;
-    *(uint32_t*) (irq_stackadress+4*4) = threads[next_thread].r4;
-    *(uint32_t*) (irq_stackadress+4*5) = threads[next_thread].r5;
-    *(uint32_t*) (irq_stackadress+4*6) = threads[next_thread].r6;
-    *(uint32_t*) (irq_stackadress+4*7) = threads[next_thread].r7;
-    *(uint32_t*) (irq_stackadress+4*8) = threads[next_thread].r8;
-    *(uint32_t*) (irq_stackadress+4*9) = threads[next_thread].r9;
-    *(uint32_t*) (irq_stackadress+4*10) = threads[next_thread].r10;
-    *(uint32_t*) (irq_stackadress+4*11) = threads[next_thread].r11;
-    *(uint32_t*) (irq_stackadress+4*12) = threads[next_thread].r12;
-    *(uint32_t*) (irq_stackadress+4*17) = threads[next_thread].sp;
-    *(uint32_t*) (irq_stackadress+4*16) = threads[next_thread].lr_usr;
-    *(uint32_t*) (irq_stackadress+4*14) = threads[next_thread].lr_irq;
+    struct tcb* thread = get_tcb(next_thread);
+    kprintf("NEXT_THREAD = %u\n\r", next_thread);
+    kprintf("THREADS[NEXT_THREAD].r0 = %x\n\r", (*thread).r0);
+    kprintf("THREADS[NEXT_THREAD].r1 = %x\n\r", (*thread).r1);
+    *(uint32_t*) irq_stackadress = (*thread).r0;
+    *(uint32_t*) (irq_stackadress+4) = (*thread).r1;
+    *(uint32_t*) (irq_stackadress+4*2) = (*thread).r2;
+    *(uint32_t*) (irq_stackadress+4*3) = (*thread).r3;
+    *(uint32_t*) (irq_stackadress+4*4) = (*thread).r4;
+    *(uint32_t*) (irq_stackadress+4*5) = (*thread).r5;
+    *(uint32_t*) (irq_stackadress+4*6) = (*thread).r6;
+    *(uint32_t*) (irq_stackadress+4*7) = (*thread).r7;
+    *(uint32_t*) (irq_stackadress+4*8) = (*thread).r8;
+    *(uint32_t*) (irq_stackadress+4*9) = (*thread).r9;
+    *(uint32_t*) (irq_stackadress+4*10) = (*thread).r10;
+    *(uint32_t*) (irq_stackadress+4*11) = (*thread).r11;
+    *(uint32_t*) (irq_stackadress+4*12) = (*thread).r12;
+    *(uint32_t*) (irq_stackadress+4*17) = (*thread).sp;
+    *(uint32_t*) (irq_stackadress+4*16) = (*thread).lr_usr;
+    *(uint32_t*) (irq_stackadress+4*14) = (*thread).lr_irq;
     kprintf("thread loaded (load_thread)");
-    return threads[next_thread].cpsr;
+    return (*thread).cpsr;
 
 }
 
 uint32_t swap_thread(uint32_t irq_stackadress, uint32_t spsr) {
     kprintf("1 start swap_thread\n\r");
-    if(threads[IDLE_THREAD].zustand == BEENDET) { //wird beim initialen durchlauf aufgereufen
+    struct tcb* idle_thread = get_tcb(IDLE_THREAD);
+    struct tcb* running_thread_tcb = get_tcb(running_thread);
+    if((*idle_thread).zustand == BEENDET) { //wird beim initialen durchlauf aufgereufen
         kprintf("2 initial case (swap_thread)\n\r");
-        running_thread = IDLE_THREAD;           // IDEL_thread ist erster thread der läuft
+        running_thread = IDLE_THREAD;           // IDLE_thread ist erster thread der läuft
     }else{
         kprintf("3.1 default case (swap_thread)\n\r");
         save_thread(irq_stackadress, spsr);
         kprintf("3.2 thread is saved (swap_thread\n\r");
-        threads[running_thread].zustand = BEREIT;
+        (*running_thread_tcb).zustand = BEREIT;
         running_thread = find_next_thread(); //TODO round robin
         kprintf("3.3 next thread found swap_thread\n\r");
     }
-    threads[running_thread].zustand = LAUFEND;
-    kprintf("ZUSTAND: %i\n\r", threads[running_thread].zustand);
+    (*running_thread_tcb).zustand = LAUFEND;
+    kprintf("ZUSTAND: %i\n\r", (*running_thread_tcb).zustand);
     return load_thread(running_thread, irq_stackadress);
 }

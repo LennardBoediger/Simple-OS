@@ -33,10 +33,10 @@ struct tcb {
     uint8_t zustand;
 };
 
-static volatile
-struct tcb threads[MAX_THREADS];
+struct tcb* get_tcb(uint8_t index);
 
-int16_t prepare_thread(void (*pc)(), uint32_t* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle);
+
+int16_t prepare_thread(void* pc, uint32_t* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle);
 
 void init_tcbs();
 void prepare_idle_thread();

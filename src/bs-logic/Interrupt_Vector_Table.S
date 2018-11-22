@@ -112,11 +112,13 @@ irq_tr:
     push {r1}           // lr_usr an Stelle direkt darüber
     sub sp, sp, #64         // zurück zum eigentlichen Stackende
     /* Printfunktion-Aufruf */
+    bl print_lr
     mov r0, sp
     mrs r1, cpsr
     mrs r2, spsr
     //    mov r3, pc+8
     bl irq
+//    bl print_lr
     cmp r0, #0          //TODO: testen
     beq j_if_uart       //TODO: testen
     //    IT EQ r0, #0
@@ -125,6 +127,7 @@ irq_tr:
     msr spsr, r0
     /* Wechsel in zuvorigen Modus */
 j_if_uart:
+    bl print_lr
     add sp, sp, #64
     pop {r1}
     pop {r0}
@@ -134,10 +137,9 @@ j_if_uart:
     pop {r0-r12}        //register zurück schreiben 0-14
     add sp, sp, #4          //sp überspringen
     add r0, lr, #0
-    bl print_lr
+//    bl print_lr
     pop {lr}
     add r0, lr, #0
-    bl print_lr
     add sp, sp, #4          //PC im stack überspringen
     add sp, sp, #8          // sp wieder auf Anfang
 //    pop {lr_usr}        //NEU AUFGABE 3 FÜR THREAD-WECHSEL
