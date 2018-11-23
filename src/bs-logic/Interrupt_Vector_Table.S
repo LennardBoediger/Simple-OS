@@ -84,7 +84,7 @@ prefab_tr:
 dataab_tr:
     sub lr, lr, #4      //wäre #8 um dataab-befehl zu wiederholen
     push {r13-r15}      //Alles pushen für Registerschnappschuss
-    push {r0-r12}       //wegen warning jetzt in 2 zeilen
+    push {r0-r12}       //wegen warning jetzt in 2 Zeilen
 /* Printfunktion-Aufruf */
     mov r0, sp
     mrs r1, cpsr
@@ -101,8 +101,6 @@ dataab_tr:
 irq_tr:
     sub lr, lr, #4      // zu letzten unausgeführten Befehl
     sub sp, sp, #8          // 2 Felder für sp_usr und lr_usr freihalten
-    //    push {sp_usr}       //NEU AUFGABE 3 FÜR THREAD-WECHSEL
-    //    push {lr_usr}       //NEU AUFGABE 3 FÜR THREAD-WECHSEL
     push {r13-r15}      //Alles pushen für Registerschnappschuss
     push {r0-r12}       //wegen warning jetzt in 2 zeilen
     add sp, sp, #72         // zurück zu den 2 freien Feldern springen
@@ -112,7 +110,6 @@ irq_tr:
     push {r1}           // lr_usr an Stelle direkt darüber
     sub sp, sp, #64         // zurück zum eigentlichen Stackende
     /* Printfunktion-Aufruf */
-    bl print_lr
     mov r0, sp
     mrs r1, cpsr
     mrs r2, spsr
@@ -127,23 +124,26 @@ irq_tr:
     msr spsr, r0
     /* Wechsel in zuvorigen Modus */
 j_if_uart:
+//    mov r0, sp
+//    bl print_peak
+    add sp, sp, #56     //#64 wäre mit pop{r1},msr lr_usr,... "richtig"
+//    pop {r1}
+//    pop {r0}
+//    msr sp_usr, r0
+//    msr lr_usr, r1
+//    sub sp, sp, #72
+//    pop {r0-r12}        // register zurück schreiben 0-14
+//    add sp, sp, #4          //sp überspringen
+/* ab hier lr nicht mehr anfassen!!! Kein bl,...*/
+    pop {lr}            // lr_irq
+    //print start
+    mov r0, lr
     bl print_lr
-    add sp, sp, #64
-    pop {r1}
-    pop {r0}
-    msr sp_usr, r0
-    msr lr_usr, r1
-    sub sp, sp, #72
-    pop {r0-r12}        //register zurück schreiben 0-14
-    add sp, sp, #4          //sp überspringen
-    add r0, lr, #0
-//    bl print_lr
-    pop {lr}
-    add r0, lr, #0
+    loop:
+    b loop
+    //print end
     add sp, sp, #4          //PC im stack überspringen
-    add sp, sp, #8          // sp wieder auf Anfang
-//    pop {lr_usr}        //NEU AUFGABE 3 FÜR THREAD-WECHSEL
-//    pop {sp_usr}        //NEU ...
+    add sp, sp, #8          // sp wieder auf Anfang (sp_usr und lr_usr-Leichen übersprungen)
     movs pc, lr
 
 

@@ -21,7 +21,6 @@ _bsprak:
     bl      INIT_STACK
     bl      enable_IRQ_interrupts   /* in interrupt_regs_driver.c */
     bl      init_tcbs                //erstellt 32 TCBs
-    bl      print_lr
 //    mrs     r0, cpsr
     bl      prepare_idle_thread     // prepared idel thread diese wird gestaret wenn der timer das erste mal abläuft
     bl      initialize_timer        /* in interrupt_regs_driver.c */

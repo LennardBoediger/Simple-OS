@@ -97,11 +97,12 @@ void enable_IRQ_interrupts() {
 }
 
 /* print ! bei Timer-Interrupt */
-uint32_t recognize_irq_interrupt(uint32_t stackadress, uint32_t spsr) {
+uint32_t recognize_irq_interrupt(uint32_t irq_stackadress, uint32_t spsr) {
     if (((arm_interrupt_reg->IRQ_BASIC_PENDING & (1 << IRQ_TIMER_SHIFT))>>IRQ_TIMER_SHIFT) == 1) {
         kprintf("!\n\r"); // print ! on timer interrupt
-        uint32_t cpsr = swap_thread(stackadress, spsr);
+        uint32_t cpsr = swap_thread(irq_stackadress, spsr);
         clear_timer();
+        kprintf("RECOGNIZE_IRQ_INTERRUPT FINISHED\n\r############################\n\r");
         return cpsr;
     }
     if (((arm_interrupt_reg->IRQ_PENDING_2 & (1 << IRQ_UART_SHIFT))>>IRQ_UART_SHIFT) == 1) {
