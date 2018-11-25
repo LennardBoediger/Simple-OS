@@ -113,9 +113,9 @@ irq_tr:
     mov r0, sp
     mrs r1, cpsr
     mrs r2, spsr
-    //    mov r3, pc+8
     bl irq
-//    bl print_lr
+    bl print_cpsr       //fordert cpsr in r0 und returnt das wieder
+
     cmp r0, #0          //TODO: testen
     beq j_if_uart       //TODO: testen
     //    IT EQ r0, #0
@@ -124,24 +124,16 @@ irq_tr:
     msr spsr, r0
     /* Wechsel in zuvorigen Modus */
 j_if_uart:
-//    mov r0, sp
-//    bl print_peak
-    add sp, sp, #56     //#64 wäre mit pop{r1},msr lr_usr,... "richtig"
-//    pop {r1}
-//    pop {r0}
-//    msr sp_usr, r0
-//    msr lr_usr, r1
-//    sub sp, sp, #72
-//    pop {r0-r12}        // register zurück schreiben 0-14
-//    add sp, sp, #4          //sp überspringen
+    add sp, sp, #64     //Um zuerst lr_usr und sp_usr auszulesen
+    pop {r1}
+    pop {r0}
+    msr sp_usr, r0
+    msr lr_usr, r1
+    sub sp, sp, #72
+    pop {r0-r12}        // register zurück schreiben 0-14
+    add sp, sp, #4          //sp überspringen
 /* ab hier lr nicht mehr anfassen!!! Kein bl,...*/
     pop {lr}            // lr_irq
-    //print start
-    mov r0, lr
-    bl print_lr
-    loop:
-    b loop
-    //print end
     add sp, sp, #4          //PC im stack überspringen
     add sp, sp, #8          // sp wieder auf Anfang (sp_usr und lr_usr-Leichen übersprungen)
     movs pc, lr

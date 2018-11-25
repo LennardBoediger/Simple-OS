@@ -339,6 +339,33 @@ src/lib/kprintf.c.s:
 	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/lib/kprintf.c.s
 .PHONY : src/lib/kprintf.c.s
 
+src/lib/userthread.o: src/lib/userthread.c.o
+
+.PHONY : src/lib/userthread.o
+
+# target to build an object file
+src/lib/userthread.c.o:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/lib/userthread.c.o
+.PHONY : src/lib/userthread.c.o
+
+src/lib/userthread.i: src/lib/userthread.c.i
+
+.PHONY : src/lib/userthread.i
+
+# target to preprocess a source file
+src/lib/userthread.c.i:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/lib/userthread.c.i
+.PHONY : src/lib/userthread.c.i
+
+src/lib/userthread.s: src/lib/userthread.c.s
+
+.PHONY : src/lib/userthread.s
+
+# target to generate assembly for a file
+src/lib/userthread.c.s:
+	$(MAKE) -f CMakeFiles/Bs_Prak.dir/build.make CMakeFiles/Bs_Prak.dir/src/lib/userthread.c.s
+.PHONY : src/lib/userthread.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -372,6 +399,9 @@ help:
 	@echo "... src/lib/kprintf.o"
 	@echo "... src/lib/kprintf.i"
 	@echo "... src/lib/kprintf.s"
+	@echo "... src/lib/userthread.o"
+	@echo "... src/lib/userthread.i"
+	@echo "... src/lib/userthread.s"
 .PHONY : help
 
 

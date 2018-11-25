@@ -7,7 +7,7 @@
 #define WARTEND 1
 #define BEREIT 2
 #define LAUFEND 3
-#define NO_STACK_ADRESS 0x7b40000 //Stack des nie aktiv genutzten Idle-threads
+#define NO_STACK_ADRESS 0x07b40000 //Stack des nie aktiv genutzten Idle-threads
 #include <stdint.h>
 
 
@@ -33,13 +33,14 @@ struct tcb {
     uint8_t zustand;
 };
 
-struct tcb* get_tcb(uint8_t index);
+struct tcb* get_tcb(int16_t index);
 
 
-int16_t prepare_thread(void* pc, uint32_t* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle);
+int16_t prepare_thread(void (*pc)(void*), uint32_t* irq_stack_data, uint32_t irq_stack_data_size, int16_t tcb_number);
 
 void init_tcbs();
 void prepare_idle_thread();
+int16_t find_free_tcb(uint8_t force_idle);
 
 
 #endif //BS_PRAK_INIT_THREAD_H

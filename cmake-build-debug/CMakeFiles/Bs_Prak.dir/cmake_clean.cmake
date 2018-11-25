@@ -7,6 +7,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/Bs_Prak.dir/src/lib/Interrupt_printer.c.o"
   "CMakeFiles/Bs_Prak.dir/src/bs-logic/threads/init_thread.c.o"
   "CMakeFiles/Bs_Prak.dir/src/bs-logic/threads/threads_handler.c.o"
+  "CMakeFiles/Bs_Prak.dir/src/lib/userthread.c.o"
   "Bs_Prak.pdb"
   "Bs_Prak"
 )

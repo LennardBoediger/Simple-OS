@@ -5,7 +5,7 @@
 #include "../../include/kprintf.h"
 
 //TODO: wie sollen vordere Bits sein bzw E-Bit (9. Stelle)
-#define DEF_USERMODE_CPSR 0x2D0
+#define DEF_USERMODE_CPSR 16 //0x2D0
 //in header:    - struct TCB (r0-r15, CPSR, Zusatzdaten-Stack-Pointer);
 //               --> R0-R12 + R13 und R14 (aus USER-Mode) + R15 (im LR vom IRQ) + CPSR (im SPSR vom IRQ)
 //              - Zusatzdaten Stack_max-size (gibt an, wie groß der Zusatzstack eines Threads sein darf
@@ -13,7 +13,7 @@
 
 struct tcb threads[MAX_THREADS];
 
-struct tcb* get_tcb(uint8_t index) {
+struct tcb* get_tcb(int16_t index) {
     kprintf("AUS get_tcb_elem -> PRINT_LR() -> threads[IDLE_THREAD].r5 = %x\n\r", threads[IDLE_THREAD].r5);
     kprintf("AUS get_tcb_elem -> PRINT_LR() -> threads[IDLE_THREAD].r6 = %x\n\r", threads[IDLE_THREAD].r6);
     return &threads[index];
@@ -57,10 +57,9 @@ void init_tcbs(){
 
 
 
-void idle_thread(){
-    kprintf("start idle thread 32");
+void idle_thread(void* voidPointerOfFame){
+    kprintf("start idle thread 32\n\r");
     while (1) {
-        kprintf("xyz");
     /* so lange, bis interrupt */
     }
 }
@@ -70,42 +69,45 @@ void idle_thread(){
 // init_idle prepare auf idle auf start_idle_thread
 void prepare_idle_thread(){
     kprintf("PREPARE IDLE-THREAD\n\r");
-    void(* idle_thread_Ptr)();
+    void(* idle_thread_Ptr)(void*);
     idle_thread_Ptr = &idle_thread;
     kprintf("PREPARE_IDLE_THREAD -> idle_thread_pointer = %x\n\r", idle_thread_Ptr);
-    prepare_thread(idle_thread_Ptr, (void*)NO_STACK_ADRESS, 0, 1); //TODO: DONE?! chose a better pointer?
+    prepare_thread((*idle_thread_Ptr)((void*)NO_STACK_ADRESS), (void*)NO_STACK_ADRESS, 0, find_free_tcb(1)); //TODO: DONE?! chose a better pointer?
 }
 
-//TODO: EBEN STAND HIER NOCH "void (*pc)()"
-int16_t prepare_thread(void* pc, uint32_t* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle) {
-    kprintf("PREPARE_THREAD() -> pc = %x\n\r", (uint32_t) pc);
-    int16_t i = 0;
-    struct tcb* thread = get_tcb(i);
+int16_t find_free_tcb(uint8_t force_idle) {
+    int16_t tcb_number = 0;
+    struct tcb* thread = get_tcb(tcb_number);
     if (force_idle == 0) {
         while ((*thread).zustand != BEENDET) {
-            thread = get_tcb(i);
-            if (i == MAX_THREADS - 1) {
+            thread = get_tcb(tcb_number);
+            if (tcb_number == MAX_THREADS - 1) {
                 kprintf("K1 THREAD FREI :(");
                 return -1;
             }
-            i++;
+            tcb_number++;
         }
         (*thread).zustand = BEREIT;
     } else{
-        i = IDLE_THREAD;
-        thread = get_tcb(i);
+        tcb_number = IDLE_THREAD;
+        thread = get_tcb(tcb_number);
         thread->zustand = BEENDET;
     }
-    thread->lr_irq = (uint32_t) pc;
+    return tcb_number;
+}
+
+int16_t prepare_thread(void (*pc)(void*), uint32_t* irq_stack_data, uint32_t irq_stack_data_size, int16_t tcb_number) {
+    kprintf("PREPARE_THREAD() -> pc = %x\n\r", (uint32_t) pc);
+    struct tcb* thread = get_tcb(tcb_number);
+    thread->lr_irq = (uint32_t) pc((void*)((*thread).data_stack_pointer - irq_stack_data_size));
     //TODO DATEN IN STACK KOPIEREN
-    thread->lr_usr = (uint32_t) pc;
     uint16_t j;
     for (j = 0; j < irq_stack_data_size; j++) {                 // copy data to thread stack
         *(uint32_t*)(128*1024*(1018 - j)) = *(irq_stack_data - j);   //TODO testen
     }
-    if (i == IDLE_THREAD) {
+    if (tcb_number == IDLE_THREAD) {
         thread->data_stack_pointer = NO_STACK_ADRESS;
-    } else thread->data_stack_pointer = (uint32_t) 128*1024*(1018-i);
+    } else thread->data_stack_pointer = (uint32_t) 128*1024*(1018-tcb_number);
     thread->sp = (*thread).data_stack_pointer - irq_stack_data_size;
-    return i;
+    return tcb_number;
 }

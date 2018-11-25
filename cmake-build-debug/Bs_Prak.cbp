@@ -126,10 +126,16 @@
 		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/include/uart_driver.h">
 			<Option target="Bs_Prak"/>
 		</Unit>
+		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/include/userthread.h">
+			<Option target="Bs_Prak"/>
+		</Unit>
 		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/lib/Interrupt_printer.c">
 			<Option target="Bs_Prak"/>
 		</Unit>
 		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/lib/kprintf.c">
+			<Option target="Bs_Prak"/>
+		</Unit>
+		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/lib/userthread.c">
 			<Option target="Bs_Prak"/>
 		</Unit>
 		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/CMakeLists.txt">
