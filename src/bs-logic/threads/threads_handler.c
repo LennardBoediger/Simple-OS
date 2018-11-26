@@ -6,6 +6,7 @@
 //#define INVALID_THREAD = 128;
 
 uint16_t running_thread;
+static uint32_t next_random = 1;
 
 uint16_t get_running_thread(){
     return running_thread;
@@ -44,28 +45,48 @@ void save_thread(uint32_t stackadress, uint32_t spsr) {
     thread->r10 = *((uint32_t*) stackadress+10);
     thread->r11 = *((uint32_t*) stackadress+11);
     thread->r12 = *((uint32_t*) stackadress+12);
-    thread->sp = *((uint32_t*) stackadress+17);     //sp_usr
-    thread->lr_usr = *((uint32_t*) stackadress+16);     //lr_usr
-//    kprintf("Gesicherter IRQ stack inhalt auf lr_usr: %x\n\r", *((uint32_t*) stackadress+16));
     thread->lr_irq = *((uint32_t*) stackadress+14);     //lr_IRQ
+    thread->lr_usr = *((uint32_t*) stackadress+16);     //lr_usr
+    thread->sp = *((uint32_t*) stackadress+17);     //sp_usr
+//    kprintf("Gesicherter IRQ stack inhalt auf lr_usr: %x\n\r", *((uint32_t*) stackadress+16));
     kprintf("thread saved (save_thread)\n\r");
     thread->cpsr = spsr;
 }
 
-uint8_t find_next_thread() {
-    //TODO round robin
-    uint8_t i = 0;
-    struct tcb* thread = get_tcb(i);
-    while (thread->zustand != BEREIT) {
-        if (i == MAX_THREADS-1) {
-            kprintf("\n\r\n\r++++++++ NEUER THREAD => IDLE_THREAD ++++++++\n\r\n\r");
-            return IDLE_THREAD;
-        }
-        i++;
-    }
-    kprintf("\n\r\n\r++++++++ NEUER THREAD => %i ++++++++\n\r\n\r", i);
-    return i;
+
+uint32_t own_random_r(uint32_t *seed) {
+    *seed = *seed * 1103515245 + 12345;
+    return (*seed % ((uint32_t)RAND_MAX + 1));
 }
+
+uint32_t own_random(void) {
+    return (own_random_r(&next_random));
+}
+
+void own_s_random(uint32_t seed) {
+    next_random = seed;
+}
+
+uint32_t find_next_thread() {
+    uint8_t i = 0;
+    uint8_t active_threads[MAX_THREADS];
+    uint32_t number_of_active_threads = 0;
+    for (i = 0; i < MAX_THREADS-1; i++) {
+        struct tcb* thread = get_tcb(i);
+        if (thread->zustand == BEREIT || thread->zustand == LAUFEND) {
+            number_of_active_threads++;
+            active_threads[number_of_active_threads-1] = i;
+        }
+    }
+    if(number_of_active_threads == 0) {
+        kprintf("\n\r\n\r++++++++ NEUER THREAD => IDLE_THREAD ++++++++\n\r\n\r");
+        return IDLE_THREAD;
+    }
+    uint32_t random_index = (own_random()%(number_of_active_threads));
+    kprintf("\n\r\n\r++++++++ NEUER THREAD => %i ++++++++\n\r\n\r", random_index);
+    return active_threads[random_index];
+}
+
 
 uint32_t load_thread(uint8_t next_thread, uint32_t irq_stackadress) {
     struct tcb* thread = get_tcb(next_thread);
@@ -83,11 +104,11 @@ uint32_t load_thread(uint8_t next_thread, uint32_t irq_stackadress) {
     *((uint32_t*) irq_stackadress+10) = thread->r10;
     *((uint32_t*) irq_stackadress+11) = thread->r11;
     *((uint32_t*) irq_stackadress+12) = thread->r12;
-    *((uint32_t*) irq_stackadress+17) = thread->sp;
+    *((uint32_t*) irq_stackadress+14) = thread->lr_irq;
     *((uint32_t*) irq_stackadress+16) = thread->lr_usr;
+    *((uint32_t*) irq_stackadress+17) = thread->sp;
 //    kprintf("LOAD_THREAD -> Wert an lr_usr (irq-Stack) = %x\n\r", *((uint32_t*) irq_stackadress+16));
 //    kprintf("LOAD_THREAD -> THREADS[NEXT_THREAD].lr_usr = %x\n\r", thread->lr_usr);
-    *((uint32_t*) irq_stackadress+14) = thread->lr_irq;
 //    kprintf("LOAD_THREAD -> Wert an lr_irq (irq-Stack) = %x\n\r", *((uint32_t*) irq_stackadress+14));
 //    kprintf("LOAD_THREAD -> THREADS[NEXT_THREAD].lr_irq = %x\n\r", thread->lr_irq);
     kprintf("thread loaded (load_thread)\n\r");

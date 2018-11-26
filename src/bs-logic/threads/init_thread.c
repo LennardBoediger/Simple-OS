@@ -46,7 +46,7 @@ void init_tcbs(){
         threads[i].lr_usr = 0x666; //sollte nie...
         threads[i].lr_irq = 0x666; //sollte nie zu sehen sein
         threads[i].cpsr = DEF_USERMODE_CPSR;
-        threads[i].data_stack_pointer = (uint32_t) 128*1024*(1018-i);
+        threads[i].data_stack_pointer = (uint32_t) (128*1024*(1018-i));
         threads[i].zustand = BEENDET;
     }
     kprintf("TCBVorbereitung abgeschlossen\n\r");
@@ -77,12 +77,12 @@ int32_t find_free_tcb(uint8_t force_idle) {
     struct tcb* thread = get_tcb(tcb_number);
     if (force_idle == 0) {
         while ((*thread).zustand != BEENDET) {
-            thread = get_tcb(tcb_number);
             if (tcb_number == MAX_THREADS - 1) {
                 kprintf("K1 THREAD FREI :(");
                 return -1;
             }
             tcb_number++;
+            thread = get_tcb(tcb_number);
         }
         (*thread).zustand = BEREIT;
     } else{
@@ -106,8 +106,16 @@ int32_t prepare_thread(void (*pc)(void*), uint32_t* irq_stack_data, uint32_t irq
     if (tcb_number == IDLE_THREAD) {
         thread->r0 = NO_STACK_ADRESS;
     } else {
-        thread->r0 = NO_STACK_ADRESS;//(uint32_t) 128*1024*(1018-tcb_number);
+        thread->r0 = thread->data_stack_pointer;
     }
-    thread->sp = thread->r0; //- irq_stack_data_size; //TODO testen / fragen
+    //Abfangen, wenn Größe des Stacks nicht mit dem Alignment zusammenpasst
+    uint32_t aligned_size;
+    if (irq_stack_data_size % 8 != 0) {
+        aligned_size = irq_stack_data_size + (8 - (irq_stack_data_size % 8));
+    } else {
+        aligned_size = irq_stack_data_size;
+    }
+    //Stackpointer auf oberstes Elemtent des Stacks
+    thread->sp = (thread->data_stack_pointer - aligned_size); //TODO testen / fragen
     return tcb_number;
 }

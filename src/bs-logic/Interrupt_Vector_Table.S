@@ -32,7 +32,7 @@ reset_tr:
     b _start
 
 undef_tr:
-    //    add lr, lr, #0      //undef befehl überspringen
+    //    add lr, lr, #0      //WAHRSCHEINLICH SUB #4
     push {r13-r15}        //Alles pushen für Registerschnappschuss
     push {r0-r12}        //wegen warning jetzt in 2 zeilen
 /* Printfunktion-Aufruf */
@@ -49,7 +49,7 @@ undef_tr:
 
 
 swi_tr:
-    add lr, lr, #0
+    sub lr, lr, #0
     push {r13-r15}        //Alles pushen für Registerschnappschuss
     push {r0-r12}        //wegen warning jetzt in 2 zeilen
 /* Printfunktion-Aufruf */
