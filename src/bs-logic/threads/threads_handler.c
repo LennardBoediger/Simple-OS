@@ -45,9 +45,10 @@ void save_thread(uint32_t stackadress, uint32_t spsr) {
     thread->r10 = *((uint32_t*) stackadress+10);
     thread->r11 = *((uint32_t*) stackadress+11);
     thread->r12 = *((uint32_t*) stackadress+12);
-    thread->lr_irq = *((uint32_t*) stackadress+14);     //lr_IRQ
-    thread->lr_usr = *((uint32_t*) stackadress+16);     //lr_usr
-    thread->sp = *((uint32_t*) stackadress+17);     //sp_usr
+    thread->lr_irq = *((uint32_t*) stackadress+14);     //lr_IRQ //14
+    thread->lr_usr = *((uint32_t*) stackadress+16);     //lr_usr //16
+    kprintf("SAVE_THREAD -> lr_usr = %x, stack = %x\n\r", thread->lr_usr, *((uint32_t*) stackadress+16));
+    thread->sp = *((uint32_t*) stackadress+17);     //sp_usr //17
 //    kprintf("Gesicherter IRQ stack inhalt auf lr_usr: %x\n\r", *((uint32_t*) stackadress+16));
     kprintf("thread saved (save_thread)\n\r");
     thread->cpsr = spsr;
@@ -83,7 +84,7 @@ uint32_t find_next_thread() {
         return IDLE_THREAD;
     }
     uint32_t random_index = (own_random()%(number_of_active_threads));
-    kprintf("\n\r\n\r++++++++ NEUER THREAD => %i ++++++++\n\r\n\r", random_index);
+    kprintf("\n\r\n\r++++++++ NEUER THREAD => %i ++++++++\n\r\n\r", active_threads[random_index]);
     return active_threads[random_index];
 }
 
@@ -104,9 +105,10 @@ uint32_t load_thread(uint8_t next_thread, uint32_t irq_stackadress) {
     *((uint32_t*) irq_stackadress+10) = thread->r10;
     *((uint32_t*) irq_stackadress+11) = thread->r11;
     *((uint32_t*) irq_stackadress+12) = thread->r12;
-    *((uint32_t*) irq_stackadress+14) = thread->lr_irq;
-    *((uint32_t*) irq_stackadress+16) = thread->lr_usr;
-    *((uint32_t*) irq_stackadress+17) = thread->sp;
+    *((uint32_t*) irq_stackadress+14) = thread->lr_irq; //13
+    *((uint32_t*) irq_stackadress+16) = thread->lr_usr; //14
+    kprintf("LOAD_THREAD -> lr_usr = %x, stack = %x\n\r", thread->lr_usr, *((uint32_t*) irq_stackadress+16));
+    *((uint32_t*) irq_stackadress+17) = thread->sp; //15
 //    kprintf("LOAD_THREAD -> Wert an lr_usr (irq-Stack) = %x\n\r", *((uint32_t*) irq_stackadress+16));
 //    kprintf("LOAD_THREAD -> THREADS[NEXT_THREAD].lr_usr = %x\n\r", thread->lr_usr);
 //    kprintf("LOAD_THREAD -> Wert an lr_irq (irq-Stack) = %x\n\r", *((uint32_t*) irq_stackadress+14));
@@ -125,9 +127,11 @@ uint32_t swap_thread(uint32_t irq_stackadress, uint32_t spsr) {
         running_thread = IDLE_THREAD;           // IDLE_thread ist erster thread der läuft
     }else {
         kprintf("3.1 default case (swap_thread)\n\r");
-        save_thread(irq_stackadress, spsr);
-        kprintf("3.2 thread is saved (swap_thread)\n\r");
-        old_running_thread->zustand = BEREIT;
+        if (old_running_thread->zustand == LAUFEND) {
+            save_thread(irq_stackadress, spsr);
+            old_running_thread->zustand = BEREIT;
+            kprintf("3.2 thread is saved (swap_thread)\n\r");
+        }
         running_thread = find_next_thread(); //TODO round robin
         kprintf("3.3 next thread found swap_thread\n\r");
     }

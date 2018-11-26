@@ -36,7 +36,7 @@ struct tcb {
 struct tcb* get_tcb(int32_t index);
 
 
-int32_t prepare_thread(void (*pc)(void*), uint32_t* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle);
+int32_t prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle);
 
 void init_tcbs();
 void prepare_idle_thread();

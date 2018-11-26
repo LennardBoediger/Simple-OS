@@ -92,17 +92,26 @@ int32_t find_free_tcb(uint8_t force_idle) {
     }
     return tcb_number;
 }
-//(void*)((*thread).data_stack_pointer - irq_stack_data_size)
-int32_t prepare_thread(void (*pc)(void*), uint32_t* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle) {
+
+//TODO auslagern
+void memcopy(void* src, void* dst, uint32_t irq_stack_data_size) {
+    uint8_t *src_byte = (uint8_t *) src;
+    uint8_t *dst_byte = (uint8_t *) dst;
+    uint16_t j;
+    for (j = 0; j < irq_stack_data_size; j++) {
+        *dst_byte = *src_byte;
+        src_byte++;
+        dst_byte++;
+    }
+}
+
+int32_t prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle) {
     kprintf("PREPARE_THREAD() -> pc = %x\n\r", (uint32_t) pc);
+    kprintf("PREPARE_THREAD() -> irq_stack_data = %x\n\r", *((uint32_t*) irq_stack_data));
     int32_t tcb_number = find_free_tcb(force_idle);
     struct tcb* thread = get_tcb(tcb_number);
     thread->lr_irq = (uint32_t) pc;
-    uint16_t j;
-//    for (j = 0; j < irq_stack_data_size; j++) {                 // copy data to thread stack
-//        *(uint32_t*)((128*1024*(1018 - tcb_number))-j) = *(irq_stack_data - j);   //TODO testen
-//    }
-
+    memcopy(irq_stack_data, (uint32_t*)thread->data_stack_pointer, irq_stack_data_size);
     if (tcb_number == IDLE_THREAD) {
         thread->r0 = NO_STACK_ADRESS;
     } else {

@@ -20,6 +20,8 @@
 
 void(* user_thread_Ptr)(void*);
 
+char global_char;
+
 
 static volatile
 struct timer* const timer_reg = (struct timer*) TIMER_BASE;
@@ -41,13 +43,15 @@ void clear_timer() {
 }
 
 void prepare_user_thread(char c){
-    user_thread_Ptr = &user_thread2;
+    global_char = c;
+    user_thread_Ptr = &user_thread;
     kprintf("PREPARE_USER_THREAD -> user_thread_Ptr = %x\n\r", user_thread_Ptr);
-    prepare_thread(user_thread_Ptr, (void*) c, sizeof(c), 0);
+    prepare_thread(user_thread_Ptr, (void*) &global_char, sizeof(global_char), 0);
 }
 
 void recognize_input () {
     char c = uart_receive();
+    kprintf("RECOGNIZE_INPUT -> uart_receive() = %c\n\r", c);
     switch (c) {
         case 'S':
             asm("swi 99");
@@ -76,10 +80,10 @@ void enable_IRQ_interrupts() {
 uint32_t recognize_irq_interrupt(uint32_t irq_stackadress, uint32_t spsr) {
     if (((arm_interrupt_reg->IRQ_BASIC_PENDING & (1 << IRQ_TIMER_SHIFT))>>IRQ_TIMER_SHIFT) == 1) {
         kprintf("!\n\r"); // print ! on timer interrupt
-        uint32_t cpsr = swap_thread(irq_stackadress, spsr);
+        uint32_t spsr = swap_thread(irq_stackadress, spsr);
         clear_timer();
         kprintf("RECOGNIZE_IRQ_INTERRUPT FINISHED\n\r############################\n\r");
-        return cpsr;
+        return spsr;
     }
     if (((arm_interrupt_reg->IRQ_PENDING_2 & (1 << IRQ_UART_SHIFT))>>IRQ_UART_SHIFT) == 1) {
         kprintf("UART INTERRUPT\n\r");

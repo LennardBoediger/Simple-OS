@@ -21,10 +21,9 @@ void interactive_test(char c){
     }
 }
 
-void user_thread2(void* stack_pointer) {
-//    char input = *((char*) stack_pointer);
+void user_thread(void* stack_pointer) {
+    char input = *((char*) stack_pointer);
     kprintf("USER_THREAD LÄUFT\n\r");
-    char input = 'n';
     switch(input) {
         case 's':
             asm("swi 99");
@@ -43,5 +42,5 @@ void user_thread2(void* stack_pointer) {
             asm("swi 42");
             break;
     }
-    while (1);
+    kprintf("\n\r\n\r\n\r\n\rDEAD THREADS CANNOT KPRINTF!!!!!11!!!elf!!!\n\r\n\r\n\r\n\r");
 }
