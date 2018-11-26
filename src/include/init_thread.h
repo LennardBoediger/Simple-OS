@@ -33,14 +33,13 @@ struct tcb {
     uint8_t zustand;
 };
 
-struct tcb* get_tcb(int16_t index);
+struct tcb* get_tcb(int32_t index);
 
 
-int16_t prepare_thread(void (*pc)(void*), uint32_t* irq_stack_data, uint32_t irq_stack_data_size, int16_t tcb_number);
+int32_t prepare_thread(void (*pc)(void*), uint32_t* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle);
 
 void init_tcbs();
 void prepare_idle_thread();
-int16_t find_free_tcb(uint8_t force_idle);
 
 
 #endif //BS_PRAK_INIT_THREAD_H

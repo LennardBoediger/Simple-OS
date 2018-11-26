@@ -2,6 +2,7 @@
 #include "../include/userthread.h"
 #include "../include/interrupt_regs_driver.h"
 #include "../include/regcheck.h"
+#include "../include/kprintf.h"
 
 /* erzeugt kurze Pausen zwischen den Buchstaben. 52147 = magic number */
 static void wait() {
@@ -20,8 +21,11 @@ void interactive_test(char c){
     }
 }
 
-void user_thread(void* stack_pointer) {
-    char input = *((char*) stack_pointer);
+void user_thread2(void* stack_pointer) {
+//    char input = *((char*) stack_pointer);
+    kprintf("USER_THREAD LÄUFT\n\r");
+    while (1);
+/*    char input = 'n';
     switch(input) {
         case 's':
             asm("swi 99");
@@ -36,8 +40,9 @@ void user_thread(void* stack_pointer) {
             register_checker();
             break;
         default:
-            interactive_test(input);
+//            interactive_test(input);
+            kprintf("INTERACTIVE_TEST_PROG TODO\n\r\n\r ");
             asm("swi 42");
             break;
-    }
+    }*/
 }

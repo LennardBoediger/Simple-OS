@@ -7,65 +7,36 @@
 
 uint16_t running_thread;
 
+uint16_t get_running_thread(){
+    return running_thread;
+}
+
 
 //in header:    - struct TCB (r0-r15, CPSR, Zusatzdaten-Stack-Pointer);
 //               --> R0-R12 + R13 und R14 (aus USER-Mode) + R15 (im LR vom IRQ) + CPSR (im SPSR vom IRQ)
 //              - Zusatzdaten Stack_max-size (gibt an, wie groß der Zusatzstack eines Threads sein darf
 
 //TODO NUR ZU DEBUG ZWECKEN:
-uint32_t print_cpsr(uint32_t cpsr) {
-    kprintf("PRINT_CPSR -> cpsr = %x\n\r", cpsr);
-    return cpsr;
-}
-void print_peak (uint32_t sp) {
-    kprintf("sp: %x\n\r", sp);
-    kprintf("PRINT_PEAK Wert bei sp+56 = %x\n\r", *((uint32_t*) sp+56));
-    kprintf("PRINT_PEAK Wert bei sp+14 = %x\n\r", *((uint32_t*) sp+14));
-   /* kprintf("PRINT_PEAK Wert bei sp-4 = %x\n\r", *((uint32_t*) sp-4));
-    kprintf("PRINT_PEAK Wert bei sp = %x\n\r", *((uint32_t*) sp));
-    kprintf("PRINT_PEAK Wert bei sp+4 = %x\n\r", *((uint32_t*) sp+4));
 
-    kprintf("############################\n\r");
-*/
-}
 void print_lr (uint32_t lr){
     kprintf("Wert bei lr = %x\n\r", lr);
 }
-/*
-void print_lr (int32_t lr) {
-    struct tcb* thread = get_tcb(IDLE_THREAD);
-    kprintf("AUS START.S -> PRINT_LR() -> threads[IDLE_THREAD].r5 = %x\n\r", (*thread).r5);
-    kprintf("AUS START.S -> PRINT_LR() -> threads[IDLE_THREAD].r6 = %x\n\r", (*thread).r6);
 
-    kprintf("\n\r############");
-    kprintf("\n\rlink register (irq): %x\n\r", lr);
-    kprintf("\n\r############");
-    kprintf(">>> IRQ_STACK_CHECK <<<\n\r");
-    int i;
-    kprintf("sp_usr: %x\n\r", *(int*) ((128*1024*1023)-4));
-    kprintf("lr_usr: %x\n\r", *(int*) ((128*1024*1023)-8));
-    for (i = 3; i <= 10; i++) {
-        kprintf("R%u: %x\t    ", (15-(i-3)), *(int*) ((128*1024*1023)-i*4));
-        kprintf("R%u: %x\n\r", (15-(i+5)), *(int*) ((128*1024*1023)-(i+8)*4));
-    }
-    return;
-}
-*/
 
 void save_thread(uint32_t stackadress, uint32_t spsr) {
     struct tcb* thread = get_tcb(running_thread);
     thread->r0 = *((uint32_t*) stackadress);
-    kprintf("Gesicherter IRQ stack inhalt auf R0: %x\n\r", *((uint32_t*) stackadress));
+//    kprintf("Gesicherter IRQ stack inhalt auf R0: %x\n\r", *((uint32_t*) stackadress));
     thread->r1 = *((uint32_t*) stackadress+1);
-    kprintf("Gesicherter IRQ stack inhalt auf R1: %x\n\r", *((uint32_t*) stackadress+1));
+//    kprintf("Gesicherter IRQ stack inhalt auf R1: %x\n\r", *((uint32_t*) stackadress+1));
     thread->r2 = *((uint32_t*) stackadress+2);
-    kprintf("Gesicherter IRQ stack inhalt auf R2: %x\n\r", *((uint32_t*) stackadress+2));
+//    kprintf("Gesicherter IRQ stack inhalt auf R2: %x\n\r", *((uint32_t*) stackadress+2));
     thread->r3 = *((uint32_t*) stackadress+3);
-    kprintf("Gesicherter IRQ stack inhalt auf R3: %x\n\r", *((uint32_t*) stackadress+3));
+//    kprintf("Gesicherter IRQ stack inhalt auf R3: %x\n\r", *((uint32_t*) stackadress+3));
     thread->r4 = *((uint32_t*) stackadress+4);
-    kprintf("Gesicherter IRQ stack inhalt auf R4: %x\n\r", *((uint32_t*) stackadress+4));
+//    kprintf("Gesicherter IRQ stack inhalt auf R4: %x\n\r", *((uint32_t*) stackadress+4));
     thread->r5 = *((uint32_t*) stackadress+5);
-    kprintf("Gesicherter IRQ stack inhalt auf R5: %x\n\r", *((uint32_t*) stackadress+5));
+//    kprintf("Gesicherter IRQ stack inhalt auf R5: %x\n\r", *((uint32_t*) stackadress+5));
     thread->r6 = *((uint32_t*) stackadress+6);
     thread->r7 = *((uint32_t*) stackadress+7);
     thread->r8 = *((uint32_t*) stackadress+8);
@@ -75,28 +46,30 @@ void save_thread(uint32_t stackadress, uint32_t spsr) {
     thread->r12 = *((uint32_t*) stackadress+12);
     thread->sp = *((uint32_t*) stackadress+17);     //sp_usr
     thread->lr_usr = *((uint32_t*) stackadress+16);     //lr_usr
-    kprintf("Gesicherter IRQ stack inhalt auf lr_usr: %x\n\r", *((uint32_t*) stackadress+16));
+//    kprintf("Gesicherter IRQ stack inhalt auf lr_usr: %x\n\r", *((uint32_t*) stackadress+16));
     thread->lr_irq = *((uint32_t*) stackadress+14);     //lr_IRQ
+    kprintf("thread saved (save_thread)\n\r");
     thread->cpsr = spsr;
 }
 
 uint8_t find_next_thread() {
     //TODO round robin
-    uint8_t i = 1;
+    uint8_t i = 0;
     struct tcb* thread = get_tcb(i);
     while (thread->zustand != BEREIT) {
         if (i == MAX_THREADS-1) {
-            kprintf("cant find Thread to execute -> loading idle\n\r");
+            kprintf("\n\r\n\r++++++++ NEUER THREAD => IDLE_THREAD ++++++++\n\r\n\r");
             return IDLE_THREAD;
         }
         i++;
     }
+    kprintf("\n\r\n\r++++++++ NEUER THREAD => %i ++++++++\n\r\n\r", i);
     return i;
 }
 
 uint32_t load_thread(uint8_t next_thread, uint32_t irq_stackadress) {
     struct tcb* thread = get_tcb(next_thread);
-    kprintf("LOAD_THREAD -> NEXT_THREAD = %u\n\r", next_thread);
+//    kprintf("LOAD_THREAD -> NEXT_THREAD = %u\n\r", next_thread);
     *((uint32_t*) irq_stackadress) = thread->r0;
     *((uint32_t*) irq_stackadress+1) = thread->r1;
     *((uint32_t*) irq_stackadress+2) = thread->r2;
@@ -112,11 +85,11 @@ uint32_t load_thread(uint8_t next_thread, uint32_t irq_stackadress) {
     *((uint32_t*) irq_stackadress+12) = thread->r12;
     *((uint32_t*) irq_stackadress+17) = thread->sp;
     *((uint32_t*) irq_stackadress+16) = thread->lr_usr;
-    kprintf("LOAD_THREAD -> Wert an lr_usr (irq-Stack) = %x\n\r", *((uint32_t*) irq_stackadress+16));
-    kprintf("LOAD_THREAD -> THREADS[NEXT_THREAD].lr_usr = %x\n\r", thread->lr_usr);
+//    kprintf("LOAD_THREAD -> Wert an lr_usr (irq-Stack) = %x\n\r", *((uint32_t*) irq_stackadress+16));
+//    kprintf("LOAD_THREAD -> THREADS[NEXT_THREAD].lr_usr = %x\n\r", thread->lr_usr);
     *((uint32_t*) irq_stackadress+14) = thread->lr_irq;
-    kprintf("LOAD_THREAD -> Wert an lr_irq (irq-Stack) = %x\n\r", *((uint32_t*) irq_stackadress+14));
-    kprintf("LOAD_THREAD -> THREADS[NEXT_THREAD].lr_irq = %x\n\r", thread->lr_irq);
+//    kprintf("LOAD_THREAD -> Wert an lr_irq (irq-Stack) = %x\n\r", *((uint32_t*) irq_stackadress+14));
+//    kprintf("LOAD_THREAD -> THREADS[NEXT_THREAD].lr_irq = %x\n\r", thread->lr_irq);
     kprintf("thread loaded (load_thread)\n\r");
     return thread->cpsr;
 

@@ -3,6 +3,9 @@
 #include "../include/Interrupt_printer.h"
 #include "../include/mode_reg_helper.h"
 #include "../include/dataab_helper.h"
+#include "../include/threads_handler.h"
+#include "../include/init_thread.h"
+
 
 uint8_t debug_irq = 1;  //Global RINT IRQ
 
@@ -13,10 +16,17 @@ void reset(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
 
 void undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     print_interrupt(stackadress, cpsr, spsr, "UNDEFINED", -4, 0);
+    //Nur Usermode ist % 16 == 0
+    if ((spsr % 16) == 0){
+        get_tcb(get_running_thread())->zustand = BEENDET;
+    }
 }
 
 void swi(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     print_interrupt(stackadress, cpsr, spsr, "SOFTWARE INTERRUPT", -4, 0);
+    if ((spsr % 16) == 0){
+        get_tcb(get_running_thread())->zustand = BEENDET;
+    }
 }
 
 
@@ -26,6 +36,9 @@ void prefab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
 
 void dataab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     print_interrupt(stackadress, cpsr, spsr, "DATA ABORT", -8, 1);
+    if ((spsr % 16) == 0){
+        get_tcb(get_running_thread())->zustand = BEENDET;
+    }
 }
 
 uint32_t irq(uint32_t irq_stackadress, uint32_t cpsr, uint32_t spsr) {

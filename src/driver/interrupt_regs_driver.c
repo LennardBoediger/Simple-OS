@@ -11,12 +11,14 @@
 #define IRQ_FIQ_REG_OFFSET (0x7E00B000 - 0x3F000000 + 0x200)
 #define TIMER_BASE (0x7E00B000 - 0x3F000000 + 0x400) //timerbaseadress minus MMU-offset
 #define PREDIVIDER_VALUE 249 /* +1 = 250*/
-#define INTERRUPT_TIMER 2000000  /* HIER HAEUFIGKEIT DER INTERRUPTS EINSTELLBAR */
+#define INTERRUPT_TIMER 6000000  /* HIER HAEUFIGKEIT DER INTERRUPTS EINSTELLBAR */
 #define TIMER_EN_SHIFT 7
 #define TIMER_INTERRUPT_EN_SHIFT 5
 #define TIMER_32BIT_COUNTER 1
 #define IRQ_TIMER_SHIFT 0
 #define IRQ_UART_SHIFT 25 /*bei irq_pending_2 entspricht das #57*/
+
+void(* user_thread_Ptr)(void*);
 
 
 static volatile
@@ -38,29 +40,11 @@ void clear_timer() {
     timer_reg->IRQ_CLEAR_ACK = 0x1;
 }
 
-
-/* erzeugt kurze Pausen zwischen den Buchstaben. 52147 = magic number */
-static void wait() {
-    int i;
-    for (i = 0; i < 52147; i++) {
-        asm("nop");
-    }
+void prepare_user_thread(char c){
+    user_thread_Ptr = &user_thread2;
+    kprintf("PREPARE_USER_THREAD -> user_thread_Ptr = %x\n\r", user_thread_Ptr);
+    prepare_thread(user_thread_Ptr, (void*) c, sizeof(c), 0);
 }
-
-
-void interactive_test(){
-    kprintf("\n\r\n\r\n\r### Interaktives Unterprogramm aufgerufen ###\n\r");
-    kprintf("### Bitte nur Tastendruck, wenn idle! Danke ###\n\r");
-    while(1){
-        char c = uart_receive();
-        int i;
-        for (i = 0; i < c; i++) {
-            kprintf("%c", c);
-            wait();
-        }
-    }
-}
-
 
 void recognize_input () {
     char c = uart_receive();
@@ -75,9 +59,7 @@ void recognize_input () {
             asm("udf");
             break;
         default:
-            void(* user_threadPtr)(void*);
-            user_threadPtr = &user_thread();
-            prepare_thread(user_threadPtr, (void*) c, sizeof(c), 0);
+            prepare_user_thread(c);
             break;
     }
 }

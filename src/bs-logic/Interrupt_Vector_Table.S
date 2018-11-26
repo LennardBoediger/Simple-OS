@@ -114,14 +114,13 @@ irq_tr:
     mrs r1, cpsr
     mrs r2, spsr
     bl irq
-    bl print_cpsr       //fordert cpsr in r0 und returnt das wieder
 
     cmp r0, #0          //TODO: testen
     beq j_if_uart       //TODO: testen
     //    IT EQ r0, #0
     //    T j_if_uart E
     //    cbz r0, j_if_uart
-    msr spsr, r0
+    msr spsr_cxsf, r0
     /* Wechsel in zuvorigen Modus */
 j_if_uart:
     add sp, sp, #64     //Um zuerst lr_usr und sp_usr auszulesen
