@@ -1,24 +1,18 @@
-
 #include <stdint.h>
 #include "../../include/init_thread.h"
 #include "../../include/threads_handler.h"
 #include "../../include/kprintf.h"
 
 #define DEF_USERMODE_CPSR 16 //0x2D0
-//in header:    - struct TCB (r0-r15, CPSR, Zusatzdaten-Stack-Pointer);
-//               --> R0-R12 + R13 und R14 (aus USER-Mode) + R15 (im LR vom IRQ) + CPSR (im SPSR vom IRQ)
-//              - Zusatzdaten Stack_max-size (gibt an, wie groß der Zusatzstack eines Threads sein darf
-//enum threadzustand {beendet = 0, wartend = 1, bereit = 2, laufend = 3};
 
 struct tcb threads[MAX_THREADS];
 
 struct tcb* get_tcb(int32_t index) {
-//    kprintf("AUS get_tcb -> PRINT_LR() -> threads[IDLE_THREAD].r5 = %x\n\r", threads[IDLE_THREAD].r5);
-//    kprintf("AUS get_tcb -> PRINT_LR() -> threads[IDLE_THREAD].r6 = %x\n\r", threads[IDLE_THREAD].r6);
     return &threads[index];
 }
 
 
+//TODO "SCHÖNES" BETRIEBSSYSTEM
 void wait_for_first_irq(){
     kprintf("\n\r\n\rINIT DONE! WAITING FOR FIRST IRQ...\n\r");
     while(1){
@@ -48,36 +42,32 @@ void init_tcbs(){
         threads[i].data_stack_pointer = (uint32_t) (128*1024*(1018-i));
         threads[i].zustand = BEENDET;
     }
-    kprintf("TCBVorbereitung abgeschlossen\n\r");
+    kprintf("TCBVorbereitung abgeschlossen.\n\r");
 }
 
 
 
 void idle_thread(void* voidPointerOfFame){
-    kprintf("start idle thread 32\n\r");
+    kprintf("Starte den idle thread (%i)...\n\r", IDLE_THREAD);
     while (1) {
     /* so lange, bis interrupt */
     }
 }
 
-//auch wenn idle keine daten braucht, braucht er einen (stack pointer?) und zustand
-//-> er liegt bei i= 32 und wird wie ein normaler thread behandelt. Dafür ruft die funktion
-// init_idle prepare auf idle auf start_idle_thread
 void prepare_idle_thread(){
-    kprintf("PREPARE IDLE-THREAD\n\r");
     void(* idle_thread_Ptr)(void*);
     idle_thread_Ptr = &idle_thread;
-    kprintf("PREPARE_IDLE_THREAD -> idle_thread_pointer = %x\n\r", idle_thread_Ptr);
     prepare_thread(idle_thread_Ptr, (void*)NO_STACK_ADRESS, 0, 1);
 }
 
+//TODO: KERNEL PANIC DURCH THREADMANGEL FIXEN
 int32_t find_free_tcb(uint8_t force_idle) {
     int16_t tcb_number = 0;
     struct tcb* thread = get_tcb(tcb_number);
     if (force_idle == 0) {
         while ((*thread).zustand != BEENDET) {
             if (tcb_number == MAX_THREADS - 1) {
-                kprintf("K1 THREAD FREI :(\n\r\n\r");
+                kprintf("K1 THREAD FREI :'(\n\r EINGABE WIRD VERWORFEN...\n\r");
                 return -1;
             }
             tcb_number++;
@@ -105,29 +95,27 @@ void memcopy(void* src, void* dst, uint32_t irq_stack_data_size) {
 }
 
 int32_t prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle) {
-    kprintf("PREPARE_THREAD() -> pc = %x\n\r", (uint32_t) pc);
-    kprintf("PREPARE_THREAD() -> irq_stack_data = %x\n\r", *((uint32_t*) irq_stack_data));
     int32_t tcb_number = find_free_tcb(force_idle);
     //Wenn kein Thread mehr frei war -> -1
 //    if (tcb_number == -1) {
-        struct tcb *thread = get_tcb(tcb_number);
-        thread->lr_irq = (uint32_t) pc;
-        memcopy(irq_stack_data, (uint32_t *) thread->data_stack_pointer, irq_stack_data_size);
-        if (tcb_number == IDLE_THREAD) {
-            thread->r0 = NO_STACK_ADRESS;
-        } else {
-            thread->r0 = thread->data_stack_pointer;
-        }
-        //Abfangen, wenn Größe des Stacks nicht mit dem Alignment zusammenpasst
-        uint32_t aligned_size;
-        if (irq_stack_data_size % 8 != 0) {
-            aligned_size = irq_stack_data_size + (8 - (irq_stack_data_size % 8));
-        } else {
-            aligned_size = irq_stack_data_size;
-        }
-        //Stackpointer auf oberstes Elemtent des Stacks
-        thread->sp = (thread->data_stack_pointer - aligned_size);
-        return tcb_number;
+    struct tcb *thread = get_tcb(tcb_number);
+    thread->lr_irq = (uint32_t) pc;
+    memcopy(irq_stack_data, (uint32_t *) thread->data_stack_pointer, irq_stack_data_size);
+    if (tcb_number == IDLE_THREAD) {
+        thread->r0 = NO_STACK_ADRESS;
+    } else {
+        thread->r0 = thread->data_stack_pointer;
+    }
+    //Abfangen, wenn Größe des Stacks nicht mit dem Alignment zusammenpasst
+    uint32_t aligned_size;
+    if (irq_stack_data_size % 8 != 0) {
+        aligned_size = irq_stack_data_size + (8 - (irq_stack_data_size % 8));
+    } else {
+        aligned_size = irq_stack_data_size;
+    }
+    //Stackpointer auf oberstes Elemtent des Stacks
+    thread->sp = (thread->data_stack_pointer - aligned_size);
+    return tcb_number;
 //    }
 //    return -1;
 }

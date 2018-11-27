@@ -45,13 +45,11 @@ void clear_timer() {
 void prepare_user_thread(char c){
     global_char = c;
     user_thread_Ptr = &user_thread;
-    kprintf("PREPARE_USER_THREAD -> user_thread_Ptr = %x\n\r", user_thread_Ptr);
     prepare_thread(user_thread_Ptr, (void*) &global_char, sizeof(global_char), 0);
 }
 
 void recognize_input () {
     char c = uart_receive();
-    kprintf("RECOGNIZE_INPUT -> uart_receive() = %c\n\r", c);
     switch (c) {
         case 'S':
             asm("swi 99");
@@ -82,10 +80,10 @@ uint32_t recognize_irq_interrupt(uint32_t irq_stackadress, uint32_t spsr) {
         kprintf("!\n\r"); // print ! on timer interrupt
         uint32_t new_spsr = swap_thread(irq_stackadress, spsr);
         clear_timer();
-        kprintf("RECOGNIZE_IRQ_INTERRUPT FINISHED\n\r############################\n\r");
         return new_spsr;
     }
     if (((arm_interrupt_reg->IRQ_PENDING_2 & (1 << IRQ_UART_SHIFT))>>IRQ_UART_SHIFT) == 1) {
+        //TODO: Vielleicht sowas wie "Taste gedrückt: " (statt UART INTERRUPT)
         kprintf("UART INTERRUPT\n\r");
         recognize_input();
 

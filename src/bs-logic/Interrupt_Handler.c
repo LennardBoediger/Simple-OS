@@ -23,7 +23,6 @@ uint32_t undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
         get_tcb(get_running_thread())->zustand = BEENDET;
         next_spsr = swap_thread(stackadress, spsr);
         clear_timer();
-        kprintf("RECOGNIZE_UNDEF_INTERRUPT FINISHED\n\r############################\n\r");
     }
     return next_spsr;
 }
@@ -32,12 +31,10 @@ uint32_t swi(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     print_interrupt(stackadress, cpsr, spsr, "SOFTWARE INTERRUPT", -4, 0);
     //Wenn wir aus dem User_mode kommen, wurde es von einem Thread ausgelößt
     uint32_t next_spsr = spsr;
-    kprintf("SWI -> next_spsr = %x", next_spsr);
     if ((next_spsr % MODE_MASK) == USER_MODE) {
         get_tcb(get_running_thread())->zustand = BEENDET;
         next_spsr = swap_thread(stackadress, spsr);
         clear_timer();
-        kprintf("RECOGNIZE_SWI_INTERRUPT FINISHED\n\r############################\n\r");
     }
     return next_spsr;
 }
@@ -51,7 +48,6 @@ uint32_t prefab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
         get_tcb(get_running_thread())->zustand = BEENDET;
         next_spsr = swap_thread(stackadress, spsr);
         clear_timer();
-        kprintf("RECOGNIZE_PREFAB_INTERRUPT FINISHED\n\r############################\n\r");
     }
     return next_spsr;
 }
@@ -64,13 +60,11 @@ uint32_t dataab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
         get_tcb(get_running_thread())->zustand = BEENDET;
         next_spsr = swap_thread(stackadress, spsr);
         clear_timer();
-        kprintf("RECOGNIZE_DATAAB_INTERRUPT FINISHED\n\r############################\n\r");
     }
     return next_spsr;
 }
 
 uint32_t irq(uint32_t irq_stackadress, uint32_t cpsr, uint32_t spsr) {
-    kprintf("\n\rIRQ() -> spsr = %x, cpsr = %x\n\r", spsr, cpsr);
     if (debug_irq == 1){
         print_interrupt(irq_stackadress, cpsr, spsr, "IRQ INTERRUPT", -8, 0);
     }

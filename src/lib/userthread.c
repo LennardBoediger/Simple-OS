@@ -17,18 +17,14 @@ static void wait() {
 void interactive_test(char c){
     int i;
     char temp = c;
-    for (i = 0; i < 200; i++) {
+    for (i = 0; i < temp; i++) {
         kprintf("%c", temp);
         wait();
     }
-    kprintf("interactive test done \n\r");
 }
 
 void user_thread(void* stack_pointer) {
     char input = *((char*) stack_pointer);
-//    int i, j;
-//    char temp = input;
-    kprintf("USER_THREAD LÄUFT\n\r");
     switch(input) {
         case 's':
             asm("swi 99");
@@ -44,17 +40,8 @@ void user_thread(void* stack_pointer) {
             break;
         default:
             interactive_test(input);
-/*            for (i = 0; i < 200; i++) {
-                kprintf("%c", temp);
-                for (j = 0; j < 52147; j++) {
-                    asm("nop");
-                }
-            }
-            kprintf("interactive test done \n\r");
-*/            kprintf("interactive_test definitly done\n\r");
             break;
     }
-    kprintf("\n\r+++ USERTHREAD DONE +++\n\r");
     asm("swi 42");
     kprintf("\n\r\n\r\n\r\n\rDEAD THREADS CANNOT KPRINTF!!!!!11!!!elf!!!\n\r\n\r\n\r\n\r");
 }

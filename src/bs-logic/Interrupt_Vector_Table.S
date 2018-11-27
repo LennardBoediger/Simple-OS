@@ -10,205 +10,200 @@ _INIT_IVT:
 .global _IVT
 .balign 32
 _IVT:
-    b reset_tr
-    b undef_tr
-    b swi_tr
-    b prefab_tr
-    b dataab_tr
+    b       reset_tr
+    b       undef_tr
+    b       swi_tr
+    b       prefab_tr
+    b       dataab_tr
     nop
-    b irq_tr
-    b fiq_tr
+    b       irq_tr
+    b       fiq_tr
 
 
 reset_tr:
-    sub sp, sp, #8          // 2 Felder für sp_usr und lr_usr freihalten
-    push {r13-r15}      //Alles pushen für Registerschnappschuss
-    push {r0-r12}       //wegen warning jetzt in 2 zeilen
-    add sp, sp, #72         // zurück zu den 2 freien Feldern springen
-    mrs r0, sp_usr
-    mrs r1, lr_usr
-    push {r0}           // sp_usr an unterste Stelle des IRQ_Stacks
-    push {r1}           // lr_usr an Stelle direkt darüber
-    sub sp, sp, #64         // zurück zum eigentlichen Stackende
+    sub     sp, sp, #8      // 2 Felder für sp_usr und lr_usr freihalten
+    push    {r13-r15}       //Alles pushen für Registerschnappschuss
+    push    {r0-r12}        //wegen warning jetzt in 2 zeilen
+    add     sp, sp, #72     // zurück zu den 2 freien Feldern springen
+    mrs     r0, sp_usr
+    mrs     r1, lr_usr
+    push    {r0}            // sp_usr an unterste Stelle des IRQ_Stacks
+    push    {r1}            // lr_usr an Stelle direkt darüber
+    sub     sp, sp, #64     // zurück zum eigentlichen Stackende
     /* Printfunktion-Aufruf */
-    mov r0, sp
-    mrs r1, cpsr
-    mrs r2, spsr
-    bl reset
+    mov     r0, sp
+    mrs     r1, cpsr
+    mrs     r2, spsr
+    bl      reset
 /* neustart des Programms*/
-    b _start
+    b       _start
 
 undef_tr:
-    //    add lr, lr, #0      //WAHRSCHEINLICH SUB #4
-    sub sp, sp, #8          // 2 Felder für sp_usr und lr_usr freihalten
-    push {r13-r15}      //Alles pushen für Registerschnappschuss
-    push {r0-r12}       //wegen warning jetzt in 2 zeilen
-    add sp, sp, #72         // zurück zu den 2 freien Feldern springen
-    mrs r0, sp_usr
-    mrs r1, lr_usr
-    push {r0}           // sp_usr an unterste Stelle des IRQ_Stacks
-    push {r1}           // lr_usr an Stelle direkt darüber
-    sub sp, sp, #64         // zurück zum eigentlichen Stackende
+    sub     sp, sp, #8      // 2 Felder für sp_usr und lr_usr freihalten
+    push    {r13-r15}       // Alles pushen für Registerschnappschuss
+    push    {r0-r12}        // wegen warning jetzt in 2 zeilen
+    add     sp, sp, #72     // zurück zu den 2 freien Feldern springen
+    mrs     r0, sp_usr
+    mrs     r1, lr_usr
+    push    {r0}            // sp_usr an unterste Stelle des IRQ_Stacks
+    push    {r1}            // lr_usr an Stelle direkt darüber
+    sub     sp, sp, #64     // zurück zum eigentlichen Stackende
     /* Printfunktion-Aufruf */
-    mov r0, sp
-    mrs r1, cpsr
-    mrs r2, spsr
-    bl undef
+    mov     r0, sp
+    mrs     r1, cpsr
+    mrs     r2, spsr
+    bl      undef
 /* Wechsel in zuvorigen Modus */
-    msr spsr_cxsf, r0
-    add sp, sp, #64     //Um zuerst lr_usr und sp_usr auszulesen
-    pop {r1}
-    pop {r0}
-    msr sp_usr, r0
-    msr lr_usr, r1
-    sub sp, sp, #72
-    pop {r0-r12}        // register zurück schreiben 0-14
-    add sp, sp, #4          //sp überspringen
+    msr     spsr_cxsf, r0
+    add     sp, sp, #64     // Um zuerst lr_usr und sp_usr auszulesen
+    pop     {r1}
+    pop     {r0}
+    msr     sp_usr, r0
+    msr     lr_usr, r1
+    sub     sp, sp, #72
+    pop     {r0-r12}        // register zurück schreiben 0-14
+    add     sp, sp, #4      // sp überspringen
 /* ab hier lr nicht mehr anfassen!!! Kein bl,...*/
-    pop {lr}            // lr_irq
-    add sp, sp, #4          //PC im stack überspringen
-    add sp, sp, #8          // sp wieder auf Anfang (sp_usr und lr_usr-Leichen übersprungen)
-    movs pc, lr
+    pop     {lr}            // lr_irq
+    add     sp, sp, #4      // PC im stack überspringen
+    add     sp, sp, #8      // sp wieder auf Anfang (sp_usr und lr_usr-Leichen übersprungen)
+    movs    pc, lr
 
 
 swi_tr:
-    sub lr, lr, #0      // EIGENTLICH #4
-    sub sp, sp, #8          // 2 Felder für sp_usr und lr_usr freihalten
-    push {r13-r15}      //Alles pushen für Registerschnappschuss
-    push {r0-r12}       //wegen warning jetzt in 2 zeilen
-    add sp, sp, #72         // zurück zu den 2 freien Feldern springen
-    mrs r0, sp_usr
-    mrs r1, lr_usr
-    push {r0}           // sp_usr an unterste Stelle des IRQ_Stacks
-    push {r1}           // lr_usr an Stelle direkt darüber
-    sub sp, sp, #64         // zurück zum eigentlichen Stackende
+    sub     lr, lr, #0      // EIGENTLICH #4
+    sub     sp, sp, #8      // 2 Felder für sp_usr und lr_usr freihalten
+    push    {r13-r15}       // Alles pushen für Registerschnappschuss
+    push    {r0-r12}        // wegen warning jetzt in 2 zeilen
+    add     sp, sp, #72     // zurück zu den 2 freien Feldern springen
+    mrs     r0, sp_usr
+    mrs     r1, lr_usr
+    push    {r0}            // sp_usr an unterste Stelle des IRQ_Stacks
+    push    {r1}            // lr_usr an Stelle direkt darüber
+    sub     sp, sp, #64     // zurück zum eigentlichen Stackende
     /* Printfunktion-Aufruf */
-    mov r0, sp
-    mrs r1, cpsr
-    mrs r2, spsr
-    bl swi
+    mov     r0, sp
+    mrs     r1, cpsr
+    mrs     r2, spsr
+    bl      swi
 /* Wechsel in zuvorigen Modus */
-    msr spsr_cxsf, r0
-    add sp, sp, #64     //Um zuerst lr_usr und sp_usr auszulesen
-    pop {r1}
-    pop {r0}
-    msr sp_usr, r0
-    msr lr_usr, r1
-    sub sp, sp, #72
-    pop {r0-r12}        // register zurück schreiben 0-14
-    add sp, sp, #4          //sp überspringen
+    msr     spsr_cxsf, r0
+    add     sp, sp, #64     // Um zuerst lr_usr und sp_usr auszulesen
+    pop     {r1}
+    pop     {r0}
+    msr     sp_usr, r0
+    msr     lr_usr, r1
+    sub     sp, sp, #72
+    pop     {r0-r12}        // register zurück schreiben 0-14
+    add     sp, sp, #4      // sp überspringen
 /* ab hier lr nicht mehr anfassen!!! Kein bl,...*/
-    pop {lr}            // lr_irq
-    add sp, sp, #4          //PC im stack überspringen
-    add sp, sp, #8          // sp wieder auf Anfang (sp_usr und lr_usr-Leichen übersprungen)
-    movs pc, lr
+    pop     {lr}            // lr_irq
+    add     sp, sp, #4      // PC im stack überspringen
+    add     sp, sp, #8      // sp wieder auf Anfang (sp_usr und lr_usr-Leichen übersprungen)
+    movs    pc, lr
 
 
 prefab_tr:
-    sub lr, lr, #0       //wäre #4 um prefab-befehl zu wiederholen
-    sub sp, sp, #8          // 2 Felder für sp_usr und lr_usr freihalten
-    push {r13-r15}      //Alles pushen für Registerschnappschuss
-    push {r0-r12}       //wegen warning jetzt in 2 zeilen
-    add sp, sp, #72         // zurück zu den 2 freien Feldern springen
-    mrs r0, sp_usr
-    mrs r1, lr_usr
-    push {r0}           // sp_usr an unterste Stelle des IRQ_Stacks
-    push {r1}           // lr_usr an Stelle direkt darüber
-    sub sp, sp, #64         // zurück zum eigentlichen Stackende
+    sub     lr, lr, #0      // wäre #4 um prefab-befehl zu wiederholen
+    sub     sp, sp, #8      // 2 Felder für sp_usr und lr_usr freihalten
+    push    {r13-r15}       // Alles pushen für Registerschnappschuss
+    push    {r0-r12}        // wegen warning jetzt in 2 zeilen
+    add     sp, sp, #72     // zurück zu den 2 freien Feldern springen
+    mrs     r0, sp_usr
+    mrs     r1, lr_usr
+    push    {r0}            // sp_usr an unterste Stelle des IRQ_Stacks
+    push    {r1}            // lr_usr an Stelle direkt darüber
+    sub     sp, sp, #64     // zurück zum eigentlichen Stackende
     /* Printfunktion-Aufruf */
-    mov r0, sp
-    mrs r1, cpsr
-    mrs r2, spsr
-    bl prefab
+    mov     r0, sp
+    mrs     r1, cpsr
+    mrs     r2, spsr
+    bl      prefab
 /* Wechsel in zuvorigen Modus */
-    msr spsr_cxsf, r0
-    add sp, sp, #64     //Um zuerst lr_usr und sp_usr auszulesen
-    pop {r1}
-    pop {r0}
-    msr sp_usr, r0
-    msr lr_usr, r1
-    sub sp, sp, #72
-    pop {r0-r12}        // register zurück schreiben 0-14
-    add sp, sp, #4          //sp überspringen
+    msr     spsr_cxsf, r0
+    add     sp, sp, #64     // Um zuerst lr_usr und sp_usr auszulesen
+    pop     {r1}
+    pop     {r0}
+    msr     sp_usr, r0
+    msr     lr_usr, r1
+    sub     sp, sp, #72
+    pop     {r0-r12}        // register zurück schreiben 0-14
+    add     sp, sp, #4      // sp überspringen
 /* ab hier lr nicht mehr anfassen!!! Kein bl,...*/
-    pop {lr}            // lr_irq
-    add sp, sp, #4          //PC im stack überspringen
-    add sp, sp, #8          // sp wieder auf Anfang (sp_usr und lr_usr-Leichen übersprungen)
-    movs pc, lr
+    pop     {lr}            // lr_irq
+    add     sp, sp, #4      // PC im stack überspringen
+    add     sp, sp, #8      // sp wieder auf Anfang (sp_usr und lr_usr-Leichen übersprungen)
+    movs    pc, lr
 
 dataab_tr:
-    sub lr, lr, #4      //wäre #8 um dataab-befehl zu wiederholen
-    sub sp, sp, #8          // 2 Felder für sp_usr und lr_usr freihalten
-    push {r13-r15}      //Alles pushen für Registerschnappschuss
-    push {r0-r12}       //wegen warning jetzt in 2 zeilen
-    add sp, sp, #72         // zurück zu den 2 freien Feldern springen
-    mrs r0, sp_usr
-    mrs r1, lr_usr
-    push {r0}           // sp_usr an unterste Stelle des IRQ_Stacks
-    push {r1}           // lr_usr an Stelle direkt darüber
-    sub sp, sp, #64         // zurück zum eigentlichen Stackende
+    sub     lr, lr, #4      // wäre #8 um dataab-befehl zu wiederholen
+    sub     sp, sp, #8      // 2 Felder für sp_usr und lr_usr freihalten
+    push    {r13-r15}       // Alles pushen für Registerschnappschuss
+    push    {r0-r12}        // wegen warning jetzt in 2 zeilen
+    add     sp, sp, #72     // zurück zu den 2 freien Feldern springen
+    mrs     r0, sp_usr
+    mrs     r1, lr_usr
+    push    {r0}            // sp_usr an unterste Stelle des IRQ_Stacks
+    push    {r1}            // lr_usr an Stelle direkt darüber
+    sub     sp, sp, #64     // zurück zum eigentlichen Stackende
     /* Printfunktion-Aufruf */
-    mov r0, sp
-    mrs r1, cpsr
-    mrs r2, spsr
-    bl dataab
+    mov     r0, sp
+    mrs     r1, cpsr
+    mrs     r2, spsr
+    bl      dataab
 /* Wechsel in zuvorigen Modus */
-    msr spsr_cxsf, r0
-    add sp, sp, #64     //Um zuerst lr_usr und sp_usr auszulesen
-    pop {r1}
-    pop {r0}
-    msr sp_usr, r0
-    msr lr_usr, r1
-    sub sp, sp, #72
-    pop {r0-r12}        // register zurück schreiben 0-14
-    add sp, sp, #4          //sp überspringen
+    msr     spsr_cxsf, r0
+    add     sp, sp, #64     // Um zuerst lr_usr und sp_usr auszulesen
+    pop     {r1}
+    pop     {r0}
+    msr     sp_usr, r0
+    msr     lr_usr, r1
+    sub     sp, sp, #72
+    pop     {r0-r12}        // register zurück schreiben 0-14
+    add     sp, sp, #4      // sp überspringen
 /* ab hier lr nicht mehr anfassen!!! Kein bl,...*/
-    pop {lr}            // lr_irq
-    add sp, sp, #4          //PC im stack überspringen
-    add sp, sp, #8          // sp wieder auf Anfang (sp_usr und lr_usr-Leichen übersprungen)
-    movs pc, lr
+    pop     {lr}            // lr_irq
+    add     sp, sp, #4      // PC im stack überspringen
+    add     sp, sp, #8      // sp wieder auf Anfang (sp_usr und lr_usr-Leichen übersprungen)
+    movs    pc, lr
 
 /* timer und uart */
 irq_tr:
-    sub lr, lr, #4      // zu letzten unausgeführten Befehl
-    sub sp, sp, #8          // 2 Felder für sp_usr und lr_usr freihalten
-    push {r13-r15}      //Alles pushen für Registerschnappschuss
-    push {r0-r12}       //wegen warning jetzt in 2 zeilen
-    add sp, sp, #72         // zurück zu den 2 freien Feldern springen
-    mrs r0, sp_usr
-    mrs r1, lr_usr
-    push {r0}           // sp_usr an unterste Stelle des IRQ_Stacks
-    push {r1}           // lr_usr an Stelle direkt darüber
-    sub sp, sp, #64         // zurück zum eigentlichen Stackende
+    sub     lr, lr, #4      // zu letzten unausgeführten Befehl
+    sub     sp, sp, #8      // 2 Felder für sp_usr und lr_usr freihalten
+    push    {r13-r15}       //Alles pushen für Registerschnappschuss
+    push    {r0-r12}
+    add     sp, sp, #72     // zurück zu den 2 freien Feldern springen
+    mrs     r0, sp_usr
+    mrs     r1, lr_usr
+    push    {r0}            // sp_usr an unterste Stelle des IRQ_Stacks
+    push    {r1}            // lr_usr an Stelle direkt darüber
+    sub     sp, sp, #64     // zurück zum eigentlichen Stackende
     /* Printfunktion-Aufruf */
-    mov r0, sp
-    mrs r1, cpsr
-    mrs r2, spsr
-    bl irq
-
-    cmp r0, #0          //TODO: testen
-    beq j_if_uart       //TODO: testen
-    //    IT EQ r0, #0
-    //    T j_if_uart E
-    //    cbz r0, j_if_uart
-    msr spsr_cxsf, r0
-    /* Wechsel in zuvorigen Modus */
+    mov     r0, sp
+    mrs     r1, cpsr
+    mrs     r2, spsr
+    bl      irq
+    cmp     r0, #0
+    beq     j_if_uart
+    msr     spsr_cxsf, r0
 j_if_uart:
-    add sp, sp, #64     //Um zuerst lr_usr und sp_usr auszulesen
-    pop {r1}
-    pop {r0}
-    msr sp_usr, r0
-    msr lr_usr, r1
-    sub sp, sp, #72
-    pop {r0-r12}        // register zurück schreiben 0-14
-    add sp, sp, #4          //sp überspringen
+    /* Wechsel in zuvorigen Modus */
+    add     sp, sp, #64     // Um zuerst lr_usr und sp_usr auszulesen
+    pop     {r1}
+    pop     {r0}
+    msr     sp_usr, r0
+    msr     lr_usr, r1
+    sub     sp, sp, #72
+    pop     {r0-r12}        // register zurück schreiben 0-14
+    add     sp, sp, #4      // sp überspringen
 /* ab hier lr nicht mehr anfassen!!! Kein bl,...*/
-    pop {lr}            // lr_irq
-    add sp, sp, #4          //PC im stack überspringen
-    add sp, sp, #8          // sp wieder auf Anfang (sp_usr und lr_usr-Leichen übersprungen)
-    movs pc, lr
+    pop     {lr}            // lr_irq
+    add     sp, sp, #4      // PC im stack überspringen
+    add     sp, sp, #8      // sp wieder auf Anfang (sp_usr und lr_usr-Leichen übersprungen)
+    movs    pc, lr
 
 
 fiq_tr:
 //    stmib r13, {r0-r12}
-    bl reset
+    bl      reset

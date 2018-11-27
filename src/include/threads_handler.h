@@ -2,7 +2,7 @@
 #define BS_PRAK_THREADS_HANDLER_H
 
 
-uint16_t get_running_thread();
+uint32_t get_running_thread();
 uint32_t load_thread(uint8_t next_thread, uint32_t irq_stackadress);
 uint32_t swap_thread(uint32_t irq_stackadress, uint32_t spsr);
 
