@@ -4,7 +4,6 @@
 #include "../../include/threads_handler.h"
 #include "../../include/kprintf.h"
 
-//TODO: wie sollen vordere Bits sein bzw E-Bit (9. Stelle)
 #define DEF_USERMODE_CPSR 16 //0x2D0
 //in header:    - struct TCB (r0-r15, CPSR, Zusatzdaten-Stack-Pointer);
 //               --> R0-R12 + R13 und R14 (aus USER-Mode) + R15 (im LR vom IRQ) + CPSR (im SPSR vom IRQ)
@@ -125,6 +124,6 @@ int32_t prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_sta
         aligned_size = irq_stack_data_size;
     }
     //Stackpointer auf oberstes Elemtent des Stacks
-    thread->sp = (thread->data_stack_pointer - aligned_size); //TODO testen / fragen
+    thread->sp = (thread->data_stack_pointer - aligned_size);
     return tcb_number;
 }

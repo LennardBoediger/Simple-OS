@@ -17,8 +17,6 @@ uint16_t get_running_thread(){
 //               --> R0-R12 + R13 und R14 (aus USER-Mode) + R15 (im LR vom IRQ) + CPSR (im SPSR vom IRQ)
 //              - Zusatzdaten Stack_max-size (gibt an, wie groß der Zusatzstack eines Threads sein darf
 
-//TODO NUR ZU DEBUG ZWECKEN:
-
 void print_lr (uint32_t lr){
     kprintf("Wert bei lr = %x\n\r", lr);
 }
@@ -132,7 +130,7 @@ uint32_t swap_thread(uint32_t irq_stackadress, uint32_t spsr) {
             old_running_thread->zustand = BEREIT;
             kprintf("3.2 thread is saved (swap_thread)\n\r");
         }
-        running_thread = find_next_thread(); //TODO round robin
+        running_thread = find_next_thread();
         kprintf("3.3 next thread found swap_thread\n\r");
     }
     struct tcb* next_running_thread = get_tcb(running_thread);

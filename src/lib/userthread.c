@@ -15,8 +15,9 @@ static void wait() {
 
 void interactive_test(char c){
     int i;
-    for (i = 0; i < c; i++) {
-        kprintf("%c", c);
+    char temp = c;
+    for (i = 0; i < temp; i++) {
+        kprintf("%c", temp);
         wait();
     }
 }
@@ -39,8 +40,8 @@ void user_thread(void* stack_pointer) {
             break;
         default:
             interactive_test(input);
-            asm("swi 42");
             break;
     }
+    asm("swi 42");
     kprintf("\n\r\n\r\n\r\n\rDEAD THREADS CANNOT KPRINTF!!!!!11!!!elf!!!\n\r\n\r\n\r\n\r");
 }
