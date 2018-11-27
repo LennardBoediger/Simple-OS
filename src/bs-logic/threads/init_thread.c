@@ -77,7 +77,7 @@ int32_t find_free_tcb(uint8_t force_idle) {
     if (force_idle == 0) {
         while ((*thread).zustand != BEENDET) {
             if (tcb_number == MAX_THREADS - 1) {
-                kprintf("K1 THREAD FREI :(");
+                kprintf("K1 THREAD FREI :(\n\r\n\r");
                 return -1;
             }
             tcb_number++;
@@ -108,22 +108,26 @@ int32_t prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_sta
     kprintf("PREPARE_THREAD() -> pc = %x\n\r", (uint32_t) pc);
     kprintf("PREPARE_THREAD() -> irq_stack_data = %x\n\r", *((uint32_t*) irq_stack_data));
     int32_t tcb_number = find_free_tcb(force_idle);
-    struct tcb* thread = get_tcb(tcb_number);
-    thread->lr_irq = (uint32_t) pc;
-    memcopy(irq_stack_data, (uint32_t*)thread->data_stack_pointer, irq_stack_data_size);
-    if (tcb_number == IDLE_THREAD) {
-        thread->r0 = NO_STACK_ADRESS;
-    } else {
-        thread->r0 = thread->data_stack_pointer;
-    }
-    //Abfangen, wenn Größe des Stacks nicht mit dem Alignment zusammenpasst
-    uint32_t aligned_size;
-    if (irq_stack_data_size % 8 != 0) {
-        aligned_size = irq_stack_data_size + (8 - (irq_stack_data_size % 8));
-    } else {
-        aligned_size = irq_stack_data_size;
-    }
-    //Stackpointer auf oberstes Elemtent des Stacks
-    thread->sp = (thread->data_stack_pointer - aligned_size);
-    return tcb_number;
+    //Wenn kein Thread mehr frei war -> -1
+//    if (tcb_number == -1) {
+        struct tcb *thread = get_tcb(tcb_number);
+        thread->lr_irq = (uint32_t) pc;
+        memcopy(irq_stack_data, (uint32_t *) thread->data_stack_pointer, irq_stack_data_size);
+        if (tcb_number == IDLE_THREAD) {
+            thread->r0 = NO_STACK_ADRESS;
+        } else {
+            thread->r0 = thread->data_stack_pointer;
+        }
+        //Abfangen, wenn Größe des Stacks nicht mit dem Alignment zusammenpasst
+        uint32_t aligned_size;
+        if (irq_stack_data_size % 8 != 0) {
+            aligned_size = irq_stack_data_size + (8 - (irq_stack_data_size % 8));
+        } else {
+            aligned_size = irq_stack_data_size;
+        }
+        //Stackpointer auf oberstes Elemtent des Stacks
+        thread->sp = (thread->data_stack_pointer - aligned_size);
+        return tcb_number;
+//    }
+//    return -1;
 }
