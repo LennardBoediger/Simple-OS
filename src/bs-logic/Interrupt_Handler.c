@@ -32,7 +32,8 @@ uint32_t swi(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     print_interrupt(stackadress, cpsr, spsr, "SOFTWARE INTERRUPT", -4, 0);
     //Wenn wir aus dem User_mode kommen, wurde es von einem Thread ausgelößt
     uint32_t next_spsr = spsr;
-    if ((spsr % MODE_MASK) == USER_MODE) {
+    kprintf("SWI -> next_spsr = %x", next_spsr);
+    if ((next_spsr % MODE_MASK) == USER_MODE) {
         get_tcb(get_running_thread())->zustand = BEENDET;
         next_spsr = swap_thread(stackadress, spsr);
         clear_timer();
@@ -69,6 +70,7 @@ uint32_t dataab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
 }
 
 uint32_t irq(uint32_t irq_stackadress, uint32_t cpsr, uint32_t spsr) {
+    kprintf("\n\rIRQ() -> spsr = %x, cpsr = %x\n\r", spsr, cpsr);
     if (debug_irq == 1){
         print_interrupt(irq_stackadress, cpsr, spsr, "IRQ INTERRUPT", -8, 0);
     }

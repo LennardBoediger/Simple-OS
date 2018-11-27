@@ -50,6 +50,7 @@ void save_thread(uint32_t stackadress, uint32_t spsr) {
 //    kprintf("Gesicherter IRQ stack inhalt auf lr_usr: %x\n\r", *((uint32_t*) stackadress+16));
     kprintf("thread saved (save_thread)\n\r");
     thread->cpsr = spsr;
+    kprintf("SAVE_THREAD->cpsr(comes from spsr) = %x \n\r");
 }
 
 
@@ -111,7 +112,8 @@ uint32_t load_thread(uint8_t next_thread, uint32_t irq_stackadress) {
 //    kprintf("LOAD_THREAD -> THREADS[NEXT_THREAD].lr_usr = %x\n\r", thread->lr_usr);
 //    kprintf("LOAD_THREAD -> Wert an lr_irq (irq-Stack) = %x\n\r", *((uint32_t*) irq_stackadress+14));
 //    kprintf("LOAD_THREAD -> THREADS[NEXT_THREAD].lr_irq = %x\n\r", thread->lr_irq);
-    kprintf("thread loaded (load_thread)\n\r");
+    kprintf("LOAD_THREAD -> thread loaded\n\r");
+    kprintf("LOAD_THREAD -> loaded cpsr = %x\n\r", thread->cpsr);
     return thread->cpsr;
 
 }
