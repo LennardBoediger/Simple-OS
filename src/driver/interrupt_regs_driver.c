@@ -83,8 +83,7 @@ uint32_t recognize_irq_interrupt(uint32_t irq_stackadress, uint32_t spsr) {
         return new_spsr;
     }
     if (((arm_interrupt_reg->IRQ_PENDING_2 & (1 << IRQ_UART_SHIFT))>>IRQ_UART_SHIFT) == 1) {
-        //TODO: Vielleicht sowas wie "Taste gedrückt: " (statt UART INTERRUPT)
-        kprintf("UART INTERRUPT\n\r");
+        kprintf("Input Detected\n\r");
         recognize_input();
 
         return 0x0;
@@ -94,4 +93,3 @@ uint32_t recognize_irq_interrupt(uint32_t irq_stackadress, uint32_t spsr) {
         return 0x0;
     }
 }
-

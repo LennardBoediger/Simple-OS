@@ -14,7 +14,16 @@ struct tcb* get_tcb(int32_t index) {
 
 //TODO "SCHÖNES" BETRIEBSSYSTEM
 void wait_for_first_irq(){
-    kprintf("\n\r\n\rINIT DONE! WAITING FOR FIRST IRQ...\n\r");
+    kprintf("\n\rHello :) \n\r");
+    kprintf("\n\rPress S for Software Interrupt \n\r");
+    kprintf("Press A for Data Abort \n\r");
+    kprintf("Press U for Undefined Instruction \n\r");
+    kprintf("Press s to start Software Interrupt Threads\n\r");
+    kprintf("Press a to start Data Abort Threads\n\r");
+    kprintf("Press u to start Undefined Instruction Threads\n\r");
+    kprintf("Press c to start RegChecker Threads\n\r");
+    kprintf("Press something else to start interactive test Threads  \n\r");
+
     while(1){
     }
 }
@@ -50,7 +59,7 @@ void init_tcbs(){
 void idle_thread(void* voidPointerOfFame){
     kprintf("Starte den idle thread (%i)...\n\r", IDLE_THREAD);
     while (1) {
-    /* so lange, bis interrupt */
+    /* so lange, bis interrupt -> neuer thread*/
     }
 }
 
@@ -67,7 +76,7 @@ int32_t find_free_tcb(uint8_t force_idle) {
     if (force_idle == 0) {
         while ((*thread).zustand != BEENDET) {
             if (tcb_number == MAX_THREADS - 1) {
-                kprintf("K1 THREAD FREI :'(\n\r EINGABE WIRD VERWORFEN...\n\r");
+                kprintf("K1 THREAD FREI :'(\n\r programm muss neu gestartet werden...\n\r"); /*EINGABE WIRD VERWORFEN*/
                 return -1;
             }
             tcb_number++;
