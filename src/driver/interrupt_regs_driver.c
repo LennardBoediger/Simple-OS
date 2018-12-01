@@ -48,8 +48,9 @@ void prepare_user_thread(char c){
     prepare_thread(user_thread_Ptr, (void*) &global_char, sizeof(global_char), 0);
 }
 
+/*
 void recognize_input () {
-    char c = uart_receive();
+    char c = read_uart_buffer();
     switch (c) {
         case 'S':
             asm("swi 99");
@@ -64,7 +65,7 @@ void recognize_input () {
             prepare_user_thread(c);
             break;
     }
-}
+}*/
 
 /* aktiviert Timer- und UART-Interrupts*/
 void enable_IRQ_interrupts() {

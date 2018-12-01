@@ -84,60 +84,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/bs-logic/Interrupt_Handler.c">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/bs-logic/inputtest.c">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/bs-logic/threads/init_thread.c">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/bs-logic/threads/threads_handler.c">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/driver/interrupt_regs_driver.c">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/driver/uart_driver.c">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/include/Interrupt_Handler.h">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/include/dataab_helper.h">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/include/init_thread.h">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/include/interrupt_regs_driver.h">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/include/kprintf.h">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/include/mode_reg_helper.h">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/include/threads_handler.h">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/include/uart_driver.h">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/include/userthread.h">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/lib/Interrupt_printer.c">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/lib/kprintf.c">
-			<Option target="Bs_Prak"/>
-		</Unit>
-		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/src/lib/userthread.c">
-			<Option target="Bs_Prak"/>
-		</Unit>
 		<Unit filename="/home/pablo/Dokumente/Uni/BSPrak/BS-Prak/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

@@ -30,6 +30,7 @@ OBJ += ./bs-logic/Stack.o
 OBJ += ./bs-logic/threads/init_thread.o
 OBJ += ./bs-logic/threads/threads_handler.o
 OBJ += ./driver/interrupt_regs_driver.o
+OBJ += ./driver/syscalls.o
 OBJ += ./driver/uart_driver.o
 OBJ += ./lib/Interrupt_printer.o
 OBJ += ./lib/kprintf.o

@@ -33,13 +33,7 @@ uint32_t undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     return next_spsr;
 }
 //TODO: put user sys call funtions in user code file
-void call_sys_kill_thread(){
-    asm("swi 0"); // swi SYS_KILL_THREAD
-}
-void call_sys_prepare_thread(void (*pc)(void*), void* irq_stack_data,
-                             uint32_t irq_stack_data_size, uint8_t force_idle){
-    asm("swi 1"); //swi SYS_PREPARE_THREAD
-}
+
 
 uint32_t swi(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     print_interrupt(stackadress, cpsr, spsr, "SOFTWARE INTERRUPT", -4, 0);

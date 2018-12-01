@@ -22,7 +22,8 @@ struct uart {
 };
 
 void uart_transmit(char);
-char uart_receive();
+void uart_receive();
+char read_uart_buffer();
 void en_uart_interrupt();
 
 #endif /*BS_PRAK_UART_DRIVER_H*/
