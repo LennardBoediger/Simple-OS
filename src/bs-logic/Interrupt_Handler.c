@@ -6,7 +6,13 @@
 #include "../include/threads_handler.h"
 #include "../include/init_thread.h"
 #include "../include/Interrupt_Handler.h"
-
+#define SWI_PC_Offset -4
+//Sys call defines
+#define SYS_KILL_THREAD 0
+#define SYS_PREPARE_THREAD 1
+#define SYS_SLEEP_THREAD 2
+#define SYS_UART_PRINT 3
+#define SYS_UART_READ 4
 
 uint8_t debug_irq = 0;  //Global RINT IRQ
 
@@ -26,15 +32,47 @@ uint32_t undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     }
     return next_spsr;
 }
+//TODO: put user sys call funtions in user code file
+void call_sys_kill_thread(){
+    asm("swi 0"); // swi SYS_KILL_THREAD
+}
+void call_sys_prepare_thread(void (*pc)(void*), void* irq_stack_data,
+                             uint32_t irq_stack_data_size, uint8_t force_idle){
+    asm("swi 1"); //swi SYS_PREPARE_THREAD
+}
 
 uint32_t swi(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     print_interrupt(stackadress, cpsr, spsr, "SOFTWARE INTERRUPT", -4, 0);
     //Wenn wir aus dem User_mode kommen, wurde es von einem Thread ausgelößt
     uint32_t next_spsr = spsr;
     if ((next_spsr % MODE_MASK) == USER_MODE) {
-        get_tcb(get_running_thread())->zustand = BEENDET;
-        next_spsr = swap_thread(stackadress, spsr);
-        clear_timer();
+        //Liest die Nummer hinter dem swi call ein
+
+        uint32_t swi_syscall_number = *(((uint32_t*) stackadress+14) + SWI_PC_Offset) % 0xffffff;
+        kprintf("------------SYSCALL NUMBER: %i ---------------\n\r",swi_syscall_number);
+
+        switch (swi_syscall_number){
+            case SYS_KILL_THREAD:
+                kprintf("-----SYS_KILL_THREAD-----\n\r");
+                get_tcb(get_running_thread())->zustand = BEENDET;
+                next_spsr = swap_thread(stackadress, spsr);
+                clear_timer();
+                break;
+            case SYS_PREPARE_THREAD:
+                prepare_thread((void*)*((uint32_t*) stackadress),(void*)*((uint32_t*) stackadress+1),
+                               *((uint32_t*) stackadress+2),*((uint8_t*) stackadress+3));
+                break;
+            case SYS_SLEEP_THREAD:
+
+                break;
+            case SYS_UART_PRINT:
+                break;
+            case SYS_UART_READ:
+                break;
+            default:
+
+                break;
+        }
     }
     return next_spsr;
 }

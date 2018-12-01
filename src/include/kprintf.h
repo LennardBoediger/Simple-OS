@@ -10,5 +10,6 @@ void sent_hex(uint32_t num);
 void sent_dez(int32_t num);
 void sent_udez(uint32_t num);
 void kprintf(char* text, ...);
+void kprintfln(char* text, ...);
 
 #endif //BS_PRAK_KPRINTF_H

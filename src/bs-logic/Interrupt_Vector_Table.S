@@ -77,8 +77,8 @@ swi_tr:
     push    {r0-r12}        // wegen warning jetzt in 2 zeilen
     add     sp, sp, #72     // zurück zu den 2 freien Feldern springen
     mrs     r0, sp_usr
-    mrs     r1, lr_usr
     push    {r0}            // sp_usr an unterste Stelle des IRQ_Stacks
+    mrs     r1, lr_usr
     push    {r1}            // lr_usr an Stelle direkt darüber
     sub     sp, sp, #64     // zurück zum eigentlichen Stackende
     /* Printfunktion-Aufruf */

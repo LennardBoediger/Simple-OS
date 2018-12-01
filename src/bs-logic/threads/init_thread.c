@@ -22,7 +22,9 @@ void wait_for_first_irq(){
     kprintf("Press a to start Data Abort Threads\n\r");
     kprintf("Press u to start Undefined Instruction Threads\n\r");
     kprintf("Press c to start RegChecker Threads\n\r");
+    kprintfln("TEST krprintfln");
     kprintf("Press something else to start interactive test Threads  \n\r");
+
 
     while(1){
     }
