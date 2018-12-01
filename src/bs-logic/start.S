@@ -23,6 +23,7 @@ _bsprak:
     bl      init_tcbs                //erstellt 32 TCBs
 //    mrs     r0, cpsr
     bl      prepare_idle_thread     // prepared idel thread diese wird gestaret wenn der timer das erste mal abläuft
+    bl      prepare_uart_listenthread        /* temporär in uart_listen.c */
     bl      initialize_timer        /* in interrupt_regs_driver.c */
     bl      wait_for_first_irq
 

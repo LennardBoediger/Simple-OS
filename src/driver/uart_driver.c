@@ -9,29 +9,29 @@
 #define TXFF (1 << TXFF_SHIFT)
 
 char uart_buffer[MAX_BUFFER_SIZE];
-uint32_t current_uart_buffer_position;
+int32_t current_uart_buffer_position;
 
 static volatile
 struct uart * const uart_reg = (struct uart *)UART_BASE;
 
 
 void write_uart_buffer (char input) {
-    uart_buffer[current_uart_buffer_position] = input;
     if (current_uart_buffer_position < MAX_BUFFER_SIZE-1) {
+        uart_buffer[current_uart_buffer_position] = input;
         current_uart_buffer_position++;
     } else {
-        current_uart_buffer_position = 0;
+        kprintfln("WRITE_UART_BUFFER -> Buffer voll");
     }
 }
 
 char read_uart_buffer() {
-    char temp = uart_buffer[current_uart_buffer_position];
     if (current_uart_buffer_position > 0) {
         current_uart_buffer_position--;
-    } else {
-        current_uart_buffer_position = MAX_BUFFER_SIZE-1;
-    }
+        char temp = uart_buffer[current_uart_buffer_position];
         return temp;
+    } else {
+        return 0;
+    }
 }
 
 void uart_receive() {
@@ -47,6 +47,10 @@ void uart_transmit(char to_send){
 }
 
 void en_uart_interrupt() {
+    uint16_t i;
+    for (i = 0; i < MAX_BUFFER_SIZE; i++) {
+        uart_buffer[i] = 0;
+    }
     current_uart_buffer_position = 0;
     uart_reg->IMSC |= (1 << RTIM_SHIFT);
 }

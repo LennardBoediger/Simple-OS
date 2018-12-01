@@ -22,13 +22,13 @@
 #
 LSCRIPT = ./bs-logic/kernel.lds
 OBJ += ./bs-logic/start.o
+OBJ += ./bs-logic/threads/init_thread.o
+OBJ += ./bs-logic/threads/threads_handler.o
 OBJ += ./bs-logic/dataab_helper.o
 OBJ += ./bs-logic/Interrupt_Handler.o
 OBJ += ./bs-logic/Interrupt_Vector_Table.o
 OBJ += ./bs-logic/mode_reg_helper.o
 OBJ += ./bs-logic/Stack.o
-OBJ += ./bs-logic/threads/init_thread.o
-OBJ += ./bs-logic/threads/threads_handler.o
 OBJ += ./driver/interrupt_regs_driver.o
 OBJ += ./driver/syscalls.o
 OBJ += ./driver/uart_driver.o
@@ -37,6 +37,7 @@ OBJ += ./lib/kprintf.o
 OBJ += ./lib/regcheck.o
 OBJ += ./lib/regcheck_asm.o
 OBJ += ./lib/userthread.o
+OBJ += ./user/uart_listen.o
 
 
 

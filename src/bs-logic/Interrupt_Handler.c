@@ -62,6 +62,7 @@ uint32_t swi(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
             case SYS_UART_PRINT:
                 break;
             case SYS_UART_READ:
+
                 break;
             default:
 
