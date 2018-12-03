@@ -1,5 +1,5 @@
 #include "../include/uart_driver.h"
-#include "../include/kprintf.h"
+#include "../include/printf_lib.h"
 #define UART_BASE (0x7E201000 - 0x3F000000)
 #define RXFE_SHIFT 4
 #define TXFF_SHIFT 5

@@ -31,6 +31,7 @@ struct tcb {
     uint32_t cpsr;
     uint32_t data_stack_pointer;
     uint8_t zustand;
+    int32_t wartezeit;
 };
 
 struct tcb* get_tcb(int32_t index);

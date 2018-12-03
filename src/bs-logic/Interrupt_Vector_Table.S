@@ -85,7 +85,7 @@ swi_tr:
     mov     r0, sp
     mrs     r1, cpsr
     mrs     r2, spsr
-    bl      swi
+    bl      swi_interrupt
 /* Wechsel in zuvorigen Modus */
     msr     spsr_cxsf, r0
     add     sp, sp, #64     // Um zuerst lr_usr und sp_usr auszulesen

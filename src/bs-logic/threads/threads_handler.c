@@ -1,5 +1,5 @@
 #include "../../include/init_thread.h"
-#include "../../include/kprintf.h"
+#include "../../include/printf_lib.h"
 #include "../../include/threads_handler.h"
 #include <stdlib.h>
 
@@ -54,9 +54,25 @@ uint32_t find_next_thread() {
     uint32_t number_of_active_threads = 0;
     for (i = 0; i < MAX_THREADS-1; i++) {
         struct tcb* thread = get_tcb(i);
-        if (thread->zustand == BEREIT || thread->zustand == LAUFEND) {
-            number_of_active_threads++;
-            active_threads[number_of_active_threads-1] = i;
+        switch (thread->zustand) {
+            case BEREIT:
+            case LAUFEND:
+                number_of_active_threads++;
+                active_threads[number_of_active_threads-1] = i;
+                break;
+            case WARTEND:
+                if (thread->wartezeit > 0) {
+                    thread->wartezeit--;
+                } else if (thread->wartezeit == 0) {
+                    thread->zustand = BEREIT;
+                } else {
+                  kprintfln("FIND_NEXT_THREAD -> thread->zustand == WARTEND aber thread->wartezeit < 0 !?!?! Darf nicht sein");
+                }
+                break;
+            case BEENDET:
+                break;
+            default:
+                kprintfln("HUPS! FIND_NEXT_THREAD -> INVALID ZUSTAND");
         }
     }
     if(number_of_active_threads == 0) {

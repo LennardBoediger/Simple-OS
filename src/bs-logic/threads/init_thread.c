@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include "../../include/init_thread.h"
 #include "../../include/threads_handler.h"
-#include "../../include/kprintf.h"
+#include "../../include/printf_lib.h"
 
 #define DEF_USERMODE_CPSR 16 //0x2D0
 
@@ -51,6 +51,7 @@ void init_tcbs(){
         threads[i].cpsr = DEF_USERMODE_CPSR;
         threads[i].data_stack_pointer = (uint32_t) (128*1024*(1018-i));
         threads[i].zustand = BEENDET;
+        threads[i].wartezeit = -1;
     }
     kprintf("TCBVorbereitung abgeschlossen.\n\r");
 }
@@ -83,7 +84,8 @@ int32_t find_free_tcb(uint8_t force_idle) {
             tcb_number++;
             thread = get_tcb(tcb_number);
         }
-        (*thread).zustand = BEREIT;
+        thread->zustand = BEREIT;
+        thread->wartezeit = 0;
     } else{
         tcb_number = IDLE_THREAD;
         thread = get_tcb(tcb_number);

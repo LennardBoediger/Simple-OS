@@ -10,7 +10,7 @@ extern uint8_t debug_irq; //Global RINT IRQ
 
 void reset(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
 uint32_t undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
-uint32_t swi(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
+uint32_t swi_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
 uint32_t prefab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
 uint32_t dataab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);
 uint32_t irq(uint32_t stackadress, uint32_t cpsr, uint32_t spsr);

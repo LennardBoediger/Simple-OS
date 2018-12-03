@@ -1,5 +1,5 @@
 #include "../include/uart_driver.h"
-#include "../include/kprintf.h"
+#include "../include/printf_lib.h"
 #include "../include/Interrupt_Handler.h"
 #include "../include/dataab_helper.h"
 #include "../include/regcheck.h"
@@ -85,7 +85,7 @@ uint32_t recognize_irq_interrupt(uint32_t irq_stackadress, uint32_t spsr) {
     }
     if (((arm_interrupt_reg->IRQ_PENDING_2 & (1 << IRQ_UART_SHIFT))>>IRQ_UART_SHIFT) == 1) {
         kprintf("Input Detected\n\r");
-        read_uart_buffer();
+        uart_receive();
         return 0x0;
     }
     else{

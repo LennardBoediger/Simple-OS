@@ -2,7 +2,7 @@
 #include "../include/userthread.h"
 #include "../include/interrupt_regs_driver.h"
 #include "../include/regcheck.h"
-#include "../include/kprintf.h"
+#include "../include/printf_lib.h"
 
 
 /* erzeugt kurze Pausen zwischen den Buchstaben. 52147 = magic number */

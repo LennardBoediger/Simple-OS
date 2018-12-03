@@ -1,5 +1,5 @@
 
-#include "../include/kprintf.h"
+#include "../include/printf_lib.h"
 #include "../include/interrupt_regs_driver.h"
 #include "../include/mode_reg_helper.h"
 #include "../include/dataab_helper.h"
