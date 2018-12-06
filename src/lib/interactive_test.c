@@ -1,8 +1,10 @@
 
-#include "../include/userthread.h"
+#include "../include/interactive_test.h"
 #include "../include/interrupt_regs_driver.h"
 #include "../include/regcheck.h"
 #include "../include/printf_lib.h"
+//TODO: IN User-Ordner verlegen
+#include "../include/syscalls.h"
 
 
 /* erzeugt kurze Pausen zwischen den Buchstaben. 52147 = magic number */
@@ -23,6 +25,7 @@ void interactive_test(char c){
     }
 }
 
+//TODO: IN User-Ordner verlegen
 void user_thread(void* stack_pointer) {
     char input = *((char*) stack_pointer);
     switch(input) {
@@ -42,6 +45,6 @@ void user_thread(void* stack_pointer) {
             interactive_test(input);
             break;
     }
-    asm("swi 42");
+    syscall_kill_thread();
     kprintf("\n\r\n\r\n\r\n\rDEAD THREADS CANNOT KPRINTF!!!!!11!!!elf!!!\n\r\n\r\n\r\n\r");
 }

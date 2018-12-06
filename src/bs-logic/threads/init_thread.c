@@ -106,7 +106,7 @@ void memcopy(void* src, void* dst, uint32_t irq_stack_data_size) {
     }
 }
 
-int32_t prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle) {
+void prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle) {
     int32_t tcb_number = find_free_tcb(force_idle);
     //Wenn kein Thread mehr frei war -> -1
 //    if (tcb_number == -1) {
@@ -127,7 +127,7 @@ int32_t prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_sta
     }
     //Stackpointer auf oberstes Elemtent des Stacks
     thread->sp = (thread->data_stack_pointer - aligned_size);
-    return tcb_number;
+    /*return tcb_number*/;
 //    }
 //    return -1;
 }

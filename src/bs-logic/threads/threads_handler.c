@@ -13,9 +13,9 @@ uint32_t get_running_thread(){
 }
 
 
-
+/* Speichert aktuellen Thread für Wechsel ins entsprechende TCB */
 void save_thread(uint32_t stackadress, uint32_t spsr) {
-    struct tcb* thread = get_tcb(running_thread);
+    struct tcb* thread = get_tcb(get_running_thread());
     thread->r0 = *((uint32_t*) stackadress);
     thread->r1 = *((uint32_t*) stackadress+1);
     thread->r2 = *((uint32_t*) stackadress+2);
@@ -35,57 +35,64 @@ void save_thread(uint32_t stackadress, uint32_t spsr) {
     thread->cpsr = spsr;
 }
 
+/* RANDOM-FUNKTION */
+/**/ uint32_t own_random_r(uint32_t *seed) {
+/**/     *seed = *seed * 1103515245 + 12345;
+/**/     return (*seed % ((uint32_t)RAND_MAX + 1));
+/**/ }
+/**/ uint32_t own_random(void) {
+/**/     return (own_random_r(&next_random));
+/**/ }
+/**/ void own_s_random(uint32_t seed) {
+/**/     next_random = seed;
+/**/ }
+/* ENDE RANDOM-FUNKTION */
 
-uint32_t own_random_r(uint32_t *seed) {
-    *seed = *seed * 1103515245 + 12345;
-    return (*seed % ((uint32_t)RAND_MAX + 1));
-}
-uint32_t own_random(void) {
-    return (own_random_r(&next_random));
-}
-void own_s_random(uint32_t seed) {
-    next_random = seed;
-}
 
-
+/* Nächsten Thread finden und Wartezeit der Threads aktualisieren */
 uint32_t find_next_thread() {
     uint8_t i = 0;
     uint8_t active_threads[MAX_THREADS];
     uint32_t number_of_active_threads = 0;
+    // Geht alle TCBs durch und überprüft den Status der Threads
     for (i = 0; i < MAX_THREADS-1; i++) {
         struct tcb* thread = get_tcb(i);
         switch (thread->zustand) {
+            // Wenn BEREIT oder (der Vollständigkeit wg) LAUFEND -> füge Index in active_threads[] hinzu
             case BEREIT:
             case LAUFEND:
                 number_of_active_threads++;
                 active_threads[number_of_active_threads-1] = i;
                 break;
+            // Wenn WARTEND -> Wartezeit aktualisieren
             case WARTEND:
                 if (thread->wartezeit > 0) {
                     thread->wartezeit--;
                 } else if (thread->wartezeit == 0) {
                     thread->zustand = BEREIT;
                 } else {
-                  kprintfln("FIND_NEXT_THREAD -> thread->zustand == WARTEND aber thread->wartezeit < 0 !?!?! Darf nicht sein");
+                    kprintfln("FIND_NEXT_THREAD -> thread->zustand == WARTEND aber thread->wartezeit < 0!? Darf nie sein");
                 }
                 break;
             case BEENDET:
                 break;
             default:
-                kprintfln("HUPS! FIND_NEXT_THREAD -> INVALID ZUSTAND");
+                kprintfln("HUPS! FIND_NEXT_THREAD -> INVALIDER ZUSTAND");
         }
     }
     if(number_of_active_threads == 0) {
 //        kprintf("\n\r\n\r++++++++ NEXT THREAD => IDLE_THREAD ++++++++\n\r\n\r");
         return IDLE_THREAD;
     }
+    // NÄCHSTEN THREAD AUSWÄHLEN
     uint32_t random_index = (own_random()%(number_of_active_threads));
 //    kprintf("\n\r\n\r++++++++ NEXT THREAD => %i ++++++++\n\r\n\r", active_threads[random_index]);
     return active_threads[random_index];
 }
 
 
-uint32_t load_thread(uint8_t next_thread, uint32_t irq_stackadress) {
+/* Lädt nächsten Thread (für Interrupt-Handler) in den STACK */
+uint32_t load_thread(uint32_t next_thread, uint32_t irq_stackadress) {
     struct tcb* thread = get_tcb(next_thread);
     *((uint32_t*) irq_stackadress) = thread->r0;
     *((uint32_t*) irq_stackadress+1) = thread->r1;
@@ -107,24 +114,25 @@ uint32_t load_thread(uint8_t next_thread, uint32_t irq_stackadress) {
 
 }
 
+
 uint32_t swap_thread(uint32_t irq_stackadress, uint32_t spsr) {
 //    kprintf("1 start swap_thread\n\r");
     struct tcb* idle_thread = get_tcb(IDLE_THREAD);
-    struct tcb* old_running_thread = get_tcb(running_thread);
-    if(idle_thread->zustand == BEENDET) { //wird beim initialen durchlauf aufgerufen
-//        kprintf("2 initial case (swap_thread)\n\r");
-        running_thread = IDLE_THREAD;           // IDLE_thread ist erster thread der läuft
-    }else {
-//        kprintf("3.1 default case (swap_thread)\n\r");
+    struct tcb* old_running_thread = get_tcb(get_running_thread());
+    // Nur bei SYSTEMSTART
+    if(idle_thread->zustand == BEENDET) {
+        running_thread = IDLE_THREAD;
+    } else {
+        // AKTUELLER THREAD WURDE UNTERBROCHEN
         if (old_running_thread->zustand == LAUFEND) {
             save_thread(irq_stackadress, spsr);
             old_running_thread->zustand = BEREIT;
-//            kprintf("3.2 thread is saved (swap_thread)\n\r");
         }
+        // Nächsten Thread AUSWÄHLEN (running_thread global)
         running_thread = find_next_thread();
-//        kprintf("3.3 next thread found swap_thread\n\r");
     }
-    struct tcb* next_running_thread = get_tcb(running_thread);
+    // Nächsten Thread STARTEN
+    struct tcb* next_running_thread = get_tcb(get_running_thread());
     next_running_thread->zustand = LAUFEND;
-    return load_thread(running_thread, irq_stackadress);
+    return load_thread(get_running_thread(), irq_stackadress);
 }

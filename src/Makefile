@@ -34,11 +34,11 @@ OBJ += ./driver/interrupt_regs_driver.o
 OBJ += ./driver/syscall_helper.o
 OBJ += ./driver/syscalls.o
 OBJ += ./driver/uart_driver.o
+OBJ += ./lib/interactive_test.o
 OBJ += ./lib/Interrupt_printer.o
 OBJ += ./lib/printf_lib.o
 OBJ += ./lib/regcheck.o
 OBJ += ./lib/regcheck_asm.o
-OBJ += ./lib/userthread.o
 OBJ += ./user/uart_listen.o
 OBJ += ./user/uprintf.o
 

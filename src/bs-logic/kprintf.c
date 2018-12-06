@@ -1,5 +1,6 @@
 #include <stdarg.h>
 #include "../include/printf_lib.h"
+#include "../include/uart_driver.h"
 
 void kprintf(char* text, ...) {
     va_list args;
