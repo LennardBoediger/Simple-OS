@@ -29,7 +29,7 @@ void interactive_test_passive(char c){
     char temp = c;
     for (i = 0; i < temp; i++) {
         kprintf("%c", temp);
-        wait();
+        syscall_sleep_thread();
     }
 }
 
