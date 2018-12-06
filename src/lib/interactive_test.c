@@ -15,8 +15,16 @@ static void wait() {
     }
 }
 
+void interactive_test_active(char c){
+    int i;
+    char temp = c;
+    for (i = 0; i < temp; i++) {
+        kprintf("%c", temp);
+        wait();
+    }
+}
 
-void interactive_test(char c){
+void interactive_test_passive(char c){
     int i;
     char temp = c;
     for (i = 0; i < temp; i++) {
@@ -26,7 +34,7 @@ void interactive_test(char c){
 }
 
 //TODO: IN User-Ordner verlegen
-void user_thread(void* stack_pointer) {
+void user_thread_active(void* stack_pointer) {
     char input = *((char*) stack_pointer);
     switch(input) {
         case 's':
@@ -42,7 +50,30 @@ void user_thread(void* stack_pointer) {
             register_checker();
             break;
         default:
-            interactive_test(input);
+            interactive_test_active(input);
+            break;
+    }
+    syscall_kill_thread();
+    kprintf("\n\r\n\r\n\r\n\rDEAD THREADS CANNOT KPRINTF!!!!!11!!!elf!!!\n\r\n\r\n\r\n\r");
+}
+
+void user_thread_passive(void* stack_pointer) {
+    char input = *((char*) stack_pointer);
+    switch(input) {
+        case 's':
+            asm("swi 99");
+            break;
+        case 'a':
+            force_dataab();
+            break;
+        case 'u':
+            asm("udf");
+            break;
+        case 'c':
+            register_checker();
+            break;
+        default:
+            interactive_test_passive(input);
             break;
     }
     syscall_kill_thread();

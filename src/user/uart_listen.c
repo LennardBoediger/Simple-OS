@@ -10,10 +10,16 @@ void(* user_thread_Ptr)(void*);
 
 
 
-void prepare_user_thread(char input){
+void prepare_user_thread_active(char input){
     //TODO: testen, ob global notwendig
     global_char = input;
-    user_thread_Ptr = &user_thread;
+    user_thread_Ptr = &user_thread_active;
+    syscall_prepare_thread(user_thread_Ptr, (void*) &global_char, sizeof(global_char), 0);
+}
+void prepare_user_thread_passive(char input){
+    //TODO: testen, ob global notwendig
+    global_char = input;
+    user_thread_Ptr = &user_thread_passive;
     syscall_prepare_thread(user_thread_Ptr, (void*) &global_char, sizeof(global_char), 0);
 }
 
@@ -26,10 +32,10 @@ void uart_listen(){
             if (input >= 65 && input <= 90) {//Input ist ein Großbuchstabe
                 //func* an syscall; syscall braucht Infos über Input
                 uprintfln("syscall_prepare_thread(AKTIVE Wait thread); mit char = %c", input);
-                //prepare_user_thread(input);
+                prepare_user_thread_active(input);
             } else {
                 uprintfln("syscall_prepare_thread(PASSIVE Wait thread); mit char = %c", input);
-                prepare_user_thread(input);
+                prepare_user_thread_passive(input);
             }
             input = (char) syscall_uart_read();
         }
