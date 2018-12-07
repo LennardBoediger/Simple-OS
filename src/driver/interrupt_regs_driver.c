@@ -39,24 +39,6 @@ void clear_timer() {
 }
 
 
-/*
-void recognize_input () {
-    char c = read_uart_buffer();
-    switch (c) {
-        case 'S':
-            asm("swi 99");
-            break;
-        case 'A':
-            force_dataab();
-            break;
-        case 'U':
-            asm("udf");
-            break;
-        default:
-            prepare_user_thread(c);
-            break;
-    }
-}*/
 
 /* aktiviert Timer- und UART-Interrupts*/
 void enable_IRQ_interrupts() {
@@ -80,8 +62,7 @@ uint32_t recognize_irq_interrupt(uint32_t irq_stackadress, uint32_t spsr) {
                 } else if (thread->wartezeit == 0) {
                     thread->zustand = BEREIT;
                 } else {
-                    kprintfln(
-                            "FIND_NEXT_THREAD -> thread->zustand == WARTEND aber thread->wartezeit < 0!? Darf nie sein");
+                    kprintfln("FIND_NEXT_THREAD -> thread->zustand == WARTEND aber thread->wartezeit < 0!? Darf nie sein");
                 }
             }
         }

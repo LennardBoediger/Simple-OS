@@ -34,7 +34,7 @@ uint32_t undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     }
     return next_spsr;
 }
-//TODO: put user sys call funtions in user code file
+
 
 /* bearbeitet den "swi xx"-call */
 uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {

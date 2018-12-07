@@ -2,7 +2,6 @@
 #include "include/interactive_test.h"
 #include "../include/interrupt_regs_driver.h"
 #include "include/uprintf.h"
-//TODO: IN User-Ordner verlegen
 #include "../include/syscalls.h"
 #include "../include/threads_handler.h"
 

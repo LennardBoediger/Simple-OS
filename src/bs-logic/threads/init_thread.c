@@ -4,6 +4,7 @@
 #include "../../include/threads_handler.h"
 #include "../../include/printf_lib.h"
 #include "../../include/Boot.h"
+#include "../../include/systemfunctions.h"
 
 #define DEF_USERMODE_CPSR 16 //0x2D0
 
@@ -93,7 +94,6 @@ void prepare_idle_thread(){
     prepare_thread(idle_thread_Ptr, (void*)NO_STACK_ADRESS, 0);
 }
 
-//TODO: KERNEL PANIC DURCH THREADMANGEL FIXEN
 int32_t find_free_tcb() {
     int16_t tcb_number = 0;
     struct tcb* thread = get_tcb(tcb_number);
@@ -117,17 +117,6 @@ int32_t find_free_tcb() {
     return tcb_number;
 }
 
-//TODO auslagern
-void memcopy(void* src, void* dst, uint32_t irq_stack_data_size) {
-    uint8_t *src_byte = (uint8_t *) src;
-    uint8_t *dst_byte = (uint8_t *) dst;
-    uint16_t j;
-    for (j = 0; j < irq_stack_data_size; j++) {
-        *dst_byte = *src_byte;
-        src_byte++;
-        dst_byte++;
-    }
-}
 
 void prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_data_size) {
     int32_t tcb_number = find_free_tcb();
