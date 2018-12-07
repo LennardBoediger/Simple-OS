@@ -20,10 +20,11 @@
  *      --> einzelnes Char von UART lesen
  */
 void syscall_kill_thread(){
-    kprintfln("SYSCALL_KILL_THREAD was called!!");
     asm("swi 0"); // swi SYS_KILL_THREAD
 }
-void syscall_prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle){
+
+void syscall_prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_data_size){
+    write_r5_to_r7(pc, irq_stack_data, irq_stack_data_size);
     asm("swi 1"); //swi SYS_PREPARE_THREAD
 }
 

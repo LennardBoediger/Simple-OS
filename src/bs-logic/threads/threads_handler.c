@@ -66,13 +66,6 @@ uint32_t find_next_thread() {
                 break;
             // Wenn WARTEND -> Wartezeit aktualisieren
             case WARTEND:
-                if (thread->wartezeit > 0) {
-                    thread->wartezeit--;
-                } else if (thread->wartezeit == 0) {
-                    thread->zustand = BEREIT;
-                } else {
-                    kprintfln("FIND_NEXT_THREAD -> thread->zustand == WARTEND aber thread->wartezeit < 0!? Darf nie sein");
-                }
                 break;
             case BEENDET:
                 break;
@@ -127,6 +120,8 @@ uint32_t swap_thread(uint32_t irq_stackadress, uint32_t spsr) {
         if (old_running_thread->zustand == LAUFEND) {
             save_thread(irq_stackadress, spsr);
             old_running_thread->zustand = BEREIT;
+        } else if(old_running_thread->zustand == WARTEND) {
+            save_thread(irq_stackadress, spsr);
         }
         // Nächsten Thread AUSWÄHLEN (running_thread global)
         running_thread = find_next_thread();

@@ -2,7 +2,7 @@
 #ifndef BS_PRAK_USERTHREAD_H
 #define BS_PRAK_USERTHREAD_H
 
-#include "printf_lib.h"
+#include "../../include/printf_lib.h"
 
 void user_thread_active (void* stack_pointer);
 void user_thread_passive (void* stack_pointer);

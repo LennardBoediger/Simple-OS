@@ -24,6 +24,7 @@ LSCRIPT = ./bs-logic/kernel.lds
 OBJ += ./bs-logic/start.o
 OBJ += ./bs-logic/threads/init_thread.o
 OBJ += ./bs-logic/threads/threads_handler.o
+OBJ += ./bs-logic/Boot.o
 OBJ += ./bs-logic/dataab_helper.o
 OBJ += ./bs-logic/Interrupt_Handler.o
 OBJ += ./bs-logic/Interrupt_Vector_Table.o
@@ -34,11 +35,11 @@ OBJ += ./driver/interrupt_regs_driver.o
 OBJ += ./driver/syscall_helper.o
 OBJ += ./driver/syscalls.o
 OBJ += ./driver/uart_driver.o
-OBJ += ./lib/interactive_test.o
 OBJ += ./lib/Interrupt_printer.o
 OBJ += ./lib/printf_lib.o
 OBJ += ./lib/regcheck.o
 OBJ += ./lib/regcheck_asm.o
+OBJ += ./user/interactive_test.o
 OBJ += ./user/uart_listen.o
 OBJ += ./user/uprintf.o
 
@@ -46,8 +47,8 @@ OBJ += ./user/uprintf.o
 
 
 SUBMISSION_FILES = $(shell find . -name '*' -not -name '*.tar.gz' -not -name '.*' -not -type d -not -name '*.pdf' -not -path './.*')
-TUBIT_NAMES = $(shell awk 'NR > 1  {ORS="+"; print prev} {prev=$$1} END { ORS=""; print $$1 }' ../Abgabe/namen.txt )
-#TUBIT_NAMES = $(shell cut -d' ' -f1  ../Abgabe/namen.txt | tr '\n' '+')
+TUBIT_NAMES = $(shell awk 'NR > 1  {ORS="+"; print prev} {prev=$$1} END { ORS=""; print $$1 }' namen.txt )
+
 
 ifeq ($(TUBIT_NAMES), )
     TUBIT_NAMES = "invalid"

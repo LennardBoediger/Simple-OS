@@ -1,30 +1,22 @@
+#include <stddef.h>
 #include <stdint.h>
 #include "../../include/init_thread.h"
 #include "../../include/threads_handler.h"
 #include "../../include/printf_lib.h"
+#include "../../include/Boot.h"
 
 #define DEF_USERMODE_CPSR 16 //0x2D0
 
 struct tcb threads[MAX_THREADS];
+
+uint8_t force_idle;
 
 struct tcb* get_tcb(int32_t index) {
     return &threads[index];
 }
 
 
-//TODO "SCHÖNES" BETRIEBSSYSTEM
 void wait_for_first_irq(){
-    kprintf("\n\rHello :) \n\r");
-    kprintf("\n\rPress S for Software Interrupt \n\r");
-    kprintf("Press A for Data Abort \n\r");
-    kprintf("Press U for Undefined Instruction \n\r");
-    kprintf("Press s to start Software Interrupt Threads\n\r");
-    kprintf("Press a to start Data Abort Threads\n\r");
-    kprintf("Press u to start Undefined Instruction Threads\n\r");
-    kprintf("Press c to start RegChecker Threads\n\r");
-    kprintf("Press something else to start interactive test Threads  \n\r");
-
-
     while(1){
     }
 }
@@ -56,29 +48,59 @@ void init_tcbs(){
     kprintf("TCBVorbereitung abgeschlossen.\n\r");
 }
 
-
-
-void idle_thread(void* voidPointerOfFame){
-    kprintf("Starte den idle thread (%i)...\n\r", IDLE_THREAD);
-    while (1) {
-    /* so lange, bis interrupt -> neuer thread*/
+static void kwait() {
+    int i;
+    for (i = 0; i < 352147; i++) {
+        asm("nop");
     }
 }
 
+void idle_thread(void* voidPointerOfFame){
+    kprintf("Starte den idle thread (%i)...\n\r", IDLE_THREAD);
+    kprintfln("Booting done!\n\r");
+    if (get_no_ext_userprog() == 1) {
+        while (1) {
+            kprintfln("### User Programm <uart_listen> nicht eingebunden ###");
+            kprintfln(" _______");
+            kprintfln("| .   . |");
+            kprintfln("|_______|");
+            kwait();
+            int i;
+            for (i = 0; i < 50; ++i) {
+                kprintfln("");
+            }
+            kprintfln("### User Programm <uart_listen> nicht eingebunden ###");
+            kprintfln(" _______");
+            kprintfln("| _   . |");
+            kprintfln("|_______|");
+            kwait();
+            for (i = 0; i < 50; ++i) {
+                kprintfln("");
+            }
+        }
+    } else {
+        while (1) {
+        }
+    }
+    /* so lange, bis interrupt -> neuer thread*/
+}
+
+
 void prepare_idle_thread(){
+    force_idle = 1;
     void(* idle_thread_Ptr)(void*);
     idle_thread_Ptr = &idle_thread;
-    prepare_thread(idle_thread_Ptr, (void*)NO_STACK_ADRESS, 0, 1);
+    prepare_thread(idle_thread_Ptr, (void*)NO_STACK_ADRESS, 0);
 }
 
 //TODO: KERNEL PANIC DURCH THREADMANGEL FIXEN
-int32_t find_free_tcb(uint8_t force_idle) {
+int32_t find_free_tcb() {
     int16_t tcb_number = 0;
     struct tcb* thread = get_tcb(tcb_number);
     if (force_idle == 0) {
         while ((*thread).zustand != BEENDET) {
             if (tcb_number == MAX_THREADS - 1) {
-                kprintf("K1 THREAD FREI :'(\n\r programm muss neu gestartet werden...\n\r"); /*EINGABE WIRD VERWORFEN*/
+                kprintf("\n\rK1 THREAD FREI :'(\n\r"); /*EINGABE WIRD VERWORFEN*/
                 return -1;
             }
             tcb_number++;
@@ -90,6 +112,7 @@ int32_t find_free_tcb(uint8_t force_idle) {
         tcb_number = IDLE_THREAD;
         thread = get_tcb(tcb_number);
         thread->zustand = BEENDET;
+        force_idle = 0;
     }
     return tcb_number;
 }
@@ -106,8 +129,8 @@ void memcopy(void* src, void* dst, uint32_t irq_stack_data_size) {
     }
 }
 
-void prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_data_size, uint8_t force_idle) {
-    int32_t tcb_number = find_free_tcb(force_idle);
+void prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_data_size) {
+    int32_t tcb_number = find_free_tcb();
     //Wenn kein Thread mehr frei war -> -1
 //    if (tcb_number == -1) {
     struct tcb *thread = get_tcb(tcb_number);
@@ -127,6 +150,7 @@ void prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_
     }
     //Stackpointer auf oberstes Elemtent des Stacks
     thread->sp = (thread->data_stack_pointer - aligned_size);
+
     /*return tcb_number*/;
 //    }
 //    return -1;
