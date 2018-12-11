@@ -5,6 +5,7 @@
 #include "../../include/printf_lib.h"
 #include "../../include/Boot.h"
 #include "../../include/systemfunctions.h"
+#include "../../include/Rick.h"
 
 #define DEF_USERMODE_CPSR 16 //0x2D0
 
@@ -49,36 +50,11 @@ void init_tcbs(){
     kprintf("TCBVorbereitung abgeschlossen.\n\r");
 }
 
-static void kwait() {
-    int i;
-    for (i = 0; i < 352147; i++) {
-        asm("nop");
-    }
-}
-
 void idle_thread(void* voidPointerOfFame){
     kprintf("Starte den idle thread (%i)...\n\r", IDLE_THREAD);
     kprintfln("Booting done!\n\r");
     if (get_no_ext_userprog() == 1) {
-        while (1) {
-            kprintfln("### User Programm <uart_listen> nicht eingebunden ###");
-            kprintfln(" _______");
-            kprintfln("| .   . |");
-            kprintfln("|_______|");
-            kwait();
-            int i;
-            for (i = 0; i < 50; ++i) {
-                kprintfln("");
-            }
-            kprintfln("### User Programm <uart_listen> nicht eingebunden ###");
-            kprintfln(" _______");
-            kprintfln("| _   . |");
-            kprintfln("|_______|");
-            kwait();
-            for (i = 0; i < 50; ++i) {
-                kprintfln("");
-            }
-        }
+        rick();
     } else {
         while (1) {
         }

@@ -40,6 +40,7 @@ OBJ += ./lib/printf_lib.o
 OBJ += ./lib/regcheck.o
 OBJ += ./lib/regcheck_asm.o
 OBJ += ./lib/systemfunctions.o
+OBJ += ./lib/Rick.o
 OBJ += ./user/interactive_test.o
 OBJ += ./user/uart_listen.o
 OBJ += ./user/uprintf.o
