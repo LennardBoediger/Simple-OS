@@ -57,9 +57,9 @@ uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {
                 break;
             //
             case SYS_PREPARE_THREAD:
-                prepare_thread((void*)*((uint32_t*) swi_stackadress+5),
-                               (void*)*((uint32_t*) swi_stackadress+6),
-                               *((uint32_t*) swi_stackadress+7));
+                prepare_thread((void*)*((uint32_t*) swi_stackadress),
+                               (void*)*((uint32_t*) swi_stackadress+1),
+                               *((uint32_t*) swi_stackadress+2));
                 break;
             case SYS_SLEEP_THREAD:
                 get_tcb(get_running_thread())->zustand = WARTEND;
@@ -68,7 +68,7 @@ uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {
                 clear_timer();
                 break;
             case SYS_UART_PRINT:
-                to_transmit = *((uint32_t*) swi_stackadress+8);
+                to_transmit = *((uint32_t*) swi_stackadress);
                 uart_transmit((char) to_transmit);
                 break;
             case SYS_UART_READ:
@@ -78,7 +78,7 @@ uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {
                 if (input == 'S') {
                     kprintfln("\n\rS: Systemcall nicht möglich");
                     asm("swi 0");
-                } else *((uint32_t*) swi_stackadress+8) = input;
+                } else *((uint32_t*) swi_stackadress) = input;
                 break;
             default:
                 kprintfln("\n\rUNKNOWN SYSCALL...\n\r");
