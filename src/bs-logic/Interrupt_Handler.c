@@ -1,8 +1,6 @@
 #include "../include/printf_lib.h"
 #include "../include/interrupt_regs_driver.h"
 #include "../include/Interrupt_printer.h"
-#include "../include/mode_reg_helper.h"
-#include "../include/dataab_helper.h"
 #include "../include/threads_handler.h"
 #include "../include/init_thread.h"
 #include "../include/Interrupt_Handler.h"
@@ -58,6 +56,7 @@ uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {
             //
             case SYS_PREPARE_THREAD:
                 prepare_thread((void*)*((uint32_t*) swi_stackadress),
+                               //TODO: VALIDATE swi_sta...+1 (irq_stack_data)
                                (void*)*((uint32_t*) swi_stackadress+1),
                                *((uint32_t*) swi_stackadress+2));
                 break;

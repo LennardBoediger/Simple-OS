@@ -1,26 +1,24 @@
 .global syscall_kill_thread
 syscall_kill_thread:
-swi 0
-bx lr
+    swi     0
+    bx      lr
 
 .global syscall_prepare_thread
 syscall_prepare_thread:
-swi 1
-bx lr
+    swi     1
+    bx      lr
 
-.global void syscall_sleep_thread
+.global syscall_sleep_thread
 syscall_sleep_thread:
-swi 2
-bx lr
+    swi     2
+    bx      lr
 
 .global syscall_uart_print
 syscall_uart_print:
-swi 3
-bx lr
+    swi     3
+    bx      lr
 
 .global syscall_uart_read
 syscall_uart_read:
-swi 4
-bx lr
-
-
+    swi     4
+    bx      lr

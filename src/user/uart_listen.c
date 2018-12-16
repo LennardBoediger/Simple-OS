@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "../include/syscalls.h"
+#include "../syscalls/syscalls.h"
 #include "../include/printf_lib.h"
 #include "include/uprintf.h"
 #include "include/interactive_test.h"
@@ -22,15 +22,19 @@ void prepare_user_thread_passive(char input){
 void uart_listen(){
 //    uprintfln("START UART_LISTEN()");
     while(1) {
+        //TODO: INTERRUPTS AUS!!
         char input = (char) syscall_uart_read();
+        //BIS HIER
         while (input != 0) {
-            if (input >= 65 && input <= 90) {//Input ist ein Großbuchstabe
+            if (input >= 'A' && input <= 'Z') {
                 //func* an syscall; syscall braucht Infos über Input
                 prepare_user_thread_active(input);
             } else {
                 prepare_user_thread_passive(input);
             }
+            //TODO: INTERRUPT AUS
             input = (char) syscall_uart_read();
+            //BIS HIER
         }
 //        uprintfln("syscall_sleep();");
         syscall_sleep_thread();

@@ -2,7 +2,7 @@
 #include "include/interactive_test.h"
 #include "../include/interrupt_regs_driver.h"
 #include "include/uprintf.h"
-#include "../include/syscalls.h"
+#include "../syscalls/syscalls.h"
 #include "../include/threads_handler.h"
 
 

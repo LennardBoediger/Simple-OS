@@ -1,7 +1,7 @@
 #ifndef BS_PRAK_SYSCALLS_H
 #define BS_PRAK_SYSCALLS_H
 
-#include <stdint-gcc.h>
+#include <stdint.h>
 
 void syscall_kill_thread();
 void syscall_sleep_thread();

@@ -20,7 +20,7 @@
 #
 # Quellen
 #
-LSCRIPT = ./bs-logic/kernel.lds
+LSCRIPT = kernel.lds
 OBJ += ./bs-logic/start.o
 OBJ += ./bs-logic/threads/init_thread.o
 OBJ += ./bs-logic/threads/threads_handler.o
@@ -32,8 +32,6 @@ OBJ += ./bs-logic/kprintf.o
 OBJ += ./bs-logic/mode_reg_helper.o
 OBJ += ./bs-logic/Stack.o
 OBJ += ./driver/interrupt_regs_driver.o
-OBJ += ./driver/syscall_helper.o
-OBJ += ./driver/syscalls.o
 OBJ += ./driver/uart_driver.o
 OBJ += ./lib/Interrupt_printer.o
 OBJ += ./lib/printf_lib.o
@@ -41,6 +39,7 @@ OBJ += ./lib/regcheck.o
 OBJ += ./lib/regcheck_asm.o
 OBJ += ./lib/systemfunctions.o
 OBJ += ./lib/Rick.o
+OBJ += ./syscalls/syscalls.o
 OBJ += ./user/interactive_test.o
 OBJ += ./user/uart_listen.o
 OBJ += ./user/uprintf.o
@@ -75,7 +74,7 @@ DEP = $(OBJ:.o=.d)
 # Regeln
 #
 .PHONY: all install clean
-all: ./bs-logic/kernel ./bs-logic/kernel.bin dump
+all: kernel kernel.bin dump
 
 -include $(DEP)
 
@@ -85,29 +84,29 @@ all: ./bs-logic/kernel ./bs-logic/kernel.bin dump
 %.o: %.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -o $@ -c $<
 
-./bs-logic/kernel: $(LSCRIPT) $(OBJ)
+kernel: $(LSCRIPT) $(OBJ)
 	$(LD) -T$(LSCRIPT) -o $@ $(OBJ) $(LIBGCC)
 
-./bs-logic/kernel.bin: ./bs-logic/kernel
+kernel.bin: kernel
 	$(OBJCOPY) -Obinary --set-section-flags .bss=contents,alloc,load,data $< $@
 
-./bs-logic/kernel.img: ./bs-logic/kernel.bin
-	mkimage -A arm -T standalone -C none -a 0x8000 -d $< $@
+kernel.img: kernel.bin
+	mkimage -A arm -T standalone -C none -a 0x100000 -d $< $@
 	
 dump:
-	$(OBJDUMP) -D ./bs-logic/kernel > ./bs-logic/kernel_dump.s
+	$(OBJDUMP) -D kernel > kernel_dump.s
 
-install: ./bs-logic/kernel.img
+install: kernel.img
 	arm-install-image $<
 
 clean:
-	rm -f ./bs-logic/kernel ./bs-logic/kernel.bin ./bs-logic/kernel.img ./bs-logic/kernel_dump.s
+	rm -f kernel kernel.bin kernel.img kernel_dump.s
 	rm -f $(OBJ)
 	rm -f $(DEP)
 
 submission:	clean 
 	tar -czf "$(TUBIT_NAMES).tar.gz" $(SUBMISSION_FILES)
 
-home: ./bs-logic/kernel.img
-	cp -v ./bs-logic/kernel.img /srv/tftp
+home: kernel.img
+	cp -v kernel.img /srv/tftp
 
