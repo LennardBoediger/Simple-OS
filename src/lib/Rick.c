@@ -238,6 +238,7 @@ void rick(){
         kprintfln("dmmmmmmdhhhhhmmmmmmmmmmmddhso+/:--.......------/o+/:::::::::::::::////++oooooo+/::/sys:......-:/+ssy");
         kprintfln("hddhhddhyyyyhdddddddhys+/::---..`````````:``..--:-::oo:-----------:::///++++/:---/osso-.`````````.-/");
         kprintfln("yyyyyyysssssshhyyo+::---...`````   ``   `.--...```.::.---------------::://:-----/+ooo:.`````````````");
+        kprintfln("########################### User Programm <uart_listen> nicht eingebunden ##########################");
         kwait();
         clears();
 
