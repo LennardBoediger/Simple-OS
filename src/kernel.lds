@@ -1,14 +1,25 @@
 ENTRY(_start)
 SECTIONS
 {
-    //TODO: LÄUFT NICHT...
-    . = 0x00200000;
-    usrtxt : { user/?*(.text*) }
-    usrdata : { user/?*(.data*) }
-    usrrodata : { user/?*(.rodata*) }
-    usrbss : { user/?*(.bss*) }
-	. = 0x00100000;
-	.init : { *(.init*) }
-	.text : { *(.text*) }
-	.data : { *(.data) }
+. = 0x00200000;
+ersttext : {
+    user/?*(.text*)
+    }
+erstrodata : {
+    user/?*(.rodata*)
+    }
+. = 0x00800000;
+.text : {
+    *(.text*)
+    }
+.rodata : {
+    *(.rodata*)
+    }
+. = 0x00A00000;
+.bss : {
+    *(.bss)*(COMMON)
+    }
+.data : {
+    *(.data)
+    }
 }
