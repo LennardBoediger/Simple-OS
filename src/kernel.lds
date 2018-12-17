@@ -2,20 +2,29 @@ ENTRY(_start)
 SECTIONS
 {
 . = 0x00200000;
-ersttext : {
-    user/?*(.text*)
+usrtext : {
+    ./user/?*(.text*)
     }
-erstrodata : {
-    user/?*(.rodata*)
+usrrodata : {
+    ./user/?*(.rodata*)
     }
-. = 0x00800000;
+usrdata : {
+    ./user/?*(.data*)
+}
+usrbss : {
+    ./user/?*(.bss*)
+}
+
+. = 0x00100000;
+.init : {
+    *(.init*)
+}
 .text : {
     *(.text*)
     }
 .rodata : {
     *(.rodata*)
     }
-. = 0x00A00000;
 .bss : {
     *(.bss)*(COMMON)
     }
