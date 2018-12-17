@@ -15,12 +15,12 @@ init_ttbr0:
     mcr     p15, 0, r0, c2, c0, 0
     bx      lr
 
-.globael get_sctlr
+.global get_sctlr
 get_sctlr:
-    mcr     p15, 0, r0, c1, c0, 0
+    mrc     p15, 0, r0, c1, c0, 0
     bx lr
 
-.globael get_sctlr
+.global set_sctlr
 set_sctlr:
     mcr     p15, 0, r0, c1, c0, 0
     bx lr
