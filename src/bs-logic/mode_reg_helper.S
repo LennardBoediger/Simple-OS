@@ -15,8 +15,11 @@
 .global get_lr_undefined
 .global get_sp_undefined
 .global get_spsr_undefined
+.global get_cpsr
 
-
+get_cpsr:
+    mrs r0, cpsr
+    bx lr
 
 get_lr_system:
     mrs r0, lr_usr

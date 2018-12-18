@@ -2,6 +2,7 @@
 #include "../include/printf_lib.h"
 #include "../include/uart_driver.h"
 
+
 void kprintf(char* text, ...) {
     va_list args;
     va_start(args, text);

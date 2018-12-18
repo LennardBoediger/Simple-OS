@@ -21,5 +21,7 @@ uint32_t get_lr_undefined();
 uint32_t get_sp_undefined();
 uint32_t get_spsr_undefined();
 
+uint32_t get_cpsr();
+
 
 #endif //BS_PRAK_MODE_REG_HELPER_H

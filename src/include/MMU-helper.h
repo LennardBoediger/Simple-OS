@@ -8,5 +8,6 @@ void init_ttbr0(uint32_t* table_pointer);
 void init_sctlr();
 uint32_t get_sctlr();
 void set_sctlr(uint32_t sctlr);
+void flush_tlb();
 
 #endif //BS_PRAK_MMU_HELPER_H

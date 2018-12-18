@@ -50,23 +50,14 @@ void init_tcbs(){
     kprintf("TCBVorbereitung abgeschlossen.\n\r");
 }
 
-void idle_thread(void* voidPointerOfFame){
-    kprintf("Starte den idle thread (%i)...\n\r", IDLE_THREAD);
-    kprintfln("Booting done!\n\r");
-    if (get_no_ext_userprog() == 1) {
-        rick();
-    } else {
-        while (1) {
-        }
-    }
-    /* so lange, bis interrupt -> neuer thread*/
-}
+extern void idle_thread();
+__attribute__((weakref("idle_thread"))) static void new_idle_thread(void* voidPointerOfFame);
 
 
 void prepare_idle_thread(){
     force_idle = 1;
     void(* idle_thread_Ptr)(void*);
-    idle_thread_Ptr = &idle_thread;
+    idle_thread_Ptr = &new_idle_thread;
     prepare_thread(idle_thread_Ptr, (void*)NO_STACK_ADRESS, 0);
 }
 

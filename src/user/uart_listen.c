@@ -4,19 +4,19 @@
 #include "include/uprintf.h"
 #include "include/interactive_test.h"
 
-void(* user_thread_Ptr)(void*);
-
 
 
 void prepare_user_thread_active(char input){
+    static void(* user_thread_Ptr_act)(void*);
     char c = input;
-    user_thread_Ptr = &user_thread_active;
-    syscall_prepare_thread(user_thread_Ptr, (void*) &c, sizeof(c));
+    user_thread_Ptr_act = &user_thread_active;
+    syscall_prepare_thread(user_thread_Ptr_act, (void*) &c, sizeof(c));
 }
 void prepare_user_thread_passive(char input){
+    static void(* user_thread_Ptr_pas)(void*);
     char c = input;
-    user_thread_Ptr = &user_thread_passive;
-    syscall_prepare_thread(user_thread_Ptr, (void*) &c, sizeof(c));
+    user_thread_Ptr_pas = &user_thread_passive;
+    syscall_prepare_thread(user_thread_Ptr_pas, (void*) &c, sizeof(c));
 }
 
 void uart_listen(){

@@ -42,6 +42,7 @@ OBJ += ./lib/regcheck_asm.o
 OBJ += ./lib/systemfunctions.o
 OBJ += ./lib/Rick.o
 OBJ += ./syscalls/syscalls.o
+OBJ += ./user/idle_thread.o
 OBJ += ./user/interactive_test.o
 OBJ += ./user/uart_listen.o
 OBJ += ./user/uprintf.o

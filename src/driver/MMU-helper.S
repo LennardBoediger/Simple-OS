@@ -18,9 +18,14 @@ init_ttbr0:
 .global get_sctlr
 get_sctlr:
     mrc     p15, 0, r0, c1, c0, 0
-    bx lr
+    bx      lr
 
 .global set_sctlr
 set_sctlr:
     mcr     p15, 0, r0, c1, c0, 0
-    bx lr
+    bx      lr
+
+.global flush_tlb
+flush_tlb:
+    mcr     p15, 0, r0, c8, c7, 0
+    bx      lr
