@@ -7,9 +7,10 @@
 #define MAX_ADDR 0x08000000 //128. MB
 #define FAULT_VALUE 0xfffffffc
 
+#define ALLWAYS_ONE_POS 1
 #define AP0_POS 10
 #define AP1_POS 11
-#define AP2_POS 12
+#define AP2_POS 15
 
 #define MMU_EN_POS 0
 #define ALIGNMENT_CHECK_EN_POS 1
@@ -18,9 +19,8 @@
 
 
 //#define IO_REGION 0x3f000000 BIS 0x3f20000
+static uint32_t L1_table[L1_TABLE_SIZE] __attribute__((aligned(L1_ALLIGNMENT)));
 
-static uint32_t L1_table[L1_TABLE_SIZE]
-__attribute__((alligned(L1_ALLIGNMENT)));
 
 uint32_t addr_to_index(uint32_t* addr) {
     return (((uint32_t) addr) >> 20);
@@ -31,22 +31,30 @@ void set_L1(){
     uint32_t i;
     uint32_t max_addr_i = addr_to_index((uint32_t*) MAX_ADDR);
     for(i = 0; i < L1_TABLE_SIZE; i++) {
-        L1_table[i] = (i << 20);        // 1 zu 1 mapping
-        L1_table[i] |= (1 << AP0_POS);  // AP = 011 Voller zugriff von allen (zum testen)
-        L1_table[i] |= (1 << AP1_POS);
-        L1_table[i] &= ~(1 << AP2_POS);
-
- // TODO: Weiter eingrenzen
-  /* if (i > 0 && i < max_addr_i - 1) {                             //user  kernel und stacks breich
-            L1_table[i] = (i << 20);       //1 ZU 1 MAPPING
-        } else if (i == addr_to_index((uint32_t *)IO_REGION)) {     // IO BEREICH
+        if (i == 2) {
+            L1_table[i] = (i << 20);        // 1 zu 1 mapping
+            L1_table[i] &= ~(1 << ALLWAYS_ONE_POS);  // SECTION DISABLED
+            L1_table[i] &= ~(1 << AP0_POS);  // AP = 000 KEIN ZUGRIFF (zum testen)
+            L1_table[i] &= ~(1 << AP1_POS);
+            L1_table[i] &= ~(1 << AP2_POS);
+        } else {
+            L1_table[i] = (i << 20);        // 1 zu 1 mapping
+            L1_table[i] |= (1 << ALLWAYS_ONE_POS);  // SECTION ENABLED
+            L1_table[i] |= (1 << AP0_POS);  // AP = 011 Voller zugriff von allen (zum testen)
+            L1_table[i] |= (1 << AP1_POS);
+            L1_table[i] &= ~(1 << AP2_POS);
         }
-        else{                                                       //Out of boud
-            L1_table[i] = L1_table[i] & FAULT_VALUE;
-        }
-*/
+        // TODO: Weiter eingrenzen
+        /* if (i > 0 && i < max_addr_i - 1) {                             //user  kernel und stacks breich
+                  L1_table[i] = (i << 20);       //1 ZU 1 MAPPING
+              } else if (i == addr_to_index((uint32_t *)IO_REGION)) {     // IO BEREICH
+              }
+              else{                                                       //Out of boud
+                  L1_table[i] = L1_table[i] & FAULT_VALUE;
+              }
+      */
     }
-    kprintfln("L1_table[1]=00000000001 bit 15 = 0 bit 11-10=11 %x",L1_table[1]);
+    kprintfln("L1_table[3]; bit [15] = 0; bit [11-10]=00 %x",L1_table[3]);
 }
 
 void init_L1_table(){
@@ -78,5 +86,5 @@ void init_mmu() {
 
     //TODO: not_1_to_1_mapping
 
-    kprintfln("INIT DONE!!");
+    kprintfln("INIT MMU DONE!!");
 }

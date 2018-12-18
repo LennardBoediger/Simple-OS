@@ -4,6 +4,7 @@
 #include "../include/interrupt_regs_driver.h"
 #include "../include/init_thread.h"
 #include "../include/kprintf.h"
+#include "../include/MMU.h"
 
 uint8_t no_ext_userprog;
 
@@ -33,6 +34,9 @@ void prepare_uart_listenthread () {
 }
 
 void boot_system() {
+    kprintfln("STARTING BOOT_SYSTEM");
+    init_mmu();
+    kprintfln("BOOT_SYSTEM -> INIT_MMU DONE");
     enable_IRQ_interrupts();
     init_tcbs();
     prepare_uart_listenthread();

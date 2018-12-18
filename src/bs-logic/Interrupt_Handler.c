@@ -36,9 +36,6 @@ uint32_t undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
 
 /* bearbeitet den "swi xx"-call */
 uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {
-    if (debug_interrupt == 1) {
-        print_interrupt(swi_stackadress, cpsr, spsr, "SOFTWARE INTERRUPT", -4, 0);
-    }
     //Wenn wir aus dem User_mode kommen, kam der SWI von einem Thread
     uint32_t next_spsr = spsr;
     if ((next_spsr % MODE_MASK) == USER_MODE) {
@@ -77,10 +74,12 @@ uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {
                 if (input == 'S') {
                     kprintfln("\n\rS: Systemcall nicht möglich");
                     asm("swi 0");
+                    print_interrupt(swi_stackadress, cpsr, spsr, "SOFTWARE INTERRUPT", -4, 0);
                 } else *((uint32_t*) swi_stackadress) = input;
                 break;
             default:
                 kprintfln("\n\rUNKNOWN SYSCALL...\n\r");
+                print_interrupt(swi_stackadress, cpsr, spsr, "SOFTWARE INTERRUPT", -4, 0);
                 break;
         }
     }

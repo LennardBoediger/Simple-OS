@@ -40,6 +40,7 @@ void user_thread_active(void* stack_pointer) {
     uprintf("\n\r\n\r\n\r\n\rDEAD THREADS CANNOT KPRINTF!!!!!11!!!elf!!!\n\r\n\r\n\r\n\r");
 }
 
+
 void user_thread_passive(void* stack_pointer) {
     char input = *((char*) stack_pointer);
     switch(input) {
