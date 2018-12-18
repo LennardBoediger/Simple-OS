@@ -6,13 +6,13 @@
 #define MAX_ADDR 0x08000000 //128. MB
 #define FAULT_VALUE 0xfffffffc
 
-#define INIT_KSEC 1
-#define TEXT_KSEC 2
+#define INIT_KERNELSEC 1
+#define TEXT_KERNELSEC 2
 //#define RODATA_KSEC 5
-#define DATA_KSEC 3
+#define DATA_KERNELSEC 3
 //#define BSS_USEC 7
-#define TEXT_USEC 4
-#define DATA_USEC 5
+#define TEXT_USERSEC 4
+#define DATA_USERSEC 5
 //TODO: IO-Bereiche & Stacks
 
 #define MMU_EN_POS 0
@@ -25,6 +25,8 @@
  *
  */
 #define ALLWAYS_ONE_POS 1
+#define XN_POS 4
+#define PXN_POS 0
 #define AP0_POS 10
 #define AP1_POS 11
 #define AP2_POS 15
@@ -64,11 +66,19 @@ void section_usr_r(uint32_t L1_index) {
     L1_table[L1_index] &= ~(1 << AP2_POS);
 }
 
-void section_usr_rw(uint32_t L1_index) {
+void section_fullAccess(uint32_t L1_index) {
     entry_is_section(L1_index);
     L1_table[L1_index] |= (1 << AP0_POS);  // AP = 011 Voller zugriff von allen (zum testen)
     L1_table[L1_index] |= (1 << AP1_POS);
     L1_table[L1_index] &= ~(1 << AP2_POS);
+}
+
+void set_execNever(uint32_t L1_index) {
+    L1_table[L1_index] |= (1 << XN_POS);
+}
+
+void set_privExecNever(uint32_t L1_index) {
+    L1_table[L1_index] |= (1 << PXN_POS);
 }
 /*
  *
@@ -83,31 +93,33 @@ void set_L1(){
     uint32_t i;
     uint32_t max_addr_i = addr_to_index((uint32_t*) MAX_ADDR);
     for(i = 0; i < L1_TABLE_SIZE; i++) {
-        section_usr_rw(i);          //TODO: müssen als INVALID markiert werden
+        section_fullAccess(i);          //TODO: müssen als INVALID markiert werden
     }
-    section_usr_rw(0);  //TODO: vielleicht VOLLZUGRIFF nennen?!
+    section_fullAccess(0);
+//    set_execNever(0); //TODO: FRAGEN, was das drinne liegt...
     kprintfln("SET_L1 -> L1[0] = %x", L1_table[0]);
-    section_usr_rw(INIT_KSEC);  //TODO ...
-    kprintfln("SET_L1 -> L1[INIT_KSEC] = %x", L1_table[INIT_KSEC]);
-    section_sys_rw(TEXT_KSEC); //TODO rw?
-    kprintfln("SET_L1 -> L1[TEXT_KSEC] = %x", L1_table[TEXT_KSEC]);
-    section_sys_rw(DATA_KSEC);
-    kprintfln("SET_L1 -> L1[DATA_KSEC] = %x", L1_table[DATA_KSEC]);
-    section_usr_r(TEXT_USEC);
-    kprintfln("SET_L1 -> L1[TEXT_USEC] = %x", L1_table[TEXT_USEC]);
-    section_usr_rw(DATA_USEC);
-    kprintfln("SET_L1 -> L1[DATA_USEC] = %x", L1_table[DATA_USEC]);
+
+    section_fullAccess(INIT_KERNELSEC);  //TODO ...
+    kprintfln("SET_L1 -> L1[INIT_KERNELSEC] = %x", L1_table[INIT_KERNELSEC]);
+
+    section_sys_rw(TEXT_KERNELSEC); //TODO rw?
+//    set_privExecNever(TEXT_KERNELSEC); NUR TESTWEISE!
+    kprintfln("SET_L1 -> L1[TEXT_KERNELSEC] = %x", L1_table[TEXT_KERNELSEC]);
+
+    section_sys_rw(DATA_KERNELSEC);
+    set_execNever(DATA_KERNELSEC);
+    kprintfln("SET_L1 -> L1[DATA_KERNELSEC] = %x", L1_table[DATA_KERNELSEC]);
+
+    //TODO: DIE BEIDEN KPRINTFs PRINTEN KOMISCHE SACHEN
+    section_usr_r(TEXT_USERSEC);
+    set_privExecNever(TEXT_USERSEC);
+    kprintfln("SET_L1 -> L1[TEXT_USERSEC] = %x", L1_table[TEXT_USERSEC]);
+
+    section_fullAccess(DATA_USERSEC);
+    set_execNever(DATA_USERSEC);
+    kprintfln("SET_L1 -> L1[DATA_USERSEC] = %x", L1_table[DATA_USERSEC]);
     //TODO IO-BEREICH und
     // TODO: Weiter eingrenzen
-    /* if (i > 0 && i < max_addr_i - 1) {                             //user  kernel und stacks breich
-              L1_table[i] = (i << 20);       //1 ZU 1 MAPPING
-          } else if (i == addr_to_index((uint32_t *)IO_REGION)) {     // IO BEREICH
-          }
-          else{                                                       //Out of boud
-              L1_table[i] = L1_table[i] & FAULT_VALUE;
-          }
-  */
-    kprintfln("L1_table[3] = %x",L1_table[3]);
 }
 
 void init_L1_table(){
