@@ -4,13 +4,10 @@
 #define DACR_CLIENT 1       //set dacr to client
 #define TTBCR_USE_TTBR0 0
 #define MAX_ADDR 0x08000000 //128. MB
-#define FAULT_VALUE 0xfffffffc
 
 #define INIT_KERNELSEC 1
 #define TEXT_KERNELSEC 2
-//#define RODATA_KSEC 5
 #define DATA_KERNELSEC 3
-//#define BSS_USEC 7
 #define TEXT_USERSEC 4
 #define DATA_USERSEC 5
 //TODO: IO-Bereiche & Stacks
@@ -108,16 +105,19 @@ void set_L1(){
 
     section_sys_rw(DATA_KERNELSEC);
     set_execNever(DATA_KERNELSEC);
+    char magic = '1';
+    kprintfln("magic=%c",magic);
     kprintfln("SET_L1 -> L1[DATA_KERNELSEC] = %x", L1_table[DATA_KERNELSEC]);
 
     //TODO: DIE BEIDEN KPRINTFs PRINTEN KOMISCHE SACHEN
     section_usr_r(TEXT_USERSEC);
     set_privExecNever(TEXT_USERSEC);
-    kprintfln("SET_L1 -> L1[TEXT_USERSEC] = %x", L1_table[TEXT_USERSEC]);
 
+    kprintfln("SET_L1 -> L1[TEXT_USERSEC] = %x", L1_table[TEXT_USERSEC]);
+    kprintfln("affe=%c",magic);
     section_fullAccess(DATA_USERSEC);
     set_execNever(DATA_USERSEC);
-    kprintfln("SET_L1 -> L1[DATA_USERSEC] = %x", L1_table[DATA_USERSEC]);
+   kprintfln("SET_L1 -> L1[DATA_USERSEC] = %x", L1_table[DATA_USERSEC]);
     //TODO IO-BEREICH und
     // TODO: Weiter eingrenzen
 }
@@ -154,4 +154,5 @@ void init_mmu() {
     //TODO: not_1_to_1_mapping
 
     kprintfln("INIT MMU DONE!!");
+
 }
