@@ -5,12 +5,23 @@
 #define TTBCR_USE_TTBR0 0
 #define MAX_ADDR 0x08000000 //128. MB
 
-#define INIT_KERNELSEC 1
-#define TEXT_KERNELSEC 2
-#define DATA_KERNELSEC 3
-#define TEXT_USERSEC 4
-#define DATA_USERSEC 5
-//TODO: IO-Bereiche & Stacks
+#define INIT_KERNELSEC 0x0001
+#define TEXT_KERNELSEC 0x0002
+#define DATA_KERNELSEC 0x0003
+#define TEXT_USERSEC 0x0004
+#define DATA_USERSEC 0x0005
+
+#define IO_PHYS_0 0x3F0
+#define IO_VIRT_0 0x7E0
+#define IO_PHYS_1 0x3F1
+#define IO_VIRT_1 0x7E1
+#define IO_PHYS_2 0x3F2
+#define IO_VIRT_2 0x7E2
+#define EXCEPTION_STACKS 0x07F     //127.MB
+#define PHYS_USER_STACKS 0x07E          //126.MB
+#define VIRT_USER_STACKS 0x07D
+
+
 
 #define MMU_EN_POS 0
 #define ALIGNMENT_CHECK_EN_POS 1
@@ -32,8 +43,12 @@ static uint32_t L1_table[L1_TABLE_SIZE] __attribute__((aligned(L1_ALIGNMENT)));
 
 void entry_is_section(uint32_t L1_index) {
     //ACHTUNG: HIER KEINE BITSETZUNG!!!
-    L1_table[L1_index] = (L1_index << 20);        // 1 zu 1 mapping
-    L1_table[L1_index] |= (1 << ALLWAYS_ONE_POS);  // SECTION ENABLED
+    if (L1_index == VIRT_USER_STACKS) {
+        L1_table[L1_index] = (PHYS_USER_STACKS << 20);        // NICHT 1 zu 1 mapping
+    } else {
+        L1_table[L1_index] = (L1_index << 20);        // 1 zu 1 mapping
+        L1_table[L1_index] |= (1 << ALLWAYS_ONE_POS);  // SECTION ENABLED
+    }
 }
 
 //TODO verständlicher
@@ -86,12 +101,18 @@ uint32_t addr_to_index(uint32_t* addr) {
     return (((uint32_t) addr) >> 20);
 }
 
+
 void set_L1(){
     uint32_t i;
-    uint32_t max_addr_i = addr_to_index((uint32_t*) MAX_ADDR);
     for(i = 0; i < L1_TABLE_SIZE; i++) {
-        section_fullAccess(i);          //TODO: müssen als INVALID markiert werden
+        entry_is_invalid(i);          //TODO: müssen als INVALID markiert werden
     }
+    section_sys_rw(IO_PHYS_0);
+    section_sys_rw(IO_PHYS_1);
+    section_sys_rw(IO_PHYS_2);
+    set_execNever(IO_PHYS_0);
+    set_execNever(IO_PHYS_1);
+    set_execNever(IO_PHYS_2);
     section_fullAccess(0);
 //    set_execNever(0); //TODO: FRAGEN, was das drinne liegt...
     kprintfln("SET_L1 -> L1[0] = %x", L1_table[0]);
@@ -100,26 +121,27 @@ void set_L1(){
     kprintfln("SET_L1 -> L1[INIT_KERNELSEC] = %x", L1_table[INIT_KERNELSEC]);
 
     section_sys_rw(TEXT_KERNELSEC); //TODO rw?
-//    set_privExecNever(TEXT_KERNELSEC); NUR TESTWEISE!
+//    set_privExecNever(TEXT_KERNELSEC); //NUR TESTWEISE!
     kprintfln("SET_L1 -> L1[TEXT_KERNELSEC] = %x", L1_table[TEXT_KERNELSEC]);
 
     section_sys_rw(DATA_KERNELSEC);
     set_execNever(DATA_KERNELSEC);
-    char magic = '1';
-    kprintfln("magic=%c",magic);
     kprintfln("SET_L1 -> L1[DATA_KERNELSEC] = %x", L1_table[DATA_KERNELSEC]);
 
-    //TODO: DIE BEIDEN KPRINTFs PRINTEN KOMISCHE SACHEN
     section_usr_r(TEXT_USERSEC);
     set_privExecNever(TEXT_USERSEC);
+    kprintfln("SET_L1 -> L1[DATA_KERNELSEC] = %x", L1_table[TEXT_USERSEC]);
 
-    kprintfln("SET_L1 -> L1[TEXT_USERSEC] = %x", L1_table[TEXT_USERSEC]);
-    kprintfln("affe=%c",magic);
     section_fullAccess(DATA_USERSEC);
     set_execNever(DATA_USERSEC);
-   kprintfln("SET_L1 -> L1[DATA_USERSEC] = %x", L1_table[DATA_USERSEC]);
-    //TODO IO-BEREICH und
-    // TODO: Weiter eingrenzen
+    kprintfln("SET_L1 -> L1[DATA_USERSEC]  = %x", L1_table[DATA_USERSEC]);
+
+    section_sys_rw(EXCEPTION_STACKS);
+    set_execNever(EXCEPTION_STACKS);
+
+    section_fullAccess(PHYS_USER_STACKS);
+    set_execNever(PHYS_USER_STACKS);
+
 }
 
 void init_L1_table(){

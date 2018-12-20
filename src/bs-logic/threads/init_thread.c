@@ -43,7 +43,7 @@ void init_tcbs(){
         threads[i].lr_usr = 0x666; //sollte nie...
         threads[i].lr_irq = 0x666; //sollte nie zu sehen sein
         threads[i].cpsr = DEF_USERMODE_CPSR;
-        threads[i].data_stack_pointer = (uint32_t) (128*1024*(1018-i));
+        threads[i].data_stack_pointer = (uint32_t) (126*1024*1023-i*1024);
         threads[i].zustand = BEENDET;
         threads[i].wartezeit = -1;
     }
