@@ -83,10 +83,15 @@ uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {
                 break;
             //
             case SYS_PREPARE_THREAD:
-                prepare_thread((void*)*((uint32_t*) swi_stackadress),
-                               //TODO: VALIDATE swi_sta...+1 (irq_stack_data)
-                               (void*)*((uint32_t*) swi_stackadress+1),
-                               *((uint32_t*) swi_stackadress+2));
+                //USER DATEN aus UNGÜLTIGgem bereich todo testen gültige adresse
+                if((void*)*((uint32_t*) swi_stackadress+1)<=(void*)get_tcb(get_running_thread())->data_stack_pointer
+                    && (void*)*((uint32_t*) swi_stackadress+1)>=(void*)(get_tcb(get_running_thread())->data_stack_pointer-1024)) {
+                    prepare_thread((void *) *((uint32_t *) swi_stackadress),
+                                   (void *) *((uint32_t *) swi_stackadress + 1),
+                                   *((uint32_t *) swi_stackadress + 2));
+                }else{
+                    kprintfln("Daten Pointer ist nicht im Besitz des Threads");
+                }
                 break;
             case SYS_SLEEP_THREAD:
                 get_tcb(get_running_thread())->zustand = WARTEND;
