@@ -1,5 +1,4 @@
 
-
 .global init_dacr
 init_dacr:
     mcr     p15, 0, r0, c3, c0, 0

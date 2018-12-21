@@ -1,4 +1,4 @@
-/home/pablo/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/173.4301.33/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/pablo/Dokumente/Uni/BSPrak/BS-Prak
+/Applications/CLion.app/Contents/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/Lennard/Github/Bs-Prak
 -- Configuring done
 CMake Error at CMakeLists.txt:6 (add_executable):
   Cannot find source file:
@@ -12,4 +12,4 @@ CMake Error at CMakeLists.txt:6 (add_executable):
 CMake Error: CMake can not determine linker language for target: Bs_Prak
 CMake Error: Cannot determine link language for target "Bs_Prak".
 -- Generating done
--- Build files have been written to: /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug
+-- Build files have been written to: /Users/Lennard/Github/Bs-Prak/cmake-build-debug

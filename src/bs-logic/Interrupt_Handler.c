@@ -1,9 +1,11 @@
+#include <stddef.h>
 #include "../include/printf_lib.h"
 #include "../include/interrupt_regs_driver.h"
 #include "../include/Interrupt_printer.h"
 #include "../include/threads_handler.h"
 #include "../include/init_thread.h"
 #include "../include/Interrupt_Handler.h"
+#include "../include/Interrupt_Handler_helper.h"
 #include "../include/uart_driver.h"
 #define SWI_PC_Offset (-4)
 //Sys call defines
@@ -29,10 +31,39 @@ uint32_t undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
         get_tcb(get_running_thread())->zustand = BEENDET;
         next_spsr = swap_thread(stackadress, spsr);
         clear_timer();
+    } else{
+        while(1);
     }
     return next_spsr;
 }
 
+uint32_t char_handler(char input){
+    switch(input){
+        case 'N':
+            k_read_address((uint32_t*)NULL);
+            kprintfln("Achtung: Read NULL Defekt");
+            break;
+        case 'P':
+            k_branch_to_np();
+            kprintfln("Achtung: JUMP NULL Defekt");
+            break;
+        case 'C':
+            k_write_address((uint32_t *)0x0002);
+            kprintfln("Achtung: Write auf eigenen Code Defekt");
+            break;
+        case 'U':
+            k_branchto((uint32_t*)0x007);
+            kprintfln("Achtung: Lesen auf Unbound");
+            break;
+        case 'X':
+            k_branchto((uint32_t*)0x0004);
+            kprintfln("Achtung: Sprung auf user code Defekt");
+            break;
+        default:
+            return 0;
+    }
+    return 1;
+}
 
 /* bearbeitet den "swi xx"-call */
 uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {
@@ -68,14 +99,11 @@ uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {
                 uart_transmit((char) to_transmit);
                 break;
             case SYS_UART_READ:
-                //ZUGRIFF AUF READ BUFFER->return Char, diesen in r8 (Stackadress+8)
                 input = (uint32_t) read_uart_buffer();
                 // FÜR NÄCHSTE ABGABE RAUS!!
-                if (input == 'S') {
-                    kprintfln("\n\rS: Systemcall nicht möglich");
-                    asm("swi 0");
-                    print_interrupt(swi_stackadress, cpsr, spsr, "SOFTWARE INTERRUPT", -4, 0);
-                } else *((uint32_t*) swi_stackadress) = input;
+                if (char_handler(input) == 0){
+                    *((uint32_t*) swi_stackadress) = input;
+                }
                 break;
             default:
                 kprintfln("\n\rUNKNOWN SYSCALL...\n\r");
@@ -95,6 +123,8 @@ uint32_t prefab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
         get_tcb(get_running_thread())->zustand = BEENDET;
         next_spsr = swap_thread(stackadress, spsr);
         clear_timer();
+    } else{
+        while(1);
     }
     return next_spsr;
 }
@@ -107,6 +137,8 @@ uint32_t dataab(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
         get_tcb(get_running_thread())->zustand = BEENDET;
         next_spsr = swap_thread(stackadress, spsr);
         clear_timer();
+    } else{
+        while(1);
     }
     return next_spsr;
 }

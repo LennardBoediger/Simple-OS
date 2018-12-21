@@ -27,6 +27,7 @@ OBJ += ./bs-logic/threads/threads_handler.o
 OBJ += ./bs-logic/Boot.o
 OBJ += ./bs-logic/dataab_helper.o
 OBJ += ./bs-logic/Interrupt_Handler.o
+OBJ += ./bs-logic/Interrupt_Handler_helper.o
 OBJ += ./bs-logic/Interrupt_Vector_Table.o
 OBJ += ./bs-logic/kprintf.o
 OBJ += ./bs-logic/MMU.o
@@ -44,6 +45,7 @@ OBJ += ./lib/Rick.o
 OBJ += ./syscalls/syscalls.o
 OBJ += ./user/idle_thread.o
 OBJ += ./user/interactive_test.o
+OBJ += ./user/interactive_test_helper.o
 OBJ += ./user/uart_listen.o
 OBJ += ./user/uprintf.o
 

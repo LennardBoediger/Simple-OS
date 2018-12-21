@@ -25,11 +25,24 @@ void prepare_uart_listenthread () {
         void(*uart_listen_Ptr);
         uart_listen_Ptr = &new_uart_listen;
         prepare_thread(uart_listen_Ptr, (void *) NO_STACK_ADRESS, 0);
-        kprintf("\n\rHello :) \n\r");
-        kprintf("\n\rDrücke S, um direkt aus der Interruptbehandlung einen bekannten Systemruf auszurufen\n\r");
-        kprintf("Drücke s, um aus einem User-Thread einen unbekannten Systemruf aufzurufen\n\r");
-        kprintf("Drücke u, um aus einem User-Thread eine 'Undefined Instruction' auszulösen\n\r");
-        kprintf("Drücke eine andere Taste, um einen interaktiven Test auszuführen...\n\r");
+        kprintfln("\n\rHello :) \n\r");
+        kprintfln("Drücke n: lesender Zugriff auf Null-Pointer.");
+        kprintfln("Drücke p: Sprung auf Null-Pointer.");
+        kprintfln("Drücke d: lesender Zugriff auf Kernel-Daten.");
+        kprintfln("Drücke k: lesender Zugriff auf Kernel-Code.");
+        kprintfln("Drücke K: lesender Zugriff auf Kernel-Stack.");
+        kprintfln("Drücke g: lesender Zugriff auf Peripherie-Gerät, z.B. UART. ");
+        kprintfln("Drücke c: schreibender Zugriff auf eigenen Code.");
+        kprintfln("Drücke s: Stack-Overflow.");
+        kprintfln("Drücke u: lesender Zugriff auf nicht zugeordnete Adresse. ");
+        kprintfln("Drücke x: Sprung auf eigene Daten oder Stack.");
+        kprintfln("Drücke a, um aus einem User-Thread eine 'Undefined Instruction' auszulösen");
+        kprintfln("N: lesender Zugriff auf Null-Pointer.");
+        kprintfln("P: Sprung auf Null-Pointer.");
+        kprintfln("C: schreibender Zugriff auf eigenen Code.");
+        kprintfln("U: lesender Zugriff auf nicht zugeordnete Adresse. X: Sprung auf User Code.");
+
+        kprintfln("Drücke eine andere Taste, um einen interaktiven Test auszuführen...");
     }
 }
 

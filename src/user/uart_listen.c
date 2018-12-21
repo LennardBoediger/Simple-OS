@@ -26,7 +26,7 @@ void uart_listen(){
         char input = (char) syscall_uart_read();
         //BIS HIER
         while (input != 0) {
-            if (input >= 'A' && input <= 'Z') {
+            if (input >= 'A' && input <= 'Z' && input != 'K') {
                 //func* an syscall; syscall braucht Infos über Input
                 prepare_user_thread_active(input);
             } else {

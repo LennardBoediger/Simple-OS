@@ -17,21 +17,15 @@
 #define IO_VIRT_1 0x7E1
 #define IO_PHYS_2 0x3F2
 #define IO_VIRT_2 0x7E2
-#define EXCEPTION_STACKS 0x07F     //127.MB
-#define PHYS_USER_STACKS 0x07E          //126.MB
-#define VIRT_USER_STACKS 0x07D
-
-
+#define EXCEPTION_STACKS 0x07F      //127.MB
+#define PHYS_USER_STACKS 0x07D      //125.MB
+#define VIRT_USER_STACKS 0x07E      //auf 126mb wird zugegriffen in 125 wir tatsächlich gelesen
 
 #define MMU_EN_POS 0
 #define ALIGNMENT_CHECK_EN_POS 1
 #define I_CHACHE_EN_POS 12
 #define C_CACHE_EN_POS 2
 
-/*
- *
- *
- */
 #define ALLWAYS_ONE_POS 1
 #define XN_POS 4
 #define PXN_POS 0
@@ -92,10 +86,6 @@ void set_execNever(uint32_t L1_index) {
 void set_privExecNever(uint32_t L1_index) {
     L1_table[L1_index] |= (1 << PXN_POS);
 }
-/*
- *
- *
- */
 
 uint32_t addr_to_index(uint32_t* addr) {
     return (((uint32_t) addr) >> 20);
@@ -105,7 +95,7 @@ uint32_t addr_to_index(uint32_t* addr) {
 void set_L1(){
     uint32_t i;
     for(i = 0; i < L1_TABLE_SIZE; i++) {
-        entry_is_invalid(i);          //TODO: müssen als INVALID markiert werden
+        entry_is_invalid(i);
     }
     section_sys_rw(IO_PHYS_0);
     section_sys_rw(IO_PHYS_1);
@@ -113,17 +103,11 @@ void set_L1(){
     set_execNever(IO_PHYS_0);
     set_execNever(IO_PHYS_1);
     set_execNever(IO_PHYS_2);
-    section_fullAccess(0);
-//    set_execNever(0); //TODO: FRAGEN, was das drinne liegt...
-    kprintfln("SET_L1 -> L1[0] = %x", L1_table[0]);
 
-    section_fullAccess(INIT_KERNELSEC);  //TODO ...
+    section_sys_r(INIT_KERNELSEC);
     kprintfln("SET_L1 -> L1[INIT_KERNELSEC] = %x", L1_table[INIT_KERNELSEC]);
-
-    section_sys_rw(TEXT_KERNELSEC); //TODO rw?
-//    set_privExecNever(TEXT_KERNELSEC); //NUR TESTWEISE!
+    section_sys_r(TEXT_KERNELSEC);
     kprintfln("SET_L1 -> L1[TEXT_KERNELSEC] = %x", L1_table[TEXT_KERNELSEC]);
-
     section_sys_rw(DATA_KERNELSEC);
     set_execNever(DATA_KERNELSEC);
     kprintfln("SET_L1 -> L1[DATA_KERNELSEC] = %x", L1_table[DATA_KERNELSEC]);
@@ -144,10 +128,6 @@ void set_L1(){
 
 }
 
-void init_L1_table(){
-    set_L1();
-    //
-}
 
 void init_sctlr() {
     uint32_t sctlr = get_sctlr();
@@ -164,7 +144,7 @@ void init_mmu() {
     init_dacr(DACR_CLIENT);
     init_ttbcr(TTBCR_USE_TTBR0);
     init_ttbr0(L1_table);
-    init_L1_table();
+    set_L1();
 
     //TODO: WAS SOLL BEIM controlReg GESETZT WERDEN??? (Skriptseite: 1707ff)
    // TODO:/*nö AccessFlagEnable(29) = 0?, TexRemapEnable(28) = 0?,*/
