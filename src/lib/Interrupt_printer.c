@@ -169,7 +169,7 @@ void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* i
         kprintf("#");
     }
     //PC wird bei Ausnahme nach LR geschrieben + wegen pipline muss offset bechatet werden
-    kprintf("\n\r%s TEST an der Adresse %x\n\r",interrupt_name, *(int*) (stackadress+14*4) + pc_offset);
+    kprintf("\n\r%s an der Adresse %x\n\r",interrupt_name, *(int*) (stackadress+14*4) + pc_offset);
     //Wenn DATA_abort print DESR stuff
     if (is_data_ab == 1) {
         print_data_abort_reason();

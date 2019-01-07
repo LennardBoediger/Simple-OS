@@ -49,7 +49,6 @@ void prepare_uart_listenthread () {
 void boot_system() {
     kprintfln("STARTING BOOT_SYSTEM");
     init_mmu();
-    kprintfln("BOOT_SYSTEM -> INIT_MMU DONE");
     enable_IRQ_interrupts();
     init_tcbs();
     prepare_uart_listenthread();

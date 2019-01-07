@@ -97,11 +97,14 @@ void set_L1(){
         entry_is_invalid(i);
     }
     section_sys_rw(IO_PHYS_0);
-    section_sys_rw(IO_PHYS_1);
-    section_sys_rw(IO_PHYS_2);
     set_execNever(IO_PHYS_0);
+    kprintfln("SET_L1 -> L1[IO_PHYS_0] = %x", L1_table[IO_PHYS_0]);
+    section_sys_rw(IO_PHYS_1);
     set_execNever(IO_PHYS_1);
+    kprintfln("SET_L1 -> L1[IO_PHYS_1] = %x", L1_table[IO_PHYS_1]);
+    section_sys_rw(IO_PHYS_2);
     set_execNever(IO_PHYS_2);
+    kprintfln("SET_L1 -> L1[IO_PHYS_2] = %x", L1_table[IO_PHYS_2]);
     section_sys_r(INIT_KERNELSEC);
     kprintfln("SET_L1 -> L1[INIT_KERNELSEC] = %x", L1_table[INIT_KERNELSEC]);
     section_sys_r(TEXT_KERNELSEC);
@@ -117,8 +120,10 @@ void set_L1(){
     kprintfln("SET_L1 -> L1[DATA_USERSEC]  = %x", L1_table[DATA_USERSEC]);
     section_sys_rw(EXCEPTION_STACKS);
     set_execNever(EXCEPTION_STACKS);
+    kprintfln("SET_L1 -> L1[EXCEPTION_STACKS]  = %x", L1_table[EXCEPTION_STACKS]);
     section_fullAccess(PHYS_USER_STACKS);
     set_execNever(PHYS_USER_STACKS);
+    kprintfln("SET_L1 -> L1[PHYS_USER_STACKS]  = %x", L1_table[PHYS_USER_STACKS]);
 }
 
 
@@ -139,5 +144,5 @@ void init_mmu() {
     init_ttbr0(L1_table);
     set_L1();
     init_sctlr();
-    kprintfln("INIT MMU DONE!!");
+    kprintfln("INIT MMU DONE!");
 }
