@@ -34,19 +34,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /Applications/CLion.app/Contents/bin/cmake/bin/cmake
+CMAKE_COMMAND = /home/pablo/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/173.4301.33/bin/cmake/bin/cmake
 
 # The command to remove a file.
-RM = /Applications/CLion.app/Contents/bin/cmake/bin/cmake -E remove -f
+RM = /home/pablo/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/173.4301.33/bin/cmake/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/Lennard/Github/Bs-Prak
+CMAKE_SOURCE_DIR = /home/pablo/Dokumente/Uni/BSPrak/BS-Prak
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/Lennard/Github/Bs-Prak/cmake-build-debug
+CMAKE_BINARY_DIR = /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/Bs_Prak.dir/depend.make
@@ -66,6 +66,6 @@ CMakeFiles/Bs_Prak.dir/clean:
 .PHONY : CMakeFiles/Bs_Prak.dir/clean
 
 CMakeFiles/Bs_Prak.dir/depend:
-	cd /Users/Lennard/Github/Bs-Prak/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/Lennard/Github/Bs-Prak /Users/Lennard/Github/Bs-Prak /Users/Lennard/Github/Bs-Prak/cmake-build-debug /Users/Lennard/Github/Bs-Prak/cmake-build-debug /Users/Lennard/Github/Bs-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/pablo/Dokumente/Uni/BSPrak/BS-Prak /home/pablo/Dokumente/Uni/BSPrak/BS-Prak /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug /home/pablo/Dokumente/Uni/BSPrak/BS-Prak/cmake-build-debug/CMakeFiles/Bs_Prak.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/Bs_Prak.dir/depend
 

@@ -48,15 +48,15 @@ uint32_t char_handler(char input){
             kprintfln("Achtung: JUMP NULL Defekt");
             break;
         case 'C':
-            k_write_address((uint32_t *)0x0002);
+            k_write_address((uint32_t *)0x00200000);
             kprintfln("Achtung: Write auf eigenen Code Defekt");
             break;
         case 'U':
-            k_branchto((uint32_t*)0x007);
+            k_branchto((uint32_t*)0x00700000);
             kprintfln("Achtung: Lesen auf Unbound");
             break;
         case 'X':
-            k_branchto((uint32_t*)0x0004);
+            k_branchto((uint32_t*)0x00400000);
             kprintfln("Achtung: Sprung auf user code Defekt");
             break;
         default:
@@ -83,7 +83,6 @@ uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {
                 break;
             //
             case SYS_PREPARE_THREAD:
-                //USER DATEN aus UNGÜLTIGgem bereich todo testen gültige adresse
                 if((void*)*((uint32_t*) swi_stackadress+1)<=(void*)get_tcb(get_running_thread())->data_stack_pointer
                     && (void*)*((uint32_t*) swi_stackadress+1)>=(void*)(get_tcb(get_running_thread())->data_stack_pointer-1024)) {
                     prepare_thread((void *) *((uint32_t *) swi_stackadress),

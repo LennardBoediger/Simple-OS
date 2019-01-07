@@ -19,14 +19,14 @@
 #define IO_VIRT_2 0x7E2
 #define EXCEPTION_STACKS 0x07F      //127.MB
 #define PHYS_USER_STACKS 0x07D      //125.MB
-#define VIRT_USER_STACKS 0x07E      //auf 126mb wird zugegriffen in 125 wir tatsächlich gelesen
+#define VIRT_USER_STACKS 0x07E      //auf 126mb wird zugegriffen in 125 wird tatsächlich gelesen
 
 #define MMU_EN_POS 0
 #define ALIGNMENT_CHECK_EN_POS 1
 #define I_CHACHE_EN_POS 12
 #define C_CACHE_EN_POS 2
 
-#define ALLWAYS_ONE_POS 1
+#define EN_SECTION 1
 #define XN_POS 4
 #define PXN_POS 0
 #define AP0_POS 10
@@ -41,40 +41,39 @@ void entry_is_section(uint32_t L1_index) {
         L1_table[L1_index] = (PHYS_USER_STACKS << 20);        // NICHT 1 zu 1 mapping
     } else {
         L1_table[L1_index] = (L1_index << 20);        // 1 zu 1 mapping
-        L1_table[L1_index] |= (1 << ALLWAYS_ONE_POS);  // SECTION ENABLED
+        L1_table[L1_index] |= (1 << EN_SECTION);  // SECTION ENABLED
     }
 }
 
-//TODO verständlicher
 void entry_is_invalid(uint32_t L1_index) {
-    L1_table[L1_index] &= ~(1 << ALLWAYS_ONE_POS);  // SECTION DISABLED
+    L1_table[L1_index] &= ~(1 << EN_SECTION);
     L1_table[L1_index] &= 0;
 }
 
 void section_sys_rw(uint32_t L1_index) {
     entry_is_section(L1_index);
-    L1_table[L1_index] |= (1 << AP0_POS);  // AP = 011 Voller zugriff von allen (zum testen)
+    L1_table[L1_index] |= (1 << AP0_POS);
     L1_table[L1_index] &= ~(1 << AP1_POS);
     L1_table[L1_index] &= ~(1 << AP2_POS);
 }
 
 void section_sys_r(uint32_t L1_index) {
     entry_is_section(L1_index);
-    L1_table[L1_index] |= (1 << AP0_POS);  // AP = 011 Voller zugriff von allen (zum testen)
+    L1_table[L1_index] |= (1 << AP0_POS);
     L1_table[L1_index] &= ~(1 << AP1_POS);
     L1_table[L1_index] |= (1 << AP2_POS);
 }
 
 void section_usr_r(uint32_t L1_index) {
     entry_is_section(L1_index);
-    L1_table[L1_index] &= ~(1 << AP0_POS);  // AP = 011 Voller zugriff von allen (zum testen)
+    L1_table[L1_index] &= ~(1 << AP0_POS);
     L1_table[L1_index] |= (1 << AP1_POS);
     L1_table[L1_index] &= ~(1 << AP2_POS);
 }
 
 void section_fullAccess(uint32_t L1_index) {
     entry_is_section(L1_index);
-    L1_table[L1_index] |= (1 << AP0_POS);  // AP = 011 Voller zugriff von allen (zum testen)
+    L1_table[L1_index] |= (1 << AP0_POS);
     L1_table[L1_index] |= (1 << AP1_POS);
     L1_table[L1_index] &= ~(1 << AP2_POS);
 }
@@ -103,7 +102,6 @@ void set_L1(){
     set_execNever(IO_PHYS_0);
     set_execNever(IO_PHYS_1);
     set_execNever(IO_PHYS_2);
-
     section_sys_r(INIT_KERNELSEC);
     kprintfln("SET_L1 -> L1[INIT_KERNELSEC] = %x", L1_table[INIT_KERNELSEC]);
     section_sys_r(TEXT_KERNELSEC);
@@ -111,27 +109,22 @@ void set_L1(){
     section_sys_rw(DATA_KERNELSEC);
     set_execNever(DATA_KERNELSEC);
     kprintfln("SET_L1 -> L1[DATA_KERNELSEC] = %x", L1_table[DATA_KERNELSEC]);
-
     section_usr_r(TEXT_USERSEC);
     set_privExecNever(TEXT_USERSEC);
     kprintfln("SET_L1 -> L1[DATA_KERNELSEC] = %x", L1_table[TEXT_USERSEC]);
-
     section_fullAccess(DATA_USERSEC);
     set_execNever(DATA_USERSEC);
     kprintfln("SET_L1 -> L1[DATA_USERSEC]  = %x", L1_table[DATA_USERSEC]);
-
     section_sys_rw(EXCEPTION_STACKS);
     set_execNever(EXCEPTION_STACKS);
-
     section_fullAccess(PHYS_USER_STACKS);
     set_execNever(PHYS_USER_STACKS);
-
 }
 
 
+//CCacheEn(2) = 0, ICacheEn(12) = 0, AlignmentCheckEnable(1) = 1, MmuEnable(0) = 1
 void init_sctlr() {
     uint32_t sctlr = get_sctlr();
-    //CCacheEn(2) = 0, ICacheEn(12) = 0, AlignmentCheckEnable(1) = 1, MmuEnable(0) = 1
     sctlr &= ~(1 << C_CACHE_EN_POS);            //C_Cache aus
     sctlr &= ~(1 << I_CHACHE_EN_POS);           //I_Cache aus
     sctlr |= (1 << ALIGNMENT_CHECK_EN_POS);     //ALignment an
@@ -145,16 +138,6 @@ void init_mmu() {
     init_ttbcr(TTBCR_USE_TTBR0);
     init_ttbr0(L1_table);
     set_L1();
-
-    //TODO: WAS SOLL BEIM controlReg GESETZT WERDEN??? (Skriptseite: 1707ff)
-   // TODO:/*nö AccessFlagEnable(29) = 0?, TexRemapEnable(28) = 0?,*/
-    // CacheEnable(2) = 0?, AlignmentCheckEnable(1) = 1! optional ,
-    // MmuEnable(0) = 1! Ichach bit (12 I)
-
     init_sctlr();
-
-    //TODO: not_1_to_1_mapping
-
     kprintfln("INIT MMU DONE!!");
-
 }

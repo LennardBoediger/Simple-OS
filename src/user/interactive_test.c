@@ -73,15 +73,15 @@ void user_thread_passive(void* stack_pointer) {
             uprintfln("Achtung: lesender Zugriff aufKernel Coder Defekt");
             break;
         case 'K':
-            read_address((uint32_t*)(uint32_t*)0x07F);
-            uprintfln("Achtung: lesender Zugriff auf Kernel Stack Defekt"); //TODO make this K
+            read_address((uint32_t*)0x07F00000);
+            uprintfln("Achtung: lesender Zugriff auf Kernel Stack Defekt");
             break;
         case 'g':
             read_address((uint32_t*)(0x7E201000 - 0x3F000000));
             uprintfln("Achtung: lesender Zugriff auf IO Defekt");
             break;
         case 'c':
-            write_address((uint32_t*) 0x0004);
+            write_address((uint32_t*) 0x00400000);
             uprintf("Achtung: Schreiben auf eigenen code Defekt");
             break;
         case 's':

@@ -194,6 +194,5 @@ void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* i
     for (i = 0; i < 47; ++i) {
         kprintf("#");
     }
-    kprintf("\n\r-----Test betrieb: Programm läuft weiter als wäre alles ok -------\n\r");
-    kprintf("\n\r");
+    kprintf("\n\r\n\r");
 }

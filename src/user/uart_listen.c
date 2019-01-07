@@ -20,23 +20,16 @@ void prepare_user_thread_passive(char input){
 }
 
 void uart_listen(){
-//    uprintfln("START UART_LISTEN()");
     while(1) {
-        //TODO: INTERRUPTS AUS!!
         char input = (char) syscall_uart_read();
-        //BIS HIER
         while (input != 0) {
             if (input >= 'A' && input <= 'Z' && input != 'K') {
-                //func* an syscall; syscall braucht Infos über Input
                 prepare_user_thread_active(input);
             } else {
                 prepare_user_thread_passive(input);
             }
-            //TODO: INTERRUPT AUS
             input = (char) syscall_uart_read();
-            //BIS HIER
         }
-//        uprintfln("syscall_sleep();");
         syscall_sleep_thread();
     }
 }
