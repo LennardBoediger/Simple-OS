@@ -32,6 +32,7 @@ OBJ += ./bs-logic/Interrupt_Vector_Table.o
 OBJ += ./bs-logic/kprintf.o
 OBJ += ./bs-logic/MMU.o
 OBJ += ./bs-logic/mode_reg_helper.o
+OBJ += ./bs-logic/process.o
 OBJ += ./bs-logic/Stack.o
 OBJ += ./driver/interrupt_regs_driver.o
 OBJ += ./driver/MMU-helper.o

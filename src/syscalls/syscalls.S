@@ -22,3 +22,8 @@ syscall_uart_print:
 syscall_uart_read:
     swi     4
     bx      lr
+
+.global syscall_prepare_process
+syscall_prepare_process:
+    swi     5
+    bx      lr

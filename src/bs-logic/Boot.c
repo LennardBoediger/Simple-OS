@@ -5,6 +5,7 @@
 #include "../include/init_thread.h"
 #include "../include/kprintf.h"
 #include "../include/MMU.h"
+#include "../include/process.h"
 
 uint8_t no_ext_userprog;
 
@@ -51,6 +52,7 @@ void boot_system() {
     init_mmu();
     enable_IRQ_interrupts();
     init_tcbs();
+    init_process();
     prepare_uart_listenthread();
     prepare_idle_thread();
     initialize_timer();

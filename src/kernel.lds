@@ -7,18 +7,22 @@ SECTIONS
     ./syscalls/?*(.text)
     }
 . = 0x00500000;
-.usrdata : {
-    ./user/?*(.data*)
-    ./syscalls/?*(.data)
-}
 .usrrodata : {
     ./user/?*(.rodata*)
     ./syscalls/?*(.rodata)
     }
+
+. = 0x00600000;
+.usrdata : {
+    ./user/?*(.data*)
+    ./syscalls/?*(.data)
+}
+VAR1 =.;
 .usrbss : {
     ./user/?*(.bss)
     ./syscalls/?*(.bss)
 }
+VAR2 =.;
 
 . = 0x00100000;
 .init : {

@@ -7,6 +7,7 @@
 #include "../include/Interrupt_Handler.h"
 #include "../include/Interrupt_Handler_helper.h"
 #include "../include/uart_driver.h"
+#include "../include/process.h"
 #define SWI_PC_Offset (-4)
 //Sys call defines
 #define SYS_KILL_THREAD 0
@@ -14,6 +15,7 @@
 #define SYS_SLEEP_THREAD 2
 #define SYS_UART_PRINT 3
 #define SYS_UART_READ 4
+#define SYS_PREPARE_PROCESS 5
 #define WAITING_TIME 1
 
 uint8_t debug_interrupt = 0;  //Global RINT IRQ
@@ -82,6 +84,8 @@ uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {
                 clear_timer();
                 break;
             //
+            case SYS_PREPARE_PROCESS:
+                new_process();
             case SYS_PREPARE_THREAD:
                 if((void*)*((uint32_t*) swi_stackadress+1)<=(void*)get_tcb(get_running_thread())->data_stack_pointer
                     && (void*)*((uint32_t*) swi_stackadress+1)>=(void*)(get_tcb(get_running_thread())->data_stack_pointer-1024)) {

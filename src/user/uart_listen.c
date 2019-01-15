@@ -6,11 +6,11 @@
 
 
 
-void prepare_user_thread_active(char input){
+void prepare_user_process_active(char input){
     static void(* user_thread_Ptr_act)(void*);
     char c = input;
     user_thread_Ptr_act = &user_thread_active;
-    syscall_prepare_thread(user_thread_Ptr_act, (void*) &c, sizeof(c));
+    syscall_prepare_process(user_thread_Ptr_act, (void*) &c, sizeof(c));
 }
 void prepare_user_thread_passive(char input){
     static void(* user_thread_Ptr_pas)(void*);
@@ -24,7 +24,7 @@ void uart_listen(){
         char input = (char) syscall_uart_read();
         while (input != 0) {
             if (input >= 'A' && input <= 'Z' && input != 'K') {
-                prepare_user_thread_active(input);
+                prepare_user_process_active(input);
             } else {
                 prepare_user_thread_passive(input);
             }

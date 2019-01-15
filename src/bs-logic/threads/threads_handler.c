@@ -1,6 +1,7 @@
 #include "../../include/init_thread.h"
 #include "../../include/printf_lib.h"
 #include "../../include/threads_handler.h"
+#include "../../include/process.h"
 #include <stdlib.h>
 
 
@@ -126,6 +127,8 @@ uint32_t swap_thread(uint32_t irq_stackadress, uint32_t spsr) {
         // Nächsten Thread AUSWÄHLEN (running_thread global)
         running_thread = find_next_thread();
     }
+    // Wechselt (wenn nötig) in den dem Thread zugehörigen Prozess
+    swap_process(get_tcb(running_thread)->process_id);
     // Nächsten Thread STARTEN
     struct tcb* next_running_thread = get_tcb(get_running_thread());
     next_running_thread->zustand = LAUFEND;

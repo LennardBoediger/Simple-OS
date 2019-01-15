@@ -5,6 +5,7 @@
 #include "../../include/printf_lib.h"
 #include "../../include/Boot.h"
 #include "../../include/systemfunctions.h"
+#include "../../include/process.h"
 #include "../../include/Rick.h"
 
 #define DEF_USERMODE_CPSR 16 //0x2D0
@@ -46,6 +47,7 @@ void init_tcbs(){
         threads[i].data_stack_pointer = (uint32_t) (126*1024*1023-i*1024);
         threads[i].zustand = BEENDET;
         threads[i].wartezeit = -1;
+        threads[i].process_id = -1;
     }
     kprintf("TCBVorbereitung abgeschlossen.\n\r");
 }
@@ -90,10 +92,18 @@ void prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_
     //Wenn kein Thread mehr frei war -> -1
 //    if (tcb_number == -1) {
     struct tcb *thread = get_tcb(tcb_number);
+    int32_t backswap_process_id;
+    if (tcb_number != IDLE_THREAD) {
+        backswap_process_id = thread->process_id;
+    } else backswap_process_id = get_unborn_process(); //initial case
+    thread->process_id = get_unborn_process();
+
+    swap_process(thread->process_id);
     thread->lr_irq = (uint32_t) pc;
     memcopy(irq_stack_data, (uint32_t *) thread->data_stack_pointer, irq_stack_data_size);
     if (tcb_number == IDLE_THREAD) {
         thread->r0 = NO_STACK_ADRESS;
+
     } else {
         thread->r0 = thread->data_stack_pointer;
     }
@@ -107,6 +117,7 @@ void prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_
     //Stackpointer auf oberstes Elemtent des Stacks
     thread->sp = (thread->data_stack_pointer - aligned_size);
 
+    swap_process(backswap_process_id);
     /*return tcb_number*/;
 //    }
 //    return -1;
