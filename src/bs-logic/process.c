@@ -10,11 +10,6 @@ extern char VAR2[];
 unsigned int usrbss_begin = (unsigned int) VAR1;
 unsigned int usrbss_end = (unsigned int) VAR2;
 
-void print_current_process_state() {
-    kprintfln("current_process: %i || unborn_process: %i", current_process, unborn_process);
-}
-
-
 int32_t get_current_process(){
     return current_process;
 }
@@ -28,7 +23,6 @@ void swap_process(int32_t next_process) {
         section_fullAccess(get_phys_user_stacks(next_process));
         set_execNever(get_phys_user_stacks(next_process));
         current_process = next_process;
-        kprintfln("SWAP_THREAD() -> CURRENT_PROCESS = %x", current_process);
     }
 }
 

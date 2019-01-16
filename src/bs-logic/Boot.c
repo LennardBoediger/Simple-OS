@@ -27,7 +27,23 @@ void prepare_uart_listenthread () {
         uart_listen_Ptr = &new_uart_listen;
         prepare_thread(uart_listen_Ptr, (void *) NO_STACK_ADRESS, 0);
         kprintfln("\n\rHello :) \n\r");
-        kprintfln("Drücke eine beliebige Taste, um einen interaktiven Test auszuführen...");
+        kprintfln("Drücke n: lesender Zugriff auf Null-Pointer.");
+        kprintfln("Drücke p: Sprung auf Null-Pointer.");
+        kprintfln("Drücke d: lesender Zugriff auf Kernel-Daten.");
+        kprintfln("Drücke k: lesender Zugriff auf Kernel-Code.");
+        kprintfln("Drücke K: lesender Zugriff auf Kernel-Stack.");
+        kprintfln("Drücke g: lesender Zugriff auf Peripherie-Gerät, z.B. UART. ");
+        kprintfln("Drücke c: schreibender Zugriff auf eigenen Code.");
+        kprintfln("Drücke s: Stack-Overflow.");
+        kprintfln("Drücke u: lesender Zugriff auf nicht zugeordnete Adresse. ");
+        kprintfln("Drücke x: Sprung auf eigene Daten oder Stack.");
+        kprintfln("Drücke a, um aus einem User-Thread eine 'Undefined Instruction' auszulösen");
+        kprintfln("N: lesender Zugriff auf Null-Pointer.");
+        kprintfln("P: Sprung auf Null-Pointer.");
+        kprintfln("C: schreibender Zugriff auf eigenen Code.");
+        kprintfln("U: lesender Zugriff auf nicht zugeordnete Adresse. X: Sprung auf User Code.");
+
+        kprintfln("Drücke eine andere Taste, um einen interaktiven Test auszuführen...");
     }
 }
 
@@ -36,15 +52,10 @@ void boot_system() {
     init_mmu();
     enable_IRQ_interrupts();
     init_tcbs();
-    kprintfln("111111111111111111111111");
     init_process();
-    kprintfln("222222222222222222222222");
     prepare_uart_listenthread();
-    kprintfln("333333333333333333333333");
     prepare_idle_thread();
-    kprintfln("444444444444444444444444");
     initialize_timer();
-    kprintfln("555555555555555555555555");
     wait_for_first_irq();
 }
 

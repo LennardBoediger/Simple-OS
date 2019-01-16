@@ -11,7 +11,7 @@
 void init_mmu();
 void section_fullAccess(uint32_t L1_index);
 void set_execNever(uint32_t L1_index);
-uint32_t get_phys_user_stacks (int32_t i);
+uint32_t get_phys_user_stacks(int32_t i);
 
 //#define IO_REGION 0x3f000000 BIS 0x3f20000
 

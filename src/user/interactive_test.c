@@ -4,44 +4,45 @@
 #include "include/uprintf.h"
 #include "../syscalls/syscalls.h"
 
-uint32_t global_counter;
 
-
-void interactive_test(char c, uint8_t thread_id){
+/* erzeugt kurze Pausen zwischen den Buchstaben. 52147 = magic number */
+static void wait() {
     int i;
-    char temp_c = c;
-    uint8_t temp_id = thread_id;
-    global_counter++;
-    for (i = 1; i < 16; i++) {
-        uprintfln("%c:%x (%x:%x)", temp_c, global_counter, temp_id, i);
+    for (i = 0; i < 52147; i++) {
+        asm("nop");
+    }
+}
+
+void interactive_test_active(char c){
+    int i;
+    char temp = c;
+    for (i = 0; i < temp; i++) {
+        uprintf("%c", temp);
+        wait();
+    }
+}
+
+void interactive_test_passive(char c){
+    int i;
+    char temp = c;
+    for (i = 0; i < temp; i++) {
+        uprintf("%c", temp);
         syscall_sleep_thread();
     }
 }
 
-void prepare_user_thread(char input, uint8_t thread_id){
-    static void(* user_thread_Ptr)(void*);
-   // char c = input;
-    uint8_t thread_data[2];
-    thread_data[0] = (uint8_t)input;
-    thread_data[1] = thread_id;
-    user_thread_Ptr = &user_thread;
-    syscall_prepare_thread(user_thread_Ptr, (void*) &thread_data, sizeof(thread_data));
-}
 
-void user_thread(void* stack_pointer) {
-    char input = *((uint8_t*) stack_pointer);
-    uint8_t thread_id = *((uint8_t*) stack_pointer-4);
-    interactive_test(input, thread_id);
+void user_thread_active(void* stack_pointer) {
+    char input = *((char*) stack_pointer);
+    interactive_test_active(input);
     syscall_kill_thread();
-
     uprintf("\n\r\n\r\n\r\n\rDEAD THREADS CANNOT KPRINTF!!!!!11!!!elf!!!\n\r\n\r\n\r\n\r");
 }
 
-void user_process(void* stack_pointer) {
-    global_counter = 0;
-    uint8_t thread_id = 1;
+
+void user_thread_passive(void* stack_pointer) {
     char input = *((char*) stack_pointer);
-    prepare_user_thread(input, thread_id + (uint8_t) 1);
-    prepare_user_thread(input, thread_id + (uint8_t) 2);
-    user_thread(stack_pointer);
+    interactive_test_passive(input);
+    syscall_kill_thread();
+    uprintf("\n\r\n\r\n\r\n\rDEAD THREADS CANNOT KPRINTF!!!!!11!!!elf!!!\n\r\n\r\n\r\n\r");
 }

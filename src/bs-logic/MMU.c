@@ -35,14 +35,12 @@
 #define AP1_POS 11
 #define AP2_POS 15
 
+const uint32_t phys_user_stacks[] = {0x07D, 0x07C, 0x07B, 0x07A, 0x079, 0x078, 0x077, 0x076};
 static uint32_t L1_table[L1_TABLE_SIZE] __attribute__((aligned(L1_ALIGNMENT)));
 
-
-const uint32_t phys_user_stacks[] = {0x07D, 0x07C, 0x07B, 0x07A, 0x079, 0x078, 0x077, 0x076};
-
-uint32_t get_phys_user_stacks (int32_t i) {
+uint32_t get_phys_user_stacks(int32_t i) {
     if (i > 7) {
-        kprintfln("GET_PHYS_USER_STACKS -> Index %x ist nicht erlaubt!!!", i);
+        kprintfln("GET_PHYS_USER_STACKS() -> INDEX ZU GROß!!!");
     }
     return phys_user_stacks[i];
 }
