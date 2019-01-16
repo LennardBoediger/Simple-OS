@@ -8,7 +8,6 @@
 #define MAX_PROCESSES 8
 
 
-
 void init_mmu();
 void section_fullAccess(uint32_t L1_index);
 void set_execNever(uint32_t L1_index);
