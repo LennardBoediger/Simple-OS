@@ -36,10 +36,15 @@ void boot_system() {
     init_mmu();
     enable_IRQ_interrupts();
     init_tcbs();
+    kprintfln("111111111111111111111111");
     init_process();
+    kprintfln("222222222222222222222222");
     prepare_uart_listenthread();
+    kprintfln("333333333333333333333333");
     prepare_idle_thread();
+    kprintfln("444444444444444444444444");
     initialize_timer();
+    kprintfln("555555555555555555555555");
     wait_for_first_irq();
 }
 

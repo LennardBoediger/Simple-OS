@@ -94,8 +94,11 @@ void prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_
     struct tcb *thread = get_tcb(tcb_number);
     int32_t backswap_process_id;
     if (tcb_number != IDLE_THREAD) {
-        backswap_process_id = thread->process_id;
-    } else backswap_process_id = get_unborn_process(); //initial case
+        backswap_process_id = 0; //TODO
+    } else {
+        //initial case
+        backswap_process_id = get_unborn_process();
+    }
     thread->process_id = get_unborn_process();
 
     swap_process(thread->process_id);

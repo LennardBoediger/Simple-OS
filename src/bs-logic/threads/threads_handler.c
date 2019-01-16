@@ -110,7 +110,7 @@ uint32_t load_thread(uint32_t next_thread, uint32_t irq_stackadress) {
 
 
 uint32_t swap_thread(uint32_t irq_stackadress, uint32_t spsr) {
-//    kprintf("1 start swap_thread\n\r");
+    kprintf("#######1 start swap_thread\n\r");
     struct tcb* idle_thread = get_tcb(IDLE_THREAD);
     struct tcb* old_running_thread = get_tcb(get_running_thread());
     // Nur bei SYSTEMSTART
@@ -127,8 +127,10 @@ uint32_t swap_thread(uint32_t irq_stackadress, uint32_t spsr) {
         // Nächsten Thread AUSWÄHLEN (running_thread global)
         running_thread = find_next_thread();
     }
+    kprintfln("SWAP_THREAD() -> VOR SWAP_PROCESS");
     // Wechselt (wenn nötig) in den dem Thread zugehörigen Prozess
     swap_process(get_tcb(running_thread)->process_id);
+    kprintfln("SWAP_THREAD() -> NACH SWAP_PROCESS");
     // Nächsten Thread STARTEN
     struct tcb* next_running_thread = get_tcb(get_running_thread());
     next_running_thread->zustand = LAUFEND;

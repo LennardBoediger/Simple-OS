@@ -14,7 +14,9 @@ void prepare_user_process(char input){
 
 void uart_listen(){
     while(1) {
+        kprintfln("UART_LISTEN() -> 11111");
         char input = (char) syscall_uart_read();
+        kprintfln("UART_LISTEN() -> 22222");
         while (input != 0) {
             prepare_user_process(input);
             input = (char) syscall_uart_read();

@@ -30,7 +30,7 @@ void prepare_user_thread(char input, uint8_t thread_id){
 
 void user_thread(void* stack_pointer) {
     char input = *((uint8_t*) stack_pointer);
-    uint8_t thread_id = *((uint8_t*) stack_pointer-1);
+    uint8_t thread_id = *((uint8_t*) stack_pointer-4);
     interactive_test(input, thread_id);
     syscall_kill_thread();
 
