@@ -35,6 +35,13 @@
 #define AP1_POS 11
 #define AP2_POS 15
 
+const uint32_t phys_user_stacks[] = {0x07D, 0x07C, 0x07B, 0x07A, 0x079, 0x078, 0x077, 0x076};
+
+uint32_t get_phys_user_stacks (int32_t i) {
+    return phys_user_stacks[i];
+}
+
+static uint32_t L1_table[L1_TABLE_SIZE] __attribute__((aligned(L1_ALIGNMENT)));
 
 void entry_is_section(uint32_t L1_index) {
     //ACHTUNG: HIER KEINE BITSETZUNG!!!
@@ -119,7 +126,7 @@ void set_L1(){
     //TODO nur usr_r
     section_fullAccess(RODATA_USERSEC);
     set_execNever(RODATA_USERSEC);
-    kprintfln("SET_L1 -> L1[DATA_USERSEC]  = %x", L1_table[RODATA_USERSEC]);
+    kprintfln("SET_L1 -> L1[RODATA_USERSEC]  = %x", L1_table[RODATA_USERSEC]);
 
     uint32_t process;
     for(process = 0; process < MAX_PROCESSES; process++) {

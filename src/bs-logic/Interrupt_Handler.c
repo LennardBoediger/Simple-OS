@@ -86,7 +86,9 @@ uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {
             //
             case SYS_PREPARE_PROCESS:
                 new_process();
+                kprintfln("SYS_PREPARE_PROCESS -> new_process wurde aufgerufen");
             case SYS_PREPARE_THREAD:
+                print_current_process_state();
                 if((void*)*((uint32_t*) swi_stackadress+1)<=(void*)get_tcb(get_running_thread())->data_stack_pointer
                     && (void*)*((uint32_t*) swi_stackadress+1)>=(void*)(get_tcb(get_running_thread())->data_stack_pointer-1024)) {
                     prepare_thread((void *) *((uint32_t *) swi_stackadress),

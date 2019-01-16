@@ -4,105 +4,44 @@
 #include "include/uprintf.h"
 #include "../syscalls/syscalls.h"
 
+uint32_t global_counter;
 
-/* erzeugt kurze Pausen zwischen den Buchstaben. 52147 = magic number */
-static void wait() {
-    int i;
-    for (i = 0; i < 52147; i++) {
-        asm("nop");
-    }
-}
 
-void interactive_test_active(char c){
+void interactive_test(char c, uint8_t thread_id){
     int i;
-    char temp = c;
-    for (i = 0; i < temp; i++) {
-        uprintf("%c", temp);
-        wait();
-    }
-}
-
-void interactive_test_passive(char c){
-    int i;
-    char temp = c;
-    for (i = 0; i < temp; i++) {
-        uprintf("%c", temp);
+    char temp_c = c;
+    uint8_t temp_id = thread_id;
+    global_counter++;
+    for (i = 1; i < 16; i++) {
+        uprintfln("%c:%x (%x:%x)", temp_c, global_counter, temp_id, i);
         syscall_sleep_thread();
     }
 }
 
+void prepare_user_thread(char input, uint8_t thread_id){
+    static void(* user_thread_Ptr)(void*);
+   // char c = input;
+    uint8_t thread_data[2];
+    thread_data[0] = (uint8_t)input;
+    thread_data[1] = thread_id;
+    user_thread_Ptr = &user_thread;
+    syscall_prepare_thread(user_thread_Ptr, (void*) &thread_data, sizeof(thread_data));
+}
 
-void user_thread_active(void* stack_pointer) {
-    char input = *((char*) stack_pointer);
-    interactive_test_active(input);
+void user_thread(void* stack_pointer) {
+    char input = *((uint8_t*) stack_pointer);
+    uint8_t thread_id = *((uint8_t*) stack_pointer-1);
+    interactive_test(input, thread_id);
     syscall_kill_thread();
+
     uprintf("\n\r\n\r\n\r\n\rDEAD THREADS CANNOT KPRINTF!!!!!11!!!elf!!!\n\r\n\r\n\r\n\r");
 }
 
-/*What to do:
-        kprintfln("n: lesender Zugriff auf Null-Pointer.");
-        kprintfln("Drücke p: Sprung auf Null-Pointer.");
-        kprintfln("Drücke d: lesender Zugriff auf Kernel-Daten.");
-        kprintfln("Drücke k: lesender Zugriff auf Kernel-Code.");
-        kprintfln("Drücke K: lesender Zugriff auf Kernel-Stack.");
-        kprintfln("Drücke g: lesender Zugriff auf Peripherie-Gerät, z.B. UART. ");
-        kprintfln("Drücke c: schreibender Zugriff auf eigenen Code.");
-        kprintfln("Drücke s: Stack-Overflow.");
-        kprintfln("Drücke u: lesender Zugriff auf nicht zugeordnete Adresse. ");
-        kprintfln("Drücke x: Sprung auf eigene Daten oder Stack.");
-        kprintfln("Drücke a, um aus einem User-Thread eine 'Undefined Instruction' auszulösen");
-        kprintfln("Drücke eine andere Taste, um einen interaktiven Test auszuführen...");*/
-void user_thread_passive(void* stack_pointer) {
+void user_process(void* stack_pointer) {
+    global_counter = 0;
+    uint8_t thread_id = 1;
     char input = *((char*) stack_pointer);
-    switch(input) {
-        case 'n':;
-            volatile int* null = NULL;
-            *null;
-            uprintfln("Achtung: lesender Zugriff auf Null-Pointer Defekt");
-            break;
-        case 'p':
-            branch_to_np();
-            uprintfln("Achtung: Sprung auf Null-Pointer Defekt");
-            break;
-        case 'd':
-            read_address((uint32_t*) 0x00300000);
-            uprintfln("Achtung: lesender Zugriff auf Kernel Daten Defekt");
-            break;
-        case 'k':
-            read_address((uint32_t*)0x00200000);
-            uprintfln("Achtung: lesender Zugriff aufKernel Coder Defekt");
-            break;
-        case 'K':
-            read_address((uint32_t*)0x07F00000);
-            uprintfln("Achtung: lesender Zugriff auf Kernel Stack Defekt");
-            break;
-        case 'g':
-            read_address((uint32_t*)(0x7E201000 - 0x3F000000));
-            uprintfln("Achtung: lesender Zugriff auf IO Defekt");
-            break;
-        case 'c':
-            write_address((uint32_t*) 0x00400000);
-            uprintf("Achtung: Schreiben auf eigenen code Defekt");
-            break;
-        case 's':
-            stack_overflow(1337);
-            uprintf("Achtung: Stack Overflow Defekt");
-            break;
-        case 'u':
-            read_address((uint32_t*)0x00700000);
-            uprintfln("Achtung: lesender Zugriff auf Unbound Defekt");
-            break;
-        case 'x':
-            branchto((uint32_t*)stack_pointer);
-            uprintfln("Achtung: Sprung auf eigene Daten Defekt");
-            break;
-        case 'a':
-            asm("udf");
-            break;
-        default:
-            interactive_test_passive(input);
-            break;
-    }
-    syscall_kill_thread();
-    uprintf("\n\r\n\r\n\r\n\rDEAD THREADS CANNOT KPRINTF!!!!!11!!!elf!!!\n\r\n\r\n\r\n\r");
+    prepare_user_thread(input, thread_id + (uint8_t) 1);
+    prepare_user_thread(input, thread_id + (uint8_t) 2);
+    user_thread(stack_pointer);
 }

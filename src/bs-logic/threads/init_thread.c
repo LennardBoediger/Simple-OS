@@ -47,7 +47,8 @@ void init_tcbs(){
         threads[i].data_stack_pointer = (uint32_t) (126*1024*1023-i*1024);
         threads[i].zustand = BEENDET;
         threads[i].wartezeit = -1;
-        threads[i].process_id = -1;
+        //TODO
+        threads[i].process_id = 10;
     }
     kprintf("TCBVorbereitung abgeschlossen.\n\r");
 }
@@ -85,7 +86,6 @@ int32_t find_free_tcb() {
     }
     return tcb_number;
 }
-
 
 void prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_data_size) {
     int32_t tcb_number = find_free_tcb();

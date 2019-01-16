@@ -7,6 +7,7 @@ void mymalloc(void* dst, uint32_t irq_stack_data_size) {
         *dst_byte = 0;
         dst_byte++;
     }
+}
 
 void memcopy(void* src, void* dst, uint32_t irq_stack_data_size) {
     uint8_t *src_byte = (uint8_t *) src;
