@@ -13,7 +13,7 @@
 #define RODATA_USERSEC 0x0005
 
 
-#define IO_PHYS_0 0x3F0
+#define IO_PHYS_0 0x03F0
 #define IO_VIRT_0 0x7E0
 #define IO_PHYS_1 0x3F1
 #define IO_VIRT_1 0x7E1
@@ -48,7 +48,7 @@ uint32_t get_phys_user_stacks(int32_t i) {
 void entry_is_section(uint32_t L1_index) {
     //ACHTUNG: HIER KEINE BITSETZUNG!!!
     if (L1_index == VIRT_USER_STACKS) {
-        L1_table[L1_index] = (phys_user_stacks[get_current_process()] << 20);        // NICHT 1 zu 1 mapping
+        L1_table[L1_index] = (phys_user_stacks[get_current_process()] << 20); //todo nicht next process?       // NICHT 1 zu 1 mapping
     } else {
         L1_table[L1_index] = (L1_index << 20);        // 1 zu 1 mapping
         L1_table[L1_index] |= (1 << EN_SECTION);  // SECTION ENABLED
@@ -128,14 +128,19 @@ void set_L1(){
     //TODO nur usr_r
     section_fullAccess(RODATA_USERSEC);
     set_execNever(RODATA_USERSEC);
-    kprintfln("SET_L1 -> L1[DATA_USERSEC]  = %x", L1_table[RODATA_USERSEC]);
+    kprintfln("SET_L1 -> L1[RODATA_USERSEC]  = %x", L1_table[RODATA_USERSEC]);
 
-    uint32_t process;
+    section_fullAccess(VIRT_USER_STACKS);
+    set_execNever(VIRT_USER_STACKS);
+    kprintfln("SET_L1 -> L1[VIRT_USER_STACKS]  = %x", L1_table[VIRT_USER_STACKS]);
+
+/*    uint32_t process;
     for(process = 0; process < MAX_PROCESSES; process++) {
         section_fullAccess(DATA_USERSEC+process);
         set_execNever(DATA_USERSEC+process);
         kprintfln("SET_L1 -> L1[DATA_USERSEC]  = %x", L1_table[DATA_USERSEC+process]);
     }
+*/
     section_sys_rw(EXCEPTION_STACKS);
     set_execNever(EXCEPTION_STACKS);
     kprintfln("SET_L1 -> L1[EXCEPTION_STACKS]  = %x", L1_table[EXCEPTION_STACKS]);

@@ -11,6 +11,7 @@ SECTIONS
         user/?*(.rodata*)
         syscalls/?*(.rodata*)
         }
+
     . = 0x00600000
     .usrdata : {
         user/?*(.data)
@@ -22,10 +23,13 @@ SECTIONS
         syscalls/?*(.bss)
     }
     VAR2 =.
+
     . = 0x00100000
     .init : { *(.init) }
+
     . = 0x00200000
     .text : { *(.text*) }
+
     . = 0x00300000
     .data : { *(.data) }
     .rodata : { *(.rodata*) }

@@ -87,6 +87,9 @@ all: kernel kernel.bin dump
 %.o: %.S
 	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -o $@ -c $<
 
+%.lds: %.lds.S
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -Wp,-P -o $@ -E $<
+
 %.o: %.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -o $@ -c $<
 

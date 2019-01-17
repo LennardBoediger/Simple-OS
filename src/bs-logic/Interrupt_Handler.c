@@ -39,33 +39,6 @@ uint32_t undef(uint32_t stackadress, uint32_t cpsr, uint32_t spsr) {
     return next_spsr;
 }
 
-uint32_t char_handler(char input){
-    switch(input){
-        case 'N':
-            k_read_address((uint32_t*)NULL);
-            kprintfln("Achtung: Read NULL Defekt");
-            break;
-        case 'P':
-            k_branch_to_np();
-            kprintfln("Achtung: JUMP NULL Defekt");
-            break;
-        case 'C':
-            k_write_address((uint32_t *)0x00200000);
-            kprintfln("Achtung: Write auf eigenen Code Defekt");
-            break;
-        case 'U':
-            k_branchto((uint32_t*)0x00700000);
-            kprintfln("Achtung: Lesen auf Unbound");
-            break;
-        case 'X':
-            k_branchto((uint32_t*)0x00400000);
-            kprintfln("Achtung: Sprung auf user code Defekt");
-            break;
-        default:
-            return 0;
-    }
-    return 1;
-}
 
 /* bearbeitet den "swi xx"-call */
 uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {
@@ -108,10 +81,7 @@ uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {
                 break;
             case SYS_UART_READ:
                 input = (uint32_t) read_uart_buffer();
-                // FÜR NÄCHSTE ABGABE RAUS!!
-                if (char_handler(input) == 0){
-                    *((uint32_t*) swi_stackadress) = input;
-                }
+                *((uint32_t*) swi_stackadress) = input;
                 break;
             default:
                 kprintfln("\n\rUNKNOWN SYSCALL...\n\r");
