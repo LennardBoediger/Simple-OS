@@ -5,11 +5,11 @@
 
 int32_t current_process;
 int32_t unborn_process;
-extern char VAR1[];
+/*extern char VAR1[];
 extern char VAR2[];
 unsigned int usrbss_begin = (unsigned int) VAR1;
 unsigned int usrbss_end = (unsigned int) VAR2;
-
+*/
 int32_t get_current_process(){
     return current_process;
 }
@@ -33,11 +33,11 @@ void copy_user_stuff(){
 }
 
 void new_process() {
-    uint32_t data_size = usrbss_begin - (DATA_USERSEC<<20);
+//    uint32_t data_size = usrbss_begin - (DATA_USERSEC<<20);
     //TODO ARRAY-SUCHE
     unborn_process += 1;
-    memcopy((void*)(DATA_USERSEC<<20), (void*)((DATA_USERSEC+unborn_process)<<20), data_size);
-    mymalloc((void*)(((DATA_USERSEC+unborn_process)<<20) + data_size), usrbss_end-usrbss_begin);
+//    memcopy((void*)(DATA_USERSEC<<20), (void*)((DATA_USERSEC+unborn_process)<<20), data_size);
+//    mymalloc((void*)(((DATA_USERSEC+unborn_process)<<20) + data_size), usrbss_end-usrbss_begin);
 }
 
 void init_process(){

@@ -1,7 +1,7 @@
 #include <stdarg.h>
 #include "../include/uart_driver.h"
 #include "../include/init_thread.h"
-#include "../syscalls/syscalls.h"
+#include "syscalls/syscalls.h"
 
 
 void user_sent_string(char* strg){

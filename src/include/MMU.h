@@ -4,7 +4,8 @@
 #include <stdint.h>
 #define L1_TABLE_SIZE 4096
 #define L1_ALIGNMENT 16384
-#define DATA_USERSEC 0x0006
+#define DATA_USERSEC 0x006
+#define BSS_USERSEC 0x007
 #define MAX_PROCESSES 8
 
 

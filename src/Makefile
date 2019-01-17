@@ -21,6 +21,12 @@
 # Quellen
 #
 LSCRIPT = kernel.lds
+OBJ += ./user/syscalls/syscalls.o
+OBJ += ./user/idle_thread.o
+OBJ += ./user/interactive_test.o
+OBJ += ./user/interactive_test_helper.o
+OBJ += ./user/uart_listen.o
+OBJ += ./user/uprintf.o
 OBJ += ./bs-logic/start.o
 OBJ += ./bs-logic/threads/init_thread.o
 OBJ += ./bs-logic/threads/threads_handler.o
@@ -43,12 +49,6 @@ OBJ += ./lib/regcheck.o
 OBJ += ./lib/regcheck_asm.o
 OBJ += ./lib/systemfunctions.o
 OBJ += ./lib/Rick.o
-OBJ += ./syscalls/syscalls.o
-OBJ += ./user/idle_thread.o
-OBJ += ./user/interactive_test.o
-OBJ += ./user/interactive_test_helper.o
-OBJ += ./user/uart_listen.o
-OBJ += ./user/uprintf.o
 
 
 
@@ -86,9 +86,6 @@ all: kernel kernel.bin dump
 
 %.o: %.S
 	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -o $@ -c $<
-
-%.lds: %.lds.S
-	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -Wp,-P -o $@ -E $<
 
 %.o: %.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -o $@ -c $<

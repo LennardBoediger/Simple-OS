@@ -2,9 +2,9 @@
 #include "include/interactive_test.h"
 #include "include/interactive_test_helper.h"
 #include "include/uprintf.h"
-#include "../syscalls/syscalls.h"
+#include "syscalls/syscalls.h"
 
-uint32_t global_counter;
+static uint32_t global_counter;
 
 void interactive_test(char c){
     int i;

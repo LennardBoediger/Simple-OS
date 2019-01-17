@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "../syscalls/syscalls.h"
+#include "syscalls/syscalls.h"
 #include "../include/printf_lib.h"
 #include "include/uprintf.h"
 #include "include/interactive_test.h"
