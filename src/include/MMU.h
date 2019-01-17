@@ -4,8 +4,9 @@
 #include <stdint.h>
 #define L1_TABLE_SIZE 4096
 #define L1_ALIGNMENT 16384
-#define DATA_USERSEC 0x006
-#define BSS_USERSEC 0x007
+#define VIRT_DATA_USERSEC 0x006
+#define VIRT_BSS_USERSEC 0x00F
+#define VIRT_USER_STACKS 0x07E        // auf 126mb wird zugegriffen, in 125-118 wird tatsächlich gelesen
 #define MAX_PROCESSES 8
 
 

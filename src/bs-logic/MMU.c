@@ -21,7 +21,6 @@
 #define IO_VIRT_2 0x7E2
 #define EXCEPTION_STACKS 0x07F      //127.MB
 
-#define VIRT_USER_STACKS 0x07E        // auf 126mb wird zugegriffen, in 125-118 wird tatsächlich gelesen
 
 #define MMU_EN_POS 0
 #define ALIGNMENT_CHECK_EN_POS 1
@@ -35,7 +34,7 @@
 #define AP1_POS 11
 #define AP2_POS 15
 
-const uint32_t phys_user_stacks[] = {0x07D, 0x07C, 0x07B, 0x07A, 0x079, 0x078, 0x077, 0x076};
+const uint32_t phys_user_stacks[] = {0x07D, 0x07C, 0x07B, 0x07A, 0x079, 0x078, 0x077, 0x076};//{0x05D, 0x05C, 0x05B, 0x05A, 0x059, 0x058, 0x057, 0x056};
 static uint32_t L1_table[L1_TABLE_SIZE] __attribute__((aligned(L1_ALIGNMENT)));
 
 uint32_t get_phys_user_stacks(int32_t i) {
@@ -45,14 +44,28 @@ uint32_t get_phys_user_stacks(int32_t i) {
     return phys_user_stacks[i];
 }
 
+//TODO: initialer Fall funktioniert (wahrscheinlich). Wie ist es beim Process-Switch??
+// WEGEN BERECHTIGUNGEN NIE DIREKT AUFRUFEN
 void entry_is_section(uint32_t L1_index) {
     //ACHTUNG: HIER KEINE BITSETZUNG!!!
-    if (L1_index == VIRT_USER_STACKS) {
-        L1_table[L1_index] = (phys_user_stacks[get_current_process()] << 20); //todo nicht next process?       // NICHT 1 zu 1 mapping
-    } else {
-        L1_table[L1_index] = (L1_index << 20);        // 1 zu 1 mapping
-        L1_table[L1_index] |= (1 << EN_SECTION);  // SECTION ENABLED
+    switch (L1_index) {
+        case VIRT_USER_STACKS:
+            L1_table[L1_index] = (phys_user_stacks[get_current_process()] << 20);
+//            L1_table[L1_index] = (VIRT_USER_STACKS << 20);
+
+
+            break;
+        case VIRT_BSS_USERSEC:
+            //die physikalischen Adressen liegen in den MBs über der virtuellen (s. weiter unten)
+            L1_table[L1_index] = ((VIRT_BSS_USERSEC + (uint32_t) get_current_process()) << 20);
+            break;
+        case VIRT_DATA_USERSEC:
+            L1_table[L1_index] = ((VIRT_DATA_USERSEC + (uint32_t) get_current_process()) << 20);
+            break;
+        default:
+            L1_table[L1_index] = (L1_index << 20);        // 1 zu 1 mapping
     }
+    L1_table[L1_index] |= (1 << EN_SECTION);  // SECTION ENABLED
 }
 
 void entry_is_invalid(uint32_t L1_index) {
@@ -130,17 +143,38 @@ void set_L1(){
     set_execNever(RODATA_USERSEC);
     kprintfln("SET_L1 -> L1[RODATA_USERSEC]  = %x", L1_table[RODATA_USERSEC]);
 
+    //KOPIEREN EINMALIG DATEN AUS VIRTUELLEN ADRESSE IN PHYSIKALISCHE ADRESSE DES 0. PROZESSES
+    //setzt VIRT_USER_STACKS, VIRT_BSS_USERSEC und VIRT_DATA_USERSEC auf den nullten Prozess (mit full-access)
     section_fullAccess(VIRT_USER_STACKS);
     set_execNever(VIRT_USER_STACKS);
     kprintfln("SET_L1 -> L1[VIRT_USER_STACKS]  = %x", L1_table[VIRT_USER_STACKS]);
+    section_fullAccess(VIRT_BSS_USERSEC);
+    set_execNever(VIRT_BSS_USERSEC);
+    kprintfln("SET_L1 -> L1[VIRT_BSS_USERSEC]  = %x", L1_table[VIRT_BSS_USERSEC]);
+    section_fullAccess(VIRT_DATA_USERSEC);
+    set_execNever(VIRT_DATA_USERSEC);
+    kprintfln("SET_L1 -> L1[VIRT_DATA_USERSEC]  = %x", L1_table[VIRT_DATA_USERSEC]);
 
-/*    uint32_t process;
-    for(process = 0; process < MAX_PROCESSES; process++) {
-        section_fullAccess(DATA_USERSEC+process);
-        set_execNever(DATA_USERSEC+process);
-        kprintfln("SET_L1 -> L1[DATA_USERSEC]  = %x", L1_table[DATA_USERSEC+process]);
+
+    //TODO DONE?! physikalisch usrSTACKS, usrBSS, usrDATA 1-zu-1 auf kernel-rw
+    uint32_t process;
+    kprintfln("PROZESSE:");
+    for(process = 1; process < MAX_PROCESSES; process++) {
+        section_sys_rw(VIRT_DATA_USERSEC + process);
+        section_sys_rw(VIRT_BSS_USERSEC + process);
+        //TODO Müssen die wirklich 1-1 gemappt werden?
+        section_sys_rw(get_phys_user_stacks(process-1));
+
+        set_execNever(VIRT_DATA_USERSEC + process);
+        set_execNever(VIRT_BSS_USERSEC + process);
+        //TODO Müssen die wirklich 1-1 gemappt werden?
+        set_execNever(get_phys_user_stacks(process-1));
+
+        kprintfln("SET_L1 -> L1[VIRT_DATA_USERSEC + %i]  = %x", process, L1_table[VIRT_DATA_USERSEC+process]);
+        kprintfln("SET_L1 -> L1[VIRT_BSS_USERSEC + %i]  = %x", process, L1_table[VIRT_BSS_USERSEC+process]);
+//        kprintfln("SET_L1 -> L1[USER_STACK + %i]  = %x", process, L1_table[get_phys_user_stacks(process-1)]);
     }
-*/
+
     section_sys_rw(EXCEPTION_STACKS);
     set_execNever(EXCEPTION_STACKS);
     kprintfln("SET_L1 -> L1[EXCEPTION_STACKS]  = %x", L1_table[EXCEPTION_STACKS]);

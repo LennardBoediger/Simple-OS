@@ -7,7 +7,7 @@
 #define WARTEND 1
 #define BEREIT 2
 #define LAUFEND 3
-#define NO_STACK_ADRESS 0x07b40000 //Stack des nie aktiv genutzten Idle-threads
+#define NO_STACK_ADRESS 0x07D40000 //Stack des nie aktiv genutzten Idle-threads
 #include <stdint.h>
 
 

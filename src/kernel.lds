@@ -8,13 +8,14 @@ SECTIONS
 	.usrrodata : { ./user/?*(.rodata*) }
 
 
+    /* bei 0x00700000 bis 0x00E00000 liegen die tatsächlichen usrdata */
 	. = 0x00600000;
 	.usrdata : { ./user/?*(.data*) }
 
-    . = 0x00700000;
+    /* bei 0x01000000 bis 0x01700000 */
+    . = 0x00F00000;
 	.usrbss : { ./user/?*(.bss*) }
 	.usrCOMMON : { ./user/?*(.COMMON*) }
-
 
 	. = 0x00100000;
 	.init : { *(.init*) }
