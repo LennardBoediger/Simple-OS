@@ -12,6 +12,11 @@
 
 struct tcb threads[MAX_THREADS];
 
+/*
+struct pcb processes[MAX_PROCESSES];
+uint8_t nr_of_processes
+*/
+
 uint8_t force_idle;
 
 struct tcb* get_tcb(int32_t index) {
@@ -44,7 +49,7 @@ void init_tcbs(){
         threads[i].lr_usr = 0x666; //sollte nie...
         threads[i].lr_irq = 0x666; //sollte nie zu sehen sein
         threads[i].cpsr = DEF_USERMODE_CPSR;
-        threads[i].data_stack_pointer = (uint32_t) (126*1024*1023-i*1024);
+        threads[i].data_stack_pointer = (uint32_t) (126*1024*1023-i*1024); // 0x07DE 0800 TODO TODO TODO
         threads[i].zustand = BEENDET;
         threads[i].wartezeit = -1;
         threads[i].process_id = -1;
@@ -88,17 +93,32 @@ int32_t find_free_tcb() {
 
 
 void prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_data_size) {
+    kprintfln("+++++++++++++++++++++++++++++++++++++++++");
+    kprintfln("PREPARE_THREAD() -> PREPARE_THREAD START");
+    kprintfln("PREPARE_THREAD() START -> CURRENT_PROCESS = %i", get_current_process());
+    //ÜBERPRÜFT, OB MINDESTENS 1 PROZESS LAUFEND IST --> WENN JA, ERGIBT EIN BACKSWAP SINN
+    int i = 0;
+    struct tcb* help_thread;
+    uint8_t nr_of_running_threads = 0;
+    for (i = 0; i < MAX_THREADS; i++) {
+        help_thread = get_tcb(i);
+        if (help_thread->zustand == LAUFEND) {
+            nr_of_running_threads++;
+        }
+    }
     int32_t tcb_number = find_free_tcb();
-    //Wenn kein Thread mehr frei war -> -1
-//    if (tcb_number == -1) {
     struct tcb *thread = get_tcb(tcb_number);
     int32_t backswap_process_id;
-    if (tcb_number != IDLE_THREAD) {
-        backswap_process_id = thread->process_id;
-    } else backswap_process_id = get_unborn_process(); //initial case
-    thread->process_id = get_unborn_process();
-
-    swap_process(thread->process_id);
+    // TODO wenn noch kein Prozess läuft, darf er keinen Backswap machen
+    // TODO wenn doch, dann muss die ID des aktuell laufenden Prozesses in backswap_process_id stehen
+    //-> dann in den in den find_free_tcb gefundenen Thread reingesprungen werden
+    if (nr_of_running_threads != 0) {
+        kprintfln("PREPARE_THREAD() -> NR_OF_RUNNING_THREADS != 0");
+        backswap_process_id = get_tcb(get_running_thread())->process_id;
+        swap_process(thread->process_id);
+    }
+    thread->process_id = get_current_process();
+    kprintfln("PREPARE_THREAD() -> AFTER SWAP_PROCESS(THREAD->PROCESS_ID");
     thread->lr_irq = (uint32_t) pc;
     memcopy(irq_stack_data, (uint32_t *) thread->data_stack_pointer, irq_stack_data_size);
     if (tcb_number == IDLE_THREAD) {
@@ -116,8 +136,12 @@ void prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_
     }
     //Stackpointer auf oberstes Elemtent des Stacks
     thread->sp = (thread->data_stack_pointer - aligned_size);
-
-    swap_process(backswap_process_id);
+    if (nr_of_running_threads != 0) {
+        swap_process(backswap_process_id);
+        kprintfln("PREPARE_THREAD() -> AFTER BACKSWAP");
+    }
+    kprintfln("PREPARE_THREAD() END -> CURRENT_PROCESS = %i", get_current_process());
+    kprintfln("++++++++++++++++++++++++++++++++++++++++");
     /*return tcb_number*/;
 //    }
 //    return -1;

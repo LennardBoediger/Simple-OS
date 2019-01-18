@@ -2,6 +2,7 @@
 #include "../../include/printf_lib.h"
 #include "../../include/threads_handler.h"
 #include "../../include/process.h"
+#include "../../include/Interrupt_printer.h"
 #include <stdlib.h>
 
 
@@ -132,5 +133,7 @@ uint32_t swap_thread(uint32_t irq_stackadress, uint32_t spsr) {
     // Nächsten Thread STARTEN
     struct tcb* next_running_thread = get_tcb(get_running_thread());
     next_running_thread->zustand = LAUFEND;
+//    kprintfln("CURRENT_PROCESS = %i", get_current_process());
+//    print_interrupt(irq_stackadress, 0x0, spsr, "IRQ INTERRUPT", -8, 0);
     return load_thread(get_running_thread(), irq_stackadress);
 }

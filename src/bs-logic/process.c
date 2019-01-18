@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include "../include/kprintf.h"
 #include "../include/MMU.h"
+#include "../include/MMU-helper.h"
 #include "../include/systemfunctions.h"
 
 #define USRDATA_USRBSS_SIZE 0x00100000
@@ -29,6 +30,7 @@ void swap_process(int32_t next_process) {
         set_execNever(VIRT_BSS_USERSEC);
         section_fullAccess(VIRT_USER_STACKS);
         set_execNever(VIRT_USER_STACKS);
+        flush_tlb();
     }
 }
 

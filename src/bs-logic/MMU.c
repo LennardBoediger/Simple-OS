@@ -163,6 +163,7 @@ void set_L1(){
         section_sys_rw(VIRT_DATA_USERSEC + process);
         section_sys_rw(VIRT_BSS_USERSEC + process);
         //TODO Müssen die wirklich 1-1 gemappt werden?
+        // TODO WIEDER ZURÜCK AUF sys_rw
         section_sys_rw(get_phys_user_stacks(process-1));
 
         set_execNever(VIRT_DATA_USERSEC + process);
