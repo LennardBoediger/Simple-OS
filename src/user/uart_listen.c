@@ -12,12 +12,12 @@ void prepare_user_process(char input){
     syscall_prepare_process(user_process_Ptr, (void*) &c, sizeof(c));
 }
 
-void prepare_user_thread(char input){
+void prepare_user_thread(char input, int8_t thread_id){
     uprintfln("PREPARE_USER_THREAD() ???");
     static void(* user_thread_Ptr)(void*);
-    char c = input;
+    int8_t data[] = {(int8_t) input, thread_id};
     user_thread_Ptr = &user_thread;
-    syscall_prepare_thread(user_thread_Ptr, (void*) &c, sizeof(c));
+    syscall_prepare_thread(user_thread_Ptr, (void*) &data, sizeof(input)+sizeof(thread_id));
 }
 
 void uart_listen(){

@@ -10,7 +10,8 @@
 int32_t get_current_process();
 int32_t get_unborn_process();
 void swap_process(int32_t next_process);
-uint32_t new_process();
+int32_t new_process();
 void init_process();
+void kill_process(int32_t process);
 
 #endif //BS_PRAK_PROCESS_H

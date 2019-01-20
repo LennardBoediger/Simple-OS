@@ -53,12 +53,26 @@ uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {
             // Zustand des alten Threads = BEENDET, führt Thread-Wechsel durch und löscht den Timer
             case SYS_KILL_THREAD:
                 get_tcb(get_running_thread())->zustand = BEENDET;
+                int32_t to_kill_process_id = get_tcb(get_running_thread())->process_id;
+                uint32_t threads;
+                int32_t threads_in_process = 0;
+                for (threads = 0; threads < MAX_THREADS; threads++) {
+                    if (get_tcb(threads)->process_id == to_kill_process_id && get_tcb(threads)->zustand != BEENDET) {
+                        threads_in_process++;
+                        break;
+                    }
+                }
+                if (threads_in_process > 0) {
+                    kill_process(to_kill_process_id);
+                }
                 next_spsr = swap_thread(swi_stackadress, spsr);
                 clear_timer();
                 break;
-            //
             case SYS_PREPARE_PROCESS:
-                new_process();
+                if (new_process() == -1) {
+                    next_spsr = swap_thread(swi_stackadress, spsr);
+                    break;
+                }
             case SYS_PREPARE_THREAD:
                 if((void*)*((uint32_t*) swi_stackadress+1)<=(void*)get_tcb(get_running_thread())->data_stack_pointer
                     && (void*)*((uint32_t*) swi_stackadress+1)>=(void*)(get_tcb(get_running_thread())->data_stack_pointer-1024)) {

@@ -133,19 +133,18 @@ void set_L1(){
     for(process = 1; process < MAX_PROCESSES; process++) {
         section_sys_rw(VIRT_DATA_USERSEC + process);
         section_sys_rw(VIRT_BSS_USERSEC + process);
-        //TODO Müssen die wirklich 1-1 gemappt werden?
-        // TODO WIEDER ZURÜCK AUF sys_rw
         section_sys_rw(get_phys_user_stacks(process-1));
 
         set_execNever(VIRT_DATA_USERSEC + process);
         set_execNever(VIRT_BSS_USERSEC + process);
-        //TODO Müssen die wirklich 1-1 gemappt werden?
         set_execNever(get_phys_user_stacks(process-1));
 
         kprintfln("SET_L1 -> L1[VIRT_DATA_USERSEC + %i]  = %x", process, L1_table[VIRT_DATA_USERSEC+process]);
         kprintfln("SET_L1 -> L1[VIRT_BSS_USERSEC + %i]  = %x", process, L1_table[VIRT_BSS_USERSEC+process]);
 //        kprintfln("SET_L1 -> L1[USER_STACK + %i]  = %x", process, L1_table[get_phys_user_stacks(process-1)]);
     }
+    section_sys_rw(get_phys_user_stacks(process-1));
+    set_execNever(get_phys_user_stacks(process-1));
 
     section_sys_rw(EXCEPTION_STACKS);
     set_execNever(EXCEPTION_STACKS);
