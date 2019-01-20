@@ -4,7 +4,7 @@
 //static uint32_t test;
 
 void idle_thread(void* voidPointerOfFame){
-//    uprintfln("Starte den idle thread...");
+    uprintfln("Starte den idle thread...");
 //    test = 0;
 //    test++;
 //    uprintfln("Booting done!\n\r");

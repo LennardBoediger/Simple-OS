@@ -2,40 +2,14 @@
 #include "../include/kprintf.h"
 #include "../include/MMU.h"
 #include "../include/process.h"
-#define DACR_CLIENT 1       //set dacr to client
-#define TTBCR_USE_TTBR0 0
-#define MAX_ADDR 0x08000000 //128. MB
-
-#define INIT_KERNELSEC 0x001
-#define TEXT_KERNELSEC 0x002
-#define DATA_KERNELSEC 0x003
-#define TEXT_USERSEC 0x004
-#define RODATA_USERSEC 0x005
 
 
-#define IO_PHYS_0 0x03F0
-#define IO_VIRT_0 0x7E0
-#define IO_PHYS_1 0x3F1
-#define IO_VIRT_1 0x7E1
-#define IO_PHYS_2 0x3F2
-#define IO_VIRT_2 0x7E2
-#define EXCEPTION_STACKS 0x07F      //127.MB
-
-
-#define MMU_EN_POS 0
-#define ALIGNMENT_CHECK_EN_POS 1
-#define I_CHACHE_EN_POS 12
-#define C_CACHE_EN_POS 2
-
-#define EN_SECTION 1
-#define XN_POS 4
-#define PXN_POS 0
-#define AP0_POS 10
-#define AP1_POS 11
-#define AP2_POS 15
-
-const uint32_t phys_user_stacks[] = {0x07D, 0x07C, 0x07B, 0x07A, 0x079, 0x078, 0x077, 0x076};//{0x05D, 0x05C, 0x05B, 0x05A, 0x059, 0x058, 0x057, 0x056};
+const uint32_t phys_user_stacks[] = {0x05D, 0x05C, 0x05B, 0x05A, 0x059, 0x058, 0x057, 0x056}; //{0x07D, 0x07C, 0x07B, 0x07A, 0x079, 0x078, 0x077, 0x076};
 static uint32_t L1_table[L1_TABLE_SIZE] __attribute__((aligned(L1_ALIGNMENT)));
+
+uint32_t get_L1_entry(uint32_t index) {
+    return L1_table[index];
+}
 
 uint32_t get_phys_user_stacks(int32_t i) {
     if (i > 7) {
@@ -51,9 +25,6 @@ void entry_is_section(uint32_t L1_index) {
     switch (L1_index) {
         case VIRT_USER_STACKS:
             L1_table[L1_index] = (phys_user_stacks[get_current_process()] << 20);
-//            L1_table[L1_index] = (VIRT_USER_STACKS << 20);
-
-
             break;
         case VIRT_BSS_USERSEC:
             //die physikalischen Adressen liegen in den MBs über der virtuellen (s. weiter unten)
@@ -137,7 +108,7 @@ void set_L1(){
     kprintfln("SET_L1 -> L1[DATA_KERNELSEC] = %x", L1_table[DATA_KERNELSEC]);
     section_usr_r(TEXT_USERSEC);
     set_privExecNever(TEXT_USERSEC);
-    kprintfln("SET_L1 -> L1[DATA_KERNELSEC] = %x", L1_table[TEXT_USERSEC]);
+    kprintfln("SET_L1 -> L1[TEXT_USERSEC] = %x", L1_table[TEXT_USERSEC]);
     //TODO nur usr_r
     section_fullAccess(RODATA_USERSEC);
     set_execNever(RODATA_USERSEC);
@@ -150,7 +121,7 @@ void set_L1(){
     kprintfln("SET_L1 -> L1[VIRT_USER_STACKS]  = %x", L1_table[VIRT_USER_STACKS]);
     section_fullAccess(VIRT_BSS_USERSEC);
     set_execNever(VIRT_BSS_USERSEC);
-    kprintfln("SET_L1 -> L1[VIRT_BSS_USERSEC]  = %x", L1_table[VIRT_BSS_USERSEC]);
+    kprintfln("SET_L1 -> L1[VIRT_USER_STACKS]  = %x", L1_table[VIRT_USER_STACKS]);
     section_fullAccess(VIRT_DATA_USERSEC);
     set_execNever(VIRT_DATA_USERSEC);
     kprintfln("SET_L1 -> L1[VIRT_DATA_USERSEC]  = %x", L1_table[VIRT_DATA_USERSEC]);

@@ -4,7 +4,7 @@
 #include "../include/MMU-helper.h"
 #include "../include/systemfunctions.h"
 
-#define USRDATA_USRBSS_SIZE 0x00100000
+#define USRDATA_USRBSS_SIZE 0x100000
 
 int32_t current_process;
 int32_t unborn_process;
@@ -43,10 +43,13 @@ void copy_user_stuff(){
 void new_process() {
     //TODO ARRAY-SUCHE
     unborn_process += 1;
-
+    kprintfln("NEW_PROCESS() -> unborn_process = %i ", unborn_process);
     //kopiert die Daten aus dem virtuellen (zeigend auf aktuellen) Prozess in den Speicher des neuen physikalischen Prozesses
-    memcopy((void*)(VIRT_DATA_USERSEC<<20), (void*)((VIRT_DATA_USERSEC+unborn_process)<<20), USRDATA_USRBSS_SIZE);
-    mymalloc((void*)((VIRT_BSS_USERSEC+unborn_process)<<20), USRDATA_USRBSS_SIZE);
+    // TODO FUNKTIONIEREN NICHT
+    //SIZE = USRDATA_USRBSS_SIZE
+    memcopy((void*)(VIRT_DATA_USERSEC<<20), (void*)((VIRT_DATA_USERSEC+unborn_process)*0x100000), USRDATA_USRBSS_SIZE);
+    mymalloc((void*)((VIRT_BSS_USERSEC+unborn_process)*0x100000), USRDATA_USRBSS_SIZE);
+    kprintfln("NEW_PROCESS -> INIT DONE");
 }
 
 void init_process(){

@@ -96,6 +96,7 @@ void prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_
     kprintfln("+++++++++++++++++++++++++++++++++++++++++");
     kprintfln("PREPARE_THREAD() -> PREPARE_THREAD START");
     kprintfln("PREPARE_THREAD() START -> CURRENT_PROCESS = %i", get_current_process());
+    kprintfln("PREPARE_THREAD() -> INPUT = %c", *((char*)irq_stack_data));
     //ÜBERPRÜFT, OB MINDESTENS 1 PROZESS LAUFEND IST --> WENN JA, ERGIBT EIN BACKSWAP SINN
     int i = 0;
     struct tcb* help_thread;
@@ -112,11 +113,13 @@ void prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_
     // TODO wenn noch kein Prozess läuft, darf er keinen Backswap machen
     // TODO wenn doch, dann muss die ID des aktuell laufenden Prozesses in backswap_process_id stehen
     //-> dann in den in den find_free_tcb gefundenen Thread reingesprungen werden
+    kprintfln("PREPARE_THREAD() -> INPUT = %c", *((char*)irq_stack_data));
     if (nr_of_running_threads != 0) {
         kprintfln("PREPARE_THREAD() -> NR_OF_RUNNING_THREADS != 0");
         backswap_process_id = get_tcb(get_running_thread())->process_id;
         swap_process(thread->process_id);
     }
+    kprintfln("PREPARE_THREAD() -> INPUT = %c", *((char*)irq_stack_data));
     thread->process_id = get_current_process();
     kprintfln("PREPARE_THREAD() -> AFTER SWAP_PROCESS(THREAD->PROCESS_ID");
     thread->lr_irq = (uint32_t) pc;

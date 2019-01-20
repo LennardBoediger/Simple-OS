@@ -3,6 +3,8 @@
 #include "../include/interrupt_regs_driver.h"
 #include "../include/mode_reg_helper.h"
 #include "../include/dataab_helper.h"
+#include "../include/MMU.h"
+#include "../include/process.h"
 
 #define WNR_BIT_SHIFT 11
 
@@ -191,6 +193,16 @@ void print_interrupt(uint32_t stackadress, uint32_t cpsr, uint32_t spsr, char* i
     kprintf("\n\r");
     print_mode_reg();
     kprintf("\n\r");
+    kprintfln("SET_L1 -> L1[INIT_KERNELSEC] = %x", get_L1_entry(INIT_KERNELSEC));
+    kprintfln("SET_L1 -> L1[TEXT_KERNELSEC] = %x", get_L1_entry(TEXT_KERNELSEC));
+    kprintfln("SET_L1 -> L1[DATA_KERNELSEC] = %x", get_L1_entry(DATA_KERNELSEC));
+    kprintfln("SET_L1 -> L1[TEXT_USERSEC] = %x", get_L1_entry(TEXT_USERSEC));
+    kprintfln("SET_L1 -> L1[RODATA_USERSEC]  = %x", get_L1_entry(RODATA_USERSEC));
+    kprintfln("SET_L1 -> L1[VIRT_USER_STACKS]  = %x", get_L1_entry(VIRT_USER_STACKS));
+    kprintfln("SET_L1 -> L1[VIRT_USER_STACKS]  = %x", get_L1_entry(VIRT_USER_STACKS));
+    kprintfln("SET_L1 -> L1[VIRT_DATA_USERSEC]  = %x", get_L1_entry(VIRT_DATA_USERSEC));
+    kprintfln("CURRENT_PROCESS = %i", get_current_process());
+
     for (i = 0; i < 47; ++i) {
         kprintf("#");
     }
