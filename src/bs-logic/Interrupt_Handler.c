@@ -73,7 +73,7 @@ uint32_t swi_interrupt(uint32_t swi_stackadress, uint32_t cpsr, uint32_t spsr) {
                     next_spsr = swap_thread(swi_stackadress, spsr);
                     break;
                 }
-            case SYS_PREPARE_THREAD://todo ende muss auch stimmen oder nicht länger as stack
+            case SYS_PREPARE_THREAD:
                 //kprintfln("start pointer:%x // end pointer %x",(void*)*((uint32_t*) swi_stackadress+1),(void*)(*((uint32_t*) swi_stackadress+1)+*((uint32_t*) swi_stackadress+2)));
                 if((void*)*((uint32_t*) swi_stackadress+1)<=(void*)get_tcb(get_running_thread())->data_stack_pointer
                     && (void*)*((uint32_t*) swi_stackadress+1)>=(void*)(get_tcb(get_running_thread())->data_stack_pointer-1024)
