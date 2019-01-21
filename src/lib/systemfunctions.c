@@ -16,10 +16,6 @@ void memcopy(void* src, void* dst, uint32_t irq_stack_data_size) {
     uint32_t j;
     for (j = 0; j < irq_stack_data_size; j++) {
         *dst_byte = *src_byte;
-        if (j == 0) {
-            kprintfln("MEMCOPY() -> SOURCE: ADRESSE = %x, CHAR = %c", src_byte, *src_byte);
-            kprintfln("MEMCOPY() -> DESTIN: ADRESSE = %x, CHAR = %c", dst_byte, *dst_byte);
-        }
         src_byte++;
         dst_byte++;
     }

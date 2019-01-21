@@ -32,6 +32,8 @@ void prepare_uart_listenthread () {
 }
 
 void boot_system() {
+    kprintfln("------------------------------------------------------");
+    kprintfln("Version 0.6");
     kprintfln("STARTING BOOT_SYSTEM");
     init_process();
     init_mmu();

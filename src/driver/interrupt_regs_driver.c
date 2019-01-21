@@ -45,7 +45,7 @@ void enable_IRQ_interrupts() {
     arm_interrupt_reg->EN_BASIC_IRQS = (1 << IRQ_TIMER_SHIFT);  // 0
     arm_interrupt_reg->EN_IRQ_2 = (1 << IRQ_UART_SHIFT);        // 25
     en_uart_interrupt();
-    kprintf("\n\rEnable_ext_Interrupts\n\r");
+    kprintfln("Enable_ext_Interrupts");
 }
 
 
@@ -71,7 +71,6 @@ uint32_t recognize_irq_interrupt(uint32_t irq_stackadress, uint32_t spsr) {
         return new_spsr;
     }
     if (((arm_interrupt_reg->IRQ_PENDING_2 & (1 << IRQ_UART_SHIFT))>>IRQ_UART_SHIFT) == 1) {
-        kprintfln("!!!");
         uart_receive();
         return 0x0;
     }

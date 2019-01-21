@@ -13,7 +13,6 @@ void prepare_user_process(char input){
 }
 
 void prepare_user_thread(char input, int8_t thread_id){
-    uprintfln("PREPARE_USER_THREAD() ???");
     static void(* user_thread_Ptr)(void*);
     int8_t data[] = {(int8_t) input, thread_id};
     user_thread_Ptr = &user_thread;
@@ -21,15 +20,10 @@ void prepare_user_thread(char input, int8_t thread_id){
 }
 
 void uart_listen(){
-    uprintfln("UART_LISTEN() WURDE GESTARTET");
     while(1) {
         char input = (char) syscall_uart_read();
         while (input != 0) {
-            uprintfln("UART_LISTEN() -> INPUT = %c", input);
-            uprintfln("UART_LISTEN() -> IS PAIRING PROCESS (INPUT != 0)");
-            // TODO GEÄNDERT VON PREPARE_USER_PROCESS AUF
             prepare_user_process(input);
-            uprintfln("UART_LISTEN() -> NACH PREPARE_USER_PROCESS");
             input = (char) syscall_uart_read();
         }
         syscall_sleep_thread();

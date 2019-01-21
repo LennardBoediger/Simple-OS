@@ -2,7 +2,7 @@
 #include "../include/kprintf.h"
 #include "../include/MMU.h"
 #include "../include/process.h"
-
+#define MMU_DEBUG 0
 
 const uint32_t phys_user_stacks[] = {0x05D, 0x05C, 0x05B, 0x05A, 0x059, 0x058, 0x057, 0x056}; //{0x07D, 0x07C, 0x07B, 0x07A, 0x079, 0x078, 0x077, 0x076};
 static uint32_t L1_table[L1_TABLE_SIZE] __attribute__((aligned(L1_ALIGNMENT)));
@@ -92,44 +92,31 @@ void set_L1(){
     }
     section_sys_rw(IO_PHYS_0);
     set_execNever(IO_PHYS_0);
-    kprintfln("SET_L1 -> L1[IO_PHYS_0] = %x", L1_table[IO_PHYS_0]);
     section_sys_rw(IO_PHYS_1);
     set_execNever(IO_PHYS_1);
-    kprintfln("SET_L1 -> L1[IO_PHYS_1] = %x", L1_table[IO_PHYS_1]);
     section_sys_rw(IO_PHYS_2);
     set_execNever(IO_PHYS_2);
-    kprintfln("SET_L1 -> L1[IO_PHYS_2] = %x", L1_table[IO_PHYS_2]);
     section_sys_r(INIT_KERNELSEC);
-    kprintfln("SET_L1 -> L1[INIT_KERNELSEC] = %x", L1_table[INIT_KERNELSEC]);
     section_sys_r(TEXT_KERNELSEC);
-    kprintfln("SET_L1 -> L1[TEXT_KERNELSEC] = %x", L1_table[TEXT_KERNELSEC]);
     section_sys_rw(DATA_KERNELSEC);
     set_execNever(DATA_KERNELSEC);
-    kprintfln("SET_L1 -> L1[DATA_KERNELSEC] = %x", L1_table[DATA_KERNELSEC]);
     section_usr_r(TEXT_USERSEC);
     set_privExecNever(TEXT_USERSEC);
-    kprintfln("SET_L1 -> L1[TEXT_USERSEC] = %x", L1_table[TEXT_USERSEC]);
     //TODO nur usr_r
     section_fullAccess(RODATA_USERSEC);
     set_execNever(RODATA_USERSEC);
-    kprintfln("SET_L1 -> L1[RODATA_USERSEC]  = %x", L1_table[RODATA_USERSEC]);
 
     //KOPIEREN EINMALIG DATEN AUS VIRTUELLEN ADRESSE IN PHYSIKALISCHE ADRESSE DES 0. PROZESSES
     //setzt VIRT_USER_STACKS, VIRT_BSS_USERSEC und VIRT_DATA_USERSEC auf den nullten Prozess (mit full-access)
     section_fullAccess(VIRT_USER_STACKS);
     set_execNever(VIRT_USER_STACKS);
-    kprintfln("SET_L1 -> L1[VIRT_USER_STACKS]  = %x", L1_table[VIRT_USER_STACKS]);
     section_fullAccess(VIRT_BSS_USERSEC);
     set_execNever(VIRT_BSS_USERSEC);
-    kprintfln("SET_L1 -> L1[VIRT_USER_STACKS]  = %x", L1_table[VIRT_USER_STACKS]);
     section_fullAccess(VIRT_DATA_USERSEC);
     set_execNever(VIRT_DATA_USERSEC);
-    kprintfln("SET_L1 -> L1[VIRT_DATA_USERSEC]  = %x", L1_table[VIRT_DATA_USERSEC]);
 
 
-    //TODO DONE?! physikalisch usrSTACKS, usrBSS, usrDATA 1-zu-1 auf kernel-rw
     uint32_t process;
-    kprintfln("PROZESSE:");
     for(process = 1; process < MAX_PROCESSES; process++) {
         section_sys_rw(VIRT_DATA_USERSEC + process);
         section_sys_rw(VIRT_BSS_USERSEC + process);
@@ -139,16 +126,30 @@ void set_L1(){
         set_execNever(VIRT_BSS_USERSEC + process);
         set_execNever(get_phys_user_stacks(process-1));
 
-        kprintfln("SET_L1 -> L1[VIRT_DATA_USERSEC + %i]  = %x", process, L1_table[VIRT_DATA_USERSEC+process]);
-        kprintfln("SET_L1 -> L1[VIRT_BSS_USERSEC + %i]  = %x", process, L1_table[VIRT_BSS_USERSEC+process]);
-//        kprintfln("SET_L1 -> L1[USER_STACK + %i]  = %x", process, L1_table[get_phys_user_stacks(process-1)]);
+        if(MMU_DEBUG) {
+            kprintfln("SET_L1 -> L1[VIRT_DATA_USERSEC + %i]  = %x", process, L1_table[VIRT_DATA_USERSEC + process]);
+            kprintfln("SET_L1 -> L1[VIRT_BSS_USERSEC + %i]  = %x", process, L1_table[VIRT_BSS_USERSEC + process]);
+        }
     }
     section_sys_rw(get_phys_user_stacks(process-1));
     set_execNever(get_phys_user_stacks(process-1));
 
     section_sys_rw(EXCEPTION_STACKS);
     set_execNever(EXCEPTION_STACKS);
+    if(MMU_DEBUG){
+    kprintfln("SET_L1 -> L1[IO_PHYS_0] = %x", L1_table[IO_PHYS_0]);
+    kprintfln("SET_L1 -> L1[IO_PHYS_1] = %x", L1_table[IO_PHYS_1]);
+    kprintfln("SET_L1 -> L1[IO_PHYS_2] = %x", L1_table[IO_PHYS_2]);
+    kprintfln("SET_L1 -> L1[INIT_KERNELSEC] = %x", L1_table[INIT_KERNELSEC]);
+    kprintfln("SET_L1 -> L1[TEXT_KERNELSEC] = %x", L1_table[TEXT_KERNELSEC]);
+    kprintfln("SET_L1 -> L1[DATA_KERNELSEC] = %x", L1_table[DATA_KERNELSEC]);
+    kprintfln("SET_L1 -> L1[TEXT_USERSEC] = %x", L1_table[TEXT_USERSEC]);
+    kprintfln("SET_L1 -> L1[RODATA_USERSEC]  = %x", L1_table[RODATA_USERSEC]);
+    kprintfln("SET_L1 -> L1[VIRT_USER_STACKS]  = %x", L1_table[VIRT_USER_STACKS]);
+    kprintfln("SET_L1 -> L1[VIRT_USER_STACKS]  = %x", L1_table[VIRT_USER_STACKS]);
+    kprintfln("SET_L1 -> L1[VIRT_DATA_USERSEC]  = %x", L1_table[VIRT_DATA_USERSEC]);
     kprintfln("SET_L1 -> L1[EXCEPTION_STACKS]  = %x", L1_table[EXCEPTION_STACKS]);
+    }
 }
 
 

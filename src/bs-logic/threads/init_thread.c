@@ -23,6 +23,7 @@ struct tcb* get_tcb(int32_t index) {
 
 
 void wait_for_first_irq(){
+    kprintfln("------------------------------------------------------");
     while(1){
     }
 }
@@ -91,9 +92,6 @@ int32_t find_free_tcb() {
 
 
 void prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_data_size) {
-    kprintfln("+++++++++++++++++++++++++++++++++++++++++");
-    kprintfln("PREPARE_THREAD() 1 -> CURRENT_PROCESS = %i", get_current_process());
-    kprintfln("PREPARE_THREAD() 2 -> INPUT = %c", *((char*)irq_stack_data));
     int i = 0;
     uint8_t nr_of_running_threads_in_unborn_process = 0;
     for (i = 0; i < MAX_THREADS; i++) {
@@ -103,18 +101,13 @@ void prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_
     }
     int32_t tcb_number = find_free_tcb();
     struct tcb *thread = get_tcb(tcb_number);
-//    int32_t backswap_process_id;
-    // TODO wenn noch kein Prozess läuft, darf er keinen Backswap machen
-    // TODO wenn doch, dann muss die ID des aktuell laufenden Prozesses in backswap_process_id stehen
-    //-> dann in den in den find_free_tcb gefundenen Thread reingesprungen werden
-    kprintfln("PREPARE_THREAD() 3 -> INPUT = %c", *((char*)irq_stack_data));
     if (nr_of_running_threads_in_unborn_process == 0) {
         // Thread wird in einem neuen Prozess erzeugt
         thread->process_id = get_unborn_process();
-        kprintfln("PREPARE_THREAD() 4a -> NEUER PROZESS %i +++", thread->process_id);
+        kprintfln("+++ NEUER PROZESS %i +++", thread->process_id);
     } else {
         thread->process_id = get_current_process();
-        kprintfln("PREPARE_THREAD() 4b -> NEUER PROZESS %i +++", thread->process_id);
+        kprintfln("+++ NEUER THREAD - IN PROCESS %i +++", thread->process_id);
     }
     thread->lr_irq = (uint32_t) pc;
     memcopy(irq_stack_data, (uint32_t *) (thread->data_stack_pointer-0x07D00000+(get_phys_user_stacks(thread->process_id)*0x100000)), irq_stack_data_size);
@@ -132,6 +125,4 @@ void prepare_thread(void (*pc)(void*), void* irq_stack_data, uint32_t irq_stack_
     }
     //Stackpointer auf oberstes Elemtent des Stacks
     thread->sp = (thread->data_stack_pointer - aligned_size);
-    kprintfln("PREPARE_THREAD() END -> CURRENT_PROCESS = %i", get_current_process());
-    kprintfln("++++++++++++++++++++++++++++++++++++++++");
 }
