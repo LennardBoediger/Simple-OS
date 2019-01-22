@@ -18,7 +18,7 @@ uint32_t get_phys_user_stacks(int32_t i) {
     return phys_user_stacks[i];
 }
 
-//TODO: initialer Fall funktioniert (wahrscheinlich). Wie ist es beim Process-Switch??
+
 // WEGEN BERECHTIGUNGEN NIE DIREKT AUFRUFEN
 void entry_is_section(uint32_t L1_index) {
     //ACHTUNG: HIER KEINE BITSETZUNG!!!
@@ -102,8 +102,8 @@ void set_L1(){
     set_execNever(DATA_KERNELSEC);
     section_usr_r(TEXT_USERSEC);
     set_privExecNever(TEXT_USERSEC);
-    //TODO nur usr_r
-    section_fullAccess(RODATA_USERSEC);
+
+    section_usr_r(RODATA_USERSEC);
     set_execNever(RODATA_USERSEC);
 
     //KOPIEREN EINMALIG DATEN AUS VIRTUELLEN ADRESSE IN PHYSIKALISCHE ADRESSE DES 0. PROZESSES
