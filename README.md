@@ -3,7 +3,7 @@
 Basic operating system for Raspberry 2 (ARM Cortex-A7) from scratch.
 
 
-### Boot screen
+### Bootscreen
 ```
  _____ _                 _             _____ _____ 
 /  ___(_)               | |           |  _  /  ___|
